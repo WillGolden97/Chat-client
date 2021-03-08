@@ -5,27 +5,25 @@
  */
 package View;
 
+import Model.Dao.contatosDAO;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author William
  */
-public class Chat extends javax.swing.JFrame  implements ActionListener {
+public class Chat extends javax.swing.JFrame implements ActionListener {
 
-    /**
-     * Creates new form NewJFrame
-     */
+    contatosDAO cDAO = new contatosDAO();
+
     public Chat() {
-        try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (Exception ex) {
-            System.err.println("Failed to initialize LaF");
-        }        
         initComponents();
+        readAlunosTable();
     }
 
     /**
@@ -43,8 +41,8 @@ public class Chat extends javax.swing.JFrame  implements ActionListener {
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         caixaDeEntrada = new javax.swing.JTextArea();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        contatosJTable = new javax.swing.JTable();
 
         jTextField1.setText("jTextField1");
 
@@ -63,47 +61,65 @@ public class Chat extends javax.swing.JFrame  implements ActionListener {
         jTextArea1.setAutoscrolls(false);
         jScrollPane1.setViewportView(jTextArea1);
 
+        caixaDeEntrada.setEditable(false);
         caixaDeEntrada.setColumns(20);
         caixaDeEntrada.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         caixaDeEntrada.setRows(5);
         jScrollPane3.setViewportView(caixaDeEntrada);
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Cliente1", "Cliente2", "Cliente3", "Cliente4" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        contatosJTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null},
+                {null},
+                {null},
+                {null}
+            },
+            new String [] {
+                "Contatos"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        jScrollPane2.setViewportView(jList1);
+        jScrollPane4.setViewportView(contatosJTable);
+        if (contatosJTable.getColumnModel().getColumnCount() > 0) {
+            contatosJTable.getColumnModel().getColumn(0).setResizable(false);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3))
                 .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(Enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(5, 5, 5))
+                .addGap(10, 10, 10))
         );
 
         pack();
@@ -113,15 +129,27 @@ public class Chat extends javax.swing.JFrame  implements ActionListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_EnviarActionPerformed
 
-    public void setCaixadeEntrada (String value) {
-        caixaDeEntrada.setText(caixaDeEntrada.getText()+value+"\n");
+    public void setCaixadeEntrada(String value) {
+        caixaDeEntrada.setEditable(true);
+        caixaDeEntrada.setText(caixaDeEntrada.getText() + value + "\n");
+        caixaDeEntrada.setEditable(false);
     }
-    
+
+    public void readAlunosTable() {
+        DefaultTableModel modelo = (DefaultTableModel) contatosJTable.getModel();
+        modelo.setNumRows(0);
+        cDAO.read().forEach((c) -> {
+            modelo.addRow(new Object[]{
+                c.getNome(),
+            });
+        });
+
+    }
+
     public void actionPerformed(ActionEvent e) {
-        
-        
+
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -149,10 +177,10 @@ public class Chat extends javax.swing.JFrame  implements ActionListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Enviar;
     private javax.swing.JTextArea caixaDeEntrada;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JTable contatosJTable;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
