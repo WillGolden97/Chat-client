@@ -5,13 +5,18 @@
  */
 package View;
 
-import Model.Dao.contatosDAO;
-import com.formdev.flatlaf.FlatLightLaf;
+import ConnectionFactory.Server;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import Model.Bean.Contato;
+import com.formdev.flatlaf.FlatDarkLaf;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.UIManager;
+import util.Messages;
 
 /**
  *
@@ -19,11 +24,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Chat extends javax.swing.JFrame implements ActionListener {
 
-    contatosDAO cDAO = new contatosDAO();
+    private List<Contato> contatos;
 
     public Chat() {
         initComponents();
-        readAlunosTable();
+        contatos();
     }
 
     /**
@@ -86,6 +91,12 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
                 return canEdit [columnIndex];
             }
         });
+        contatosJTable.setRowHeight(32);
+        contatosJTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                contatosJTableKeyReleased(evt);
+            }
+        });
         jScrollPane4.setViewportView(contatosJTable);
         if (contatosJTable.getColumnModel().getColumnCount() > 0) {
             contatosJTable.getColumnModel().getColumn(0).setResizable(false);
@@ -97,11 +108,11 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3))
@@ -129,50 +140,65 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_EnviarActionPerformed
 
+    private void contatosJTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contatosJTableKeyReleased
+        int row = contatosJTable.getSelectedRow();
+        caixaDeEntrada.setText(getContatos().get(row).getUltimaMsg());
+    }//GEN-LAST:event_contatosJTableKeyReleased
+
     public void setCaixadeEntrada(String value) {
         caixaDeEntrada.setEditable(true);
         caixaDeEntrada.setText(caixaDeEntrada.getText() + value + "\n");
         caixaDeEntrada.setEditable(false);
     }
 
-    public void readAlunosTable() {
+    public List<Contato> getContatos() {
+        return contatos;
+    }
+
+    public void setContatos(List<Contato> contatos) {
+        this.contatos = contatos;
+    }
+
+    public void contatos() {
+        try {
+            Server server = new Server("localhost", 2134);
+            Messages message = new Messages("READ");
+            message.setParam("nickName","willGolden");
+            message = server.outPut_inPut(message);
+            setContatos((List<Contato>) message.getParam("READREPLY"));
+            readAlunosTable();
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void readAlunosTable() throws IOException, ClassNotFoundException {
         DefaultTableModel modelo = (DefaultTableModel) contatosJTable.getModel();
         modelo.setNumRows(0);
-        cDAO.read().forEach((c) -> {
+        getContatos().forEach((c) -> {
             modelo.addRow(new Object[]{
-                c.getNome(),
+                c.getNome() + " : @"+c.getNickName(),
             });
         });
-
     }
 
     public void actionPerformed(ActionEvent e) {
 
     }
+    
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Chat().setVisible(true);
+            }
+        });
+    }    
 
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            UIManager.setLookAndFeel(new FlatDarkLaf());
-//        } catch (Exception ex) {
-//            System.err.println("Failed to initialize LaF");
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new Chat().setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Enviar;

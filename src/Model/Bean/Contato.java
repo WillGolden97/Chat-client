@@ -5,25 +5,25 @@
  */
 package Model.Bean;
 
+import java.io.Serializable;
+
 /**
  *
  * @author William
  */
-public class Contato {
+public class Contato implements Serializable {
     private String nome;
     private String ultimaMsg;
     private String data;
-    private int id;
+    private String nickName;
 
-    public int getId() {
-        return id;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
-    
-    
 
     public String getNome() {
         return nome;
