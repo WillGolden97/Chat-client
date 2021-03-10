@@ -198,6 +198,7 @@ public class Chat extends javax.swing.JFrame {
             List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
             String msg = "";
             caixaDeEntrada.setContentType("text/html");
+            msg="<!DOCTYPE html><html><body>";
             for (Message m : message) {
                 if (!m.getContactName().equals(nickName)) {
                     msg += "<h2>@" + m.getContactName() + " : ";
@@ -207,6 +208,7 @@ public class Chat extends javax.swing.JFrame {
                 msg += m.getDate() + "</h2>";
                 msg += m.getMessage() + "<br/><br/>";
             }
+            msg +="</body></html>"; 
             setCaixadeEntrada(msg);
         } catch (NoClassDefFoundError | IOException | ClassNotFoundException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);

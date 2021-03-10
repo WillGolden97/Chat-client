@@ -5,12 +5,10 @@
         <group>
             <file>file:/C:/Users/William/Documents/github/Chat-client/src/View/Chat.java</file>
             <file>file:/C:/Users/William/Documents/github/Chat-client/src/ConnectionFactory/Server.java</file>
-            <file>file:/C:/Users/William/Documents/github/Chat-client/src/View/Client.java</file>
-            <file>file:/C:/Users/William/Documents/github/Chat-client/src/Model/Bean/Sessao.java</file>
-            <file>file:/C:/Users/William/Documents/github/Chat-client/src/util/Status.java</file>
-            <file>file:/C:/Users/William/Documents/github/Chat-client/src/Model/Bean/Contato.java</file>
+            <file>file:/C:/Users/William/Documents/github/Chat-client/src/Model/bean/Message.java</file>
+            <file>file:/C:/Users/William/Documents/github/Chat-client/src/util/Communication.java</file>
             <file>file:/C:/Users/William/Documents/github/Chat-client/src/util/States.java</file>
-            <file>file:/C:/Users/William/Documents/github/Chat-client/src/util/Messages.java</file>
+            <file>file:/C:/Users/William/Documents/github/Chat-client/src/Model/bean/Contact.java</file>
         </group>
     </open-files>
 </project-private>
