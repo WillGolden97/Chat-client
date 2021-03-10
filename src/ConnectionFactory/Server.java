@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import util.Messages;
+import util.Communication;
 
 /**
  *
@@ -32,29 +32,29 @@ public class Server {
     
     }   
 
-    public Messages outPut_inPut(Messages m) throws IOException, ClassNotFoundException {
+    public Communication outPut_inPut(Communication m) throws IOException, ClassNotFoundException {
         socket = new Socket(address, door);          
         outPut = new ObjectOutputStream(socket.getOutputStream());
         outPut.writeObject(m);
         outPut.flush();
-        Messages messages;
+        Communication messages;
         input = new ObjectInputStream(socket.getInputStream());
-        messages = (Messages) input.readObject();
+        messages = (Communication) input.readObject();
         close();   
         return messages;        
     }
     
-    public void outPut(Messages m) throws IOException, ClassNotFoundException {
+    public void outPut(Communication m) throws IOException, ClassNotFoundException {
         socket = new Socket(address, door);  
         outPut = new ObjectOutputStream(socket.getOutputStream());
         outPut.writeObject(m);
         outPut.flush();      
     } 
     
-    public Messages inPut(Messages m) throws IOException, ClassNotFoundException {
-        Messages messages;
+    public Communication inPut(Communication m) throws IOException, ClassNotFoundException {
+        Communication messages;
         input = new ObjectInputStream(socket.getInputStream());
-        messages = (Messages) input.readObject();
+        messages = (Communication) input.readObject();
         close();   
         return messages;        
     }    

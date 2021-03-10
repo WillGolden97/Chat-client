@@ -5,26 +5,27 @@
  */
 package View;
 
+import Model.bean.Contact;
 import ConnectionFactory.Server;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.table.DefaultTableModel;
-import Model.Bean.Contato;
+import Model.bean.Message;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
-import util.Messages;
+import static javax.swing.event.HyperlinkEvent.EventType.ACTIVATED;
+import util.Communication;
 
 /**
  *
  * @author William
  */
-public class Chat extends javax.swing.JFrame implements ActionListener {
+public class Chat extends javax.swing.JFrame {
 
-    private List<Contato> contatos;
+    private List<Contact> contatos;
+    private final String nickName = "willGolden";
 
     public Chat() {
         initComponents();
@@ -45,13 +46,14 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        caixaDeEntrada = new javax.swing.JTextArea();
+        caixaDeEntrada = new javax.swing.JEditorPane();
         jScrollPane4 = new javax.swing.JScrollPane();
         contatosJTable = new javax.swing.JTable();
 
         jTextField1.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(550, 400));
 
         Enviar.setText("ENVIAR");
         Enviar.addActionListener(new java.awt.event.ActionListener() {
@@ -66,10 +68,11 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
         jTextArea1.setAutoscrolls(false);
         jScrollPane1.setViewportView(jTextArea1);
 
-        caixaDeEntrada.setEditable(false);
-        caixaDeEntrada.setColumns(20);
-        caixaDeEntrada.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        caixaDeEntrada.setRows(5);
+        caixaDeEntrada.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+                caixaDeEntradaHyperlinkUpdate(evt);
+            }
+        });
         jScrollPane3.setViewportView(caixaDeEntrada);
 
         contatosJTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -92,6 +95,11 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
             }
         });
         contatosJTable.setRowHeight(32);
+        contatosJTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                contatosJTableMouseReleased(evt);
+            }
+        });
         contatosJTable.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 contatosJTableKeyReleased(evt);
@@ -112,7 +120,7 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3))
@@ -125,7 +133,7 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(Enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -137,55 +145,96 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_EnviarActionPerformed
 
     private void contatosJTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contatosJTableKeyReleased
-        int row = contatosJTable.getSelectedRow();
-        caixaDeEntrada.setText(getContatos().get(row).getUltimaMsg());
+        Mensagens();
     }//GEN-LAST:event_contatosJTableKeyReleased
 
-    public void setCaixadeEntrada(String value) {
+    private void caixaDeEntradaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_caixaDeEntradaHyperlinkUpdate
+        if (evt.getEventType() == ACTIVATED) {
+            try {
+                Runtime.getRuntime().exec("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe \"" + evt.getURL() + "\"");
+            } catch (IOException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_caixaDeEntradaHyperlinkUpdate
+
+    private void contatosJTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contatosJTableMouseReleased
+        Mensagens();
+    }//GEN-LAST:event_contatosJTableMouseReleased
+
+    public void addCaixadeEntrada(String value) {
         caixaDeEntrada.setEditable(true);
         caixaDeEntrada.setText(caixaDeEntrada.getText() + value + "\n");
         caixaDeEntrada.setEditable(false);
     }
 
-    public List<Contato> getContatos() {
+    public void setCaixadeEntrada(String value) {
+        caixaDeEntrada.setEditable(true);
+        caixaDeEntrada.setText(value + "\n");
+        caixaDeEntrada.setEditable(false);
+    }
+
+    public List<Contact> getContatos() {
         return contatos;
     }
 
-    public void setContatos(List<Contato> contatos) {
+    public void setContatos(List<Contact> contatos) {
         this.contatos = contatos;
+    }
+
+    public void Mensagens() {
+        int row = contatosJTable.getSelectedRow();
+        String contactNickName = contatos.get(row).getNickName();
+        try {
+            Server server = new Server("localhost", 2134);
+            Communication communication = new Communication("MESSAGE");
+            communication.setParam("nickName", nickName);
+            communication.setParam("contactNickName", contactNickName);
+            communication = server.outPut_inPut(communication);
+            List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
+            String msg = "";
+            caixaDeEntrada.setContentType("text/html");
+            for (Message m : message) {
+                if (!m.getContactName().equals(nickName)) {
+                    msg += "<h2>@" + m.getContactName() + " : ";
+                } else {
+                    msg += "<h2>@reply : ";
+                }
+                msg += m.getDate() + "</h2>";
+                msg += m.getMessage() + "<br/><br/>";
+            }
+            setCaixadeEntrada(msg);
+        } catch (NoClassDefFoundError | IOException | ClassNotFoundException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void contatos() {
         try {
             Server server = new Server("localhost", 2134);
-            Messages message = new Messages("READ");
-            message.setParam("nickName","willGolden");
+            Communication message = new Communication("READ");
+            message.setParam("nickName", nickName);
             message = server.outPut_inPut(message);
-            setContatos((List<Contato>) message.getParam("READREPLY"));
-            readAlunosTable();
+            setContatos((List<Contact>) message.getParam("READREPLY"));
+            readContatosTable();
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void readAlunosTable() throws IOException, ClassNotFoundException {
+    public void readContatosTable() throws IOException, ClassNotFoundException {
         DefaultTableModel modelo = (DefaultTableModel) contatosJTable.getModel();
         modelo.setNumRows(0);
         getContatos().forEach((c) -> {
             modelo.addRow(new Object[]{
-                c.getNome() + " : @"+c.getNickName(),
-            });
+                c.getNome() + " : @" + c.getNickName(),});
         });
     }
 
-    public void actionPerformed(ActionEvent e) {
-
-    }
-    
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
@@ -197,12 +246,12 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
                 new Chat().setVisible(true);
             }
         });
-    }    
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Enviar;
-    private javax.swing.JTextArea caixaDeEntrada;
+    private javax.swing.JEditorPane caixaDeEntrada;
     private javax.swing.JTable contatosJTable;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
@@ -210,4 +259,5 @@ public class Chat extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
 }
