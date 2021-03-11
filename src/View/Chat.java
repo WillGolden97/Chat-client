@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import Model.bean.Message;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,11 +26,13 @@ import util.Communication;
 public class Chat extends javax.swing.JFrame {
 
     private List<Contact> contatos;
+    private List<String> campoTextos = new ArrayList<>();
     private final String nickName = "willGolden";
 
     public Chat() {
         initComponents();
         contatos();
+        send.setEnabled(false);
     }
 
     /**
@@ -42,9 +45,9 @@ public class Chat extends javax.swing.JFrame {
     private void initComponents() {
 
         jTextField1 = new javax.swing.JTextField();
-        Enviar = new javax.swing.JButton();
+        send = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        campoMensagem = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         caixaDeEntrada = new javax.swing.JEditorPane();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -53,20 +56,33 @@ public class Chat extends javax.swing.JFrame {
         jTextField1.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(550, 400));
-
-        Enviar.setText("ENVIAR");
-        Enviar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EnviarActionPerformed(evt);
+        setMaximumSize(new java.awt.Dimension(3254353, 400));
+        setMinimumSize(new java.awt.Dimension(500, 400));
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jTextArea1.setRows(5);
-        jTextArea1.setAutoscrolls(false);
-        jScrollPane1.setViewportView(jTextArea1);
+        send.setText("ENVIAR");
+        send.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendActionPerformed(evt);
+            }
+        });
+
+        campoMensagem.setColumns(20);
+        campoMensagem.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        campoMensagem.setRows(5);
+        campoMensagem.setAutoscrolls(false);
+        campoMensagem.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                campoMensagemKeyReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(campoMensagem);
 
         caixaDeEntrada.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
             public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
@@ -122,7 +138,7 @@ public class Chat extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3))
                 .addGap(10, 10, 10))
         );
@@ -136,7 +152,7 @@ public class Chat extends javax.swing.JFrame {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(10, 10, 10))
         );
@@ -144,9 +160,16 @@ public class Chat extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
-
-    }//GEN-LAST:event_EnviarActionPerformed
+    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
+        try {
+            enviarMensagem();
+            Mensagens();            
+        } catch (IOException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_sendActionPerformed
 
     private void contatosJTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contatosJTableKeyReleased
         Mensagens();
@@ -155,7 +178,7 @@ public class Chat extends javax.swing.JFrame {
     private void caixaDeEntradaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_caixaDeEntradaHyperlinkUpdate
         if (evt.getEventType() == ACTIVATED) {
             try {
-                Runtime.getRuntime().exec("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe \"" + evt.getURL() + "\"");
+                Runtime.getRuntime().exec("explorer.exe \"" + evt.getURL() + "\"");
             } catch (IOException ex) {
                 Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -165,6 +188,23 @@ public class Chat extends javax.swing.JFrame {
     private void contatosJTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contatosJTableMouseReleased
         Mensagens();
     }//GEN-LAST:event_contatosJTableMouseReleased
+
+    private void campoMensagemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoMensagemKeyReleased
+        int row = contatosJTable.getSelectedRow();
+        if (!campoMensagem.getText().equals("")) {
+            send.setEnabled(true);
+        } else if (send.isEnabled()) {
+            send.setEnabled(false);
+        }
+        campoTextos.set(row, campoMensagem.getText());
+    }//GEN-LAST:event_campoMensagemKeyReleased
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        try {
+            Mensagens();
+        } catch (ArrayIndexOutOfBoundsException ex) {
+        }
+    }//GEN-LAST:event_formWindowGainedFocus
 
     public void addCaixadeEntrada(String value) {
         caixaDeEntrada.setEditable(true);
@@ -186,31 +226,45 @@ public class Chat extends javax.swing.JFrame {
         this.contatos = contatos;
     }
 
-    public void Mensagens() {
+    public void enviarMensagem() throws IOException, ClassNotFoundException {
+        Server server = new Server();
         int row = contatosJTable.getSelectedRow();
-        String contactNickName = contatos.get(row).getNickName();
+        String Message = campoMensagem.getText();
+        String From = nickName;
+        String To = getContatos().get(row).getNickName();
+        Message msg = new Message(Message, From, To);
+        Communication communication = new Communication("CREATEMESSAGE");
+        communication.setParam("SENDEDMESSAGE", msg);
+        communication = server.outPut_inPut(communication);
+        System.out.println(communication.getParam("STATUSMESSAGE"));
+    }
+
+    public void Mensagens() {
         try {
-            Server server = new Server("localhost", 2134);
+
+            int row = contatosJTable.getSelectedRow();
+            campoMensagem.setText(campoTextos.get(row));
+            String contactNickName = getContatos().get(row).getNickName();
+            Server server = new Server();
             Communication communication = new Communication("MESSAGE");
             communication.setParam("nickName", nickName);
             communication.setParam("contactNickName", contactNickName);
+            setTitle("Chat - "+nickName+" - Contact - " + getContatos().get(row).getNome() + " : @" + contactNickName);
             communication = server.outPut_inPut(communication);
             List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
             String msg = "";
             caixaDeEntrada.setContentType("text/html");
-            msg="<!DOCTYPE html><html><body>";
+            msg = "<!DOCTYPE html><html><head></head><body>";
             for (Message m : message) {
-                if (!m.getContactName().equals(nickName)) {
-                    msg += "<h2>@" + m.getContactName() + " : ";
+                if (!m.getFrom().equals(nickName)) {
+                    msg += "<div style=\"background-color:#282a36;margin:5px;padding:5px 5px 5px 5px;\" ><h3 style=\"margin-top:0px;font-size:8px;\">@" + m.getFrom() + " :  </h3>" + m.getMessage() + "<p style=\"margin-top:-10px;\" align=\"right\">" + m.getDate() + "</p></div>";
                 } else {
-                    msg += "<h2>@reply : ";
+                    msg += "<div style=\"background-color:#383a59;margin:5px;padding:5px 5px 5px 5px;\" >" + m.getMessage() + "<p style=\"margin-top:-10px;\" align=\"right\">" + m.getDate() + "</p></div>";
                 }
-                msg += m.getDate() + "</h2>";
-                msg += m.getMessage() + "<br/><br/>";
             }
-            msg +="</body></html>"; 
+            msg += "</body></html>";
             setCaixadeEntrada(msg);
-        } catch (NoClassDefFoundError | IOException | ClassNotFoundException ex) {
+        } catch (NullPointerException | NoClassDefFoundError | IOException | ClassNotFoundException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -232,6 +286,7 @@ public class Chat extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) contatosJTable.getModel();
         modelo.setNumRows(0);
         getContatos().forEach((c) -> {
+            campoTextos.add("");
             modelo.addRow(new Object[]{
                 c.getNome() + " : @" + c.getNickName(),});
         });
@@ -252,14 +307,14 @@ public class Chat extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Enviar;
     private javax.swing.JEditorPane caixaDeEntrada;
+    private javax.swing.JTextArea campoMensagem;
     private javax.swing.JTable contatosJTable;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton send;
     // End of variables declaration//GEN-END:variables
 
 }

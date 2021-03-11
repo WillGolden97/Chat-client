@@ -59,7 +59,7 @@ public class Server {
         return messages;        
     }    
 
-    private void close() throws IOException, ClassNotFoundException {
+    public void close() throws IOException, ClassNotFoundException {
         outPut.close();
         input.close();
         socket.close();
