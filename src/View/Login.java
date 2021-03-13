@@ -8,6 +8,8 @@ package View;
 import ConnectionFactory.Server;
 import Model.bean.Authenticated;
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -28,6 +30,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() throws IOException, ClassNotFoundException {
         initComponents();
+        setIconTop ();
         setLocation(500,250);
     }
 
@@ -73,7 +76,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("@");
 
@@ -119,11 +122,10 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(messageLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(logar)
-                .addContainerGap())
+                .addGap(4, 4, 4)
+                .addComponent(messageLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -169,15 +171,18 @@ public class Login extends javax.swing.JFrame {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (replyLogin.equals("OK")) {
-            System.out.println("sucesso ! " + nickName.getText() + replyLogin);
             Authenticated auth = new Authenticated();
             auth.setLogin(nickName.getText());
             new Chat().setVisible(true);
+            setVisible(false);
         } else {
             messageLogin.setText(replyLogin);
         }
     }
 
+    private void setIconTop () {
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Images/chat.png")));
+    }     
     /**
      * @param args the command line arguments
      */
