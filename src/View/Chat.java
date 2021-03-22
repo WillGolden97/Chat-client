@@ -1,24 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
 import Model.bean.Contact;
 import ConnectionFactory.Server;
+import Model.bean.Arquivos;
 import Model.bean.Authenticated;
 import javax.swing.table.DefaultTableModel;
 import Model.bean.Message;
-import java.awt.Image;
+import Model.bean.SendMessage;
+import Model.bean.TreatFiles;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Icon;
-import javax.swing.JEditorPane;
+import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
 import static javax.swing.event.HyperlinkEvent.EventType.ACTIVATED;
 import util.Communication;
 
@@ -31,8 +28,11 @@ public final class Chat extends javax.swing.JFrame {
     private Authenticated auth = new Authenticated();
     private List<Contact> contatos;
     private List<String> campoTextos = new ArrayList<>();
-
     private String nickName = auth.getLogin();
+    private TreatFiles currentFile = new TreatFiles();
+    private SendMessage sendMsg;
+    private SelectorFile sf = new SelectorFile();
+    private boolean selectedFile;
 
     public Chat() {
         initComponents();
@@ -43,20 +43,7 @@ public final class Chat extends javax.swing.JFrame {
         componentsToggle(false);
         setLocation(400, 150);
     }
-
-    public void componentsToggle (boolean b) {
-        titleChat.setVisible(b);
-        characters.setVisible(b);
-        send.setVisible(b);
-        caixaDeEntradaScroll.setVisible(b);
-        campoMensagemScroll.setVisible(b);  
-        emoji.setVisible(b);
-        file.setVisible(b);
-        chatIcon.setVisible(!b);
-    }
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    
     private void initComponents() {
 
         jTextField1 = new javax.swing.JTextField();
@@ -66,19 +53,20 @@ public final class Chat extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         contatosJTable = new javax.swing.JTable();
         characters = new javax.swing.JLabel();
-        campoMensagemScroll = new javax.swing.JScrollPane();
-        campoMensagem = new javax.swing.JTextArea();
+        campoMensagemScroll = new javax.swing.JScrollPane( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        campoMensagem = new javax.swing.JTextPane();
         titleChat = new javax.swing.JLabel();
         chatIcon = new javax.swing.JLabel();
         emoji = new javax.swing.JLabel();
         file = new javax.swing.JLabel();
+        sendMessageLabel = new javax.swing.JLabel();
 
         jTextField1.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(600, 600));
         setMinimumSize(new java.awt.Dimension(520, 400));
-        setPreferredSize(new java.awt.Dimension(520, 400));
+        setResizable(false);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
@@ -143,12 +131,6 @@ public final class Chat extends javax.swing.JFrame {
         characters.setText("000/500");
         characters.setToolTipText("");
 
-        campoMensagem.setColumns(20);
-        campoMensagem.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        campoMensagem.setLineWrap(true);
-        campoMensagem.setRows(5);
-        campoMensagem.setAutoscrolls(false);
-        campoMensagem.setMaximumSize(new java.awt.Dimension(300, 2147483647));
         campoMensagem.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 campoMensagemKeyReleased(evt);
@@ -157,7 +139,10 @@ public final class Chat extends javax.swing.JFrame {
                 campoMensagemKeyTyped(evt);
             }
         });
-        campoMensagemScroll.setViewportView(campoMensagem);
+
+        campoMensagemScroll = new javax.swing.JScrollPane(campoMensagem, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
 
         titleChat.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         titleChat.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -170,6 +155,12 @@ public final class Chat extends javax.swing.JFrame {
 
         file.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         file.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/file.png"))); // NOI18N
+        file.setToolTipText("nome do arquivo");
+        file.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fileMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -184,15 +175,18 @@ public final class Chat extends javax.swing.JFrame {
                             .addComponent(emoji, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                             .addComponent(file, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, 0)
-                        .addComponent(campoMensagemScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                        .addComponent(campoMensagemScroll)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(characters, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(7, 7, 7))
                             .addComponent(send, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(caixaDeEntradaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(titleChat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chatIcon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(chatIcon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(titleChat, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(sendMessageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(caixaDeEntradaScroll)))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {emoji, file});
@@ -204,7 +198,9 @@ public final class Chat extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(titleChat, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(titleChat, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sendMessageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, 0)
                         .addComponent(caixaDeEntradaScroll)
                         .addGap(0, 0, 0)
@@ -223,11 +219,32 @@ public final class Chat extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }  
+    
+    public void componentsToggle(boolean b) {
+        titleChat.setVisible(b);
+        characters.setVisible(b);
+        send.setVisible(b);
+        caixaDeEntradaScroll.setVisible(b);
+        campoMensagemScroll.setVisible(b);
+        emoji.setVisible(b);
+        file.setVisible(b);
+        chatIcon.setVisible(!b);
+    }
+
+    public TreatFiles getCurrentFile() {
+        return currentFile;
+    }
+
+    public void setCurrentFile(TreatFiles currentFile) {
+        this.currentFile = currentFile;
+    }
+                 
 
     private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
         try {
             enviarMensagem();
+            clearCurrenteFile();
             setCampoMensagem("");
             campoMensagem.setText("");
             send.setEnabled(false);
@@ -239,27 +256,98 @@ public final class Chat extends javax.swing.JFrame {
 
     private void contatosJTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contatosJTableKeyReleased
         Mensagens();
-        componentsToggle(true);  
+        int row = contatosJTable.getSelectedRow();
+        campoMensagem.setText(campoTextos.get(row));
+        clearCurrenteFile();
+        componentsToggle(true);
     }//GEN-LAST:event_contatosJTableKeyReleased
 
     private void caixaDeEntradaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_caixaDeEntradaHyperlinkUpdate
         if (evt.getEventType() == ACTIVATED) {
             try {
-                Runtime.getRuntime().exec("explorer.exe \"" + evt.getURL() + "\"");
+                // Abrir conexão socket
+                Server server = new Server();
+                // Instanciando objeto de comunicação com o servidor
+                Communication communication = new Communication("DOWNLOADFILE");
+                //Instanciando objeto que receber propriedade dos arquivo
+                Arquivos arquivos;
+                //Instanciando objeto que manipula arquivos
+                TreatFiles tf = new TreatFiles();
+                //Coletando nome hash do arquivo
+                String hashName = ("" + evt.getURL()).split("/")[1];
+                // Setando valor como paramento para coleta com o BD 
+                communication.setParam("nomeHash", hashName);
+                // Enviado comunicação parametrada, para servidor
+                communication = server.outPut_inPut(communication);
+                // Coletando informações retornada do servidor
+                arquivos = (Arquivos) communication.getParam("DOWNLOADFILEREPLY");
+                // Setando valor retornado do para o objeto de manipulação de arquivos
+                tf.setNomeArquivo(arquivos.getNomeArquivo());
+                String[] spliPoint = hashName.split("[.]");
+                String format = spliPoint[spliPoint.length - 1];
+                tf.setHashArquivo(arquivos.getHashArquivo());
+                tf.setArquivo(arquivos.getArquivo());
+                // Salvando arquivo em diretorio responsável pelo download de arquivo do cliente
+                tf.saveRenomedFile();
+                // Abrindo arquivo
+                if (!isImage(format)) {
+                    Runtime.getRuntime().exec("explorer.exe \"" + tf.getPathName() + "\"");
+                } else {
+                    Mensagens();
+                }
             } catch (IOException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_caixaDeEntradaHyperlinkUpdate
 
+    private boolean isImage(String format) {
+        return format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge") || format.toLowerCase().equals("gif");
+    }
+
+
     private void contatosJTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contatosJTableMouseReleased
         Mensagens();
-        componentsToggle(true);          
+        int row = contatosJTable.getSelectedRow();
+        campoMensagem.setText(campoTextos.get(row));
+        clearCurrenteFile();
+        componentsToggle(true);
     }//GEN-LAST:event_contatosJTableMouseReleased
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        try {
+            Mensagens();
+            try {
+                this.currentFile = sf.getCurrentFile();
+                file.setToolTipText(currentFile.getFileName() + "." + currentFile.getFileFormat());
+                file.setIcon(new ImageIcon(getClass().getResource("/Images/attachedFile.png")));
+                this.selectedFile = true;
+                send.setEnabled(true);
+            } catch (NullPointerException ex) {
+                file.setIcon(new ImageIcon(getClass().getResource("/Images/file.png")));
+                currentFile = new TreatFiles();
+            } catch (IOException ex) {
+                System.out.println("Arquivo não selecionado : " + ex);
+            }
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            System.out.println(ex);
+        }
+    }//GEN-LAST:event_formWindowGainedFocus
+
+    private void fileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileMouseClicked
+        sf = new SelectorFile();
+        sf.toggleSelectorWindows(true);
+    }//GEN-LAST:event_fileMouseClicked
+
+    private void campoMensagemKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoMensagemKeyTyped
+        setCampoMensagem(campoMensagem.getText());
+    }//GEN-LAST:event_campoMensagemKeyTyped
 
     private void campoMensagemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoMensagemKeyReleased
         int count = campoMensagem.getText().length();
-        if (count > 0 && count <= 500) {
+        if (count > 0 && count <= 500 || selectedFile) {
             send.setEnabled(true);
         } else if (send.isEnabled()) {
             send.setEnabled(false);
@@ -267,16 +355,11 @@ public final class Chat extends javax.swing.JFrame {
         characters.setText(count + "/500");
     }//GEN-LAST:event_campoMensagemKeyReleased
 
-    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
-        try {
-            Mensagens();
-        } catch (ArrayIndexOutOfBoundsException ex) {
-        }
-    }//GEN-LAST:event_formWindowGainedFocus
-
-    private void campoMensagemKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoMensagemKeyTyped
-        setCampoMensagem(campoMensagem.getText());
-    }//GEN-LAST:event_campoMensagemKeyTyped
+    private void clearCurrenteFile() {
+        sf = new SelectorFile();
+        this.selectedFile = false;
+        file.setIcon(new ImageIcon(getClass().getResource("/Images/file.png")));
+    }
 
     private void setCampoMensagem(String value) {
         int row = contatosJTable.getSelectedRow();
@@ -304,40 +387,42 @@ public final class Chat extends javax.swing.JFrame {
     }
 
     public void enviarMensagem() throws IOException, ClassNotFoundException {
-        Server server = new Server("localhost", 2134);
         int row = contatosJTable.getSelectedRow();
         String Message = campoMensagem.getText();
         String From = nickName;
         String To = getContatos().get(row).getNickName();
         Message msg = new Message(Message, From, To);
-        Communication communication = new Communication("CREATEMESSAGE");
-        communication.setParam("SENDEDMESSAGE", msg);
-        communication = server.outPut_inPut(communication);
-        System.out.println(communication.getParam("STATUSMESSAGE"));
+        sendMsg = new SendMessage(msg, currentFile);
+        Thread t = new Thread(sendMsg);
+        t.start();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public void Mensagens() {      
+    public void Mensagens() {
         try {
             int row = contatosJTable.getSelectedRow();
-            campoMensagem.setText(campoTextos.get(row));
             String contactNickName = getContatos().get(row).getNickName();
             Server server = new Server();
             Communication communication = new Communication("MESSAGE");
             communication.setParam("nickName", nickName);
             communication.setParam("contactNickName", contactNickName);
             setTitle("Chat - @" + nickName + " - Contact - " + getContatos().get(row).getNome() + " : @" + contactNickName);
-            titleChat.setText("  @"+getContatos().get(row).getNickName());
+            titleChat.setText("  @" + getContatos().get(row).getNickName());
             communication = server.outPut_inPut(communication);
             List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
-            String msg = "";
+            String msg;
             caixaDeEntrada.setContentType("text/html");
             HtmlContent html = new HtmlContent();
-            msg = "<!DOCTYPE html><html><head></head><body>";
+            msg = "<!DOCTYPE html><html><head><link type=\"text/css\" href=\"/style.css\" rel=\"stylesheet\"></head><body>";
             for (Message m : message) {
                 if (m.getFrom().equals(nickName)) {
-                    msg += html.HtmlReplyMsg("#383a59", m.getMessage(), m.getDate());
+                    msg += html.htmlMsg("#383a59", "left", m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate());
                 } else {
-                    msg += html.HtmlContactMsg("#282a36", m.getFrom(), m.getMessage(), m.getDate());
+                    msg += html.htmlMsg("#282a36", "right", m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate());
                 }
             }
             msg += "</body></html>";
@@ -374,24 +459,10 @@ public final class Chat extends javax.swing.JFrame {
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Images/chat.png")));
     }
 
-//    public static void main(String args[]) {
-//        try {
-//            UIManager.setLookAndFeel(new FlatDarkLaf());
-//        } catch (Exception ex) {
-//            System.err.println("Failed to initialize LaF");
-//        }
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new Chat().setVisible(true);
-//            }
-//        });
-//    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane caixaDeEntrada;
     private javax.swing.JScrollPane caixaDeEntradaScroll;
-    private javax.swing.JTextArea campoMensagem;
+    private javax.swing.JTextPane campoMensagem;
     private javax.swing.JScrollPane campoMensagemScroll;
     private javax.swing.JLabel characters;
     private javax.swing.JLabel chatIcon;
@@ -401,6 +472,7 @@ public final class Chat extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JButton send;
+    private javax.swing.JLabel sendMessageLabel;
     private javax.swing.JLabel titleChat;
     // End of variables declaration//GEN-END:variables
 
