@@ -43,7 +43,9 @@ public final class Chat extends javax.swing.JFrame {
         componentsToggle(false);
         setLocation(400, 150);
     }
-    
+
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">   
     private void initComponents() {
 
         jTextField1 = new javax.swing.JTextField();
@@ -219,7 +221,7 @@ public final class Chat extends javax.swing.JFrame {
         );
 
         pack();
-    }  
+    }  // </editor-fold>   
     
     public void componentsToggle(boolean b) {
         titleChat.setVisible(b);
