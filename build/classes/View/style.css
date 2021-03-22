@@ -1,0 +1,7 @@
+body {
+	background-color: black;
+}
+.reply {
+	float:right;
+        padding-bottom:10px;
+}
