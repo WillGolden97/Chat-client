@@ -43,9 +43,9 @@ public final class Chat extends javax.swing.JFrame {
         componentsToggle(false);
         setLocation(400, 150);
     }
-
+    
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">   
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">      
     private void initComponents() {
 
         jTextField1 = new javax.swing.JTextField();
@@ -55,8 +55,7 @@ public final class Chat extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         contatosJTable = new javax.swing.JTable();
         characters = new javax.swing.JLabel();
-        campoMensagemScroll = new javax.swing.JScrollPane( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        campoMensagemScroll = new javax.swing.JScrollPane();
         campoMensagem = new javax.swing.JTextPane();
         titleChat = new javax.swing.JLabel();
         chatIcon = new javax.swing.JLabel();
@@ -141,7 +140,7 @@ public final class Chat extends javax.swing.JFrame {
                 campoMensagemKeyTyped(evt);
             }
         });
-
+        campoMensagemScroll.setViewportView(campoMensagem);
         campoMensagemScroll = new javax.swing.JScrollPane(campoMensagem, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
