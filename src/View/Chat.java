@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import static javax.swing.event.HyperlinkEvent.EventType.ACTIVATED;
 import util.Communication;
+
 /**
  *
  * @author William
@@ -36,7 +37,7 @@ public class Chat extends javax.swing.JFrame {
     private SendMessage sendMsg;
     private SelectorFile sf = new SelectorFile();
     private boolean selectedFile;
-    
+
     public Chat() {
         initComponents();
         send.setEnabled(false);
@@ -44,7 +45,7 @@ public class Chat extends javax.swing.JFrame {
         contatos();
         setIconTop();
         componentsToggle(false);
-        setLocation(400, 150);        
+        setLocation(400, 150);
     }
 
     public void componentsToggle(boolean b) {
@@ -65,7 +66,7 @@ public class Chat extends javax.swing.JFrame {
     public void setCurrentFile(TreatFiles currentFile) {
         this.currentFile = currentFile;
     }
-          
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -206,13 +207,12 @@ public class Chat extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(titleChat, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(sendMessageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, 0)
-                        .addComponent(caixaDeEntradaScroll)
+                        .addComponent(caixaDeEntradaScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -246,50 +246,62 @@ public class Chat extends javax.swing.JFrame {
 
     private void caixaDeEntradaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_caixaDeEntradaHyperlinkUpdate
         if (evt.getEventType() == ACTIVATED) {
-            try {
-                // Abrir conexão socket
-                Server server = new Server();
-                // Instanciando objeto de comunicação com o servidor
-                Communication communication = new Communication("DOWNLOADFILE");
-                //Instanciando objeto que receber propriedade dos arquivo
-                Arquivos arquivos;
-                //Instanciando objeto que manipula arquivos
-                TreatFiles tf = new TreatFiles();
-                //Coletando nome hash do arquivo
-                String hashName = ("" + evt.getURL()).split("/")[1];
-                // Setando valor como paramento para coleta com o BD
-                communication.setParam("nomeHash", hashName);
-                // Enviado comunicação parametrada, para servidor
-                communication = server.outPut_inPut(communication);
-                // Coletando informações retornada do servidor
-                arquivos = (Arquivos) communication.getParam("DOWNLOADFILEREPLY");
-                // Setando valor retornado do para o objeto de manipulação de arquivos
-                tf.setNomeArquivo(arquivos.getNomeArquivo());
-                String[] spliPoint = hashName.split("[.]");
-                String format = spliPoint[spliPoint.length - 1];
-                tf.setHashArquivo(arquivos.getHashArquivo());
-                tf.setArquivo(arquivos.getArquivo());
-                // Salvando arquivo em diretorio responsável pelo download de arquivo do cliente
-                tf.saveRenomedFile();
-                // Abrindo arquivo
-                if (!isImage(format)) {
-                    Runtime.getRuntime().exec("explorer.exe \"" + tf.getPathName() + "\"");
-                } else {
-                    Mensagens();
+            String hashName = ("" + evt.getURL()).split("/")[1];
+            String pathName = downloadArquivo(hashName);
+            
+            if (!isImage(hashName)) {
+                try {
+                    Runtime.getRuntime().exec("explorer.exe \"" + pathName + "\"");
+                } catch (IOException ex) {
+                    Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            } else {
+                Mensagens();
             }
         }
     }//GEN-LAST:event_caixaDeEntradaHyperlinkUpdate
 
-    private boolean isImage(String format) {
+    private String downloadArquivo(String hash) {
+        //Instanciando objeto que manipula arquivos
+        TreatFiles tf = new TreatFiles();
+        String pathName = "";
+        try {
+            // Abrir conexão socket
+            Server server = new Server();
+            // Instanciando objeto de comunicação com o servidor
+            Communication communication = new Communication("DOWNLOADFILE");
+            //Instanciando objeto que receber propriedade dos arquivo
+            Arquivos arquivos;
+
+            //Coletando nome hash do arquivo
+            String hashName = hash;
+            // Setando valor como paramento para coleta com o BD
+            communication.setParam("nomeHash", hashName);
+            // Enviado comunicação parametrada, para servidor
+            communication = server.outPut_inPut(communication);
+            // Coletando informações retornada do servidor
+            arquivos = (Arquivos) communication.getParam("DOWNLOADFILEREPLY");
+            // Setando valor retornado do para o objeto de manipulação de arquivos
+            tf.setNomeArquivo(arquivos.getNomeArquivo());
+            tf.setHashArquivo(arquivos.getHashArquivo());
+            tf.setArquivo(arquivos.getArquivo());
+            // Salvando arquivo em diretorio responsável pelo download de arquivo do cliente
+            tf.saveRenomedFile();
+            // Abrindo arquivo
+            pathName = tf.getPathName();
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pathName;
+    }
+
+    private boolean isImage(String fileName) {
+        String[] spliPoint = fileName.split("[.]");
+        String format = spliPoint[spliPoint.length - 1];
         return format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge") || format.toLowerCase().equals("gif");
     }
-    
-    
+
+
     private void contatosJTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contatosJTableMouseReleased
         Mensagens();
         int row = contatosJTable.getSelectedRow();
@@ -344,8 +356,7 @@ public class Chat extends javax.swing.JFrame {
             System.out.println(ex);
         }
     }//GEN-LAST:event_formWindowGainedFocus
-                                     
-                               
+
     private void clearCurrenteFile() {
         sf = new SelectorFile();
         this.selectedFile = false;

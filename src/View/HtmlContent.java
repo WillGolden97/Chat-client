@@ -38,6 +38,10 @@ public class HtmlContent {
         return format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge") || format.toLowerCase().equals("gif");
     }
 
+    private boolean isAudio(String format) {
+        return format.toLowerCase().equals("ogg") || format.toLowerCase().equals("wav") || format.toLowerCase().equals("mp3");
+    }
+
     private boolean isFile(String name, String format) {
         boolean isFile = new File("Files\\Received\\" + format + "\\" + name).isFile();
         return isFile;
@@ -57,9 +61,12 @@ public class HtmlContent {
             } else {
                 html = "<div style=\"background-color:rgb(90,90,127);border:1px solid white;\"> <img src='" + filePath + "/" + name + "' width=\"240\" /> </div>";
             }
+        } else if (isAudio(format)) {
+            html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0, 20) + "..." : name));
+            html = html.replace("#img", "<img src='" + file + "/audioIcon.png' height=\"16\" />");
         } else {
             html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0, 20) + "..." : name));
-            html = html.replace("#img", "<img src='" + file + "/filesIcon.png' width=\"16\" />");
+            html = html.replace("#img", "<img src='" + file + "/filesIcon.png' height=\"16\" />");
         }
         return html;
     }
