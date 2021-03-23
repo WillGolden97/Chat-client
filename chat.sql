@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 12-Mar-2021 às 00:16
+-- Tempo de geração: 22-Mar-2021 às 05:03
 -- Versão do servidor: 10.4.17-MariaDB
 -- versão do PHP: 8.0.2
 
@@ -25,10 +25,45 @@ DELIMITER $$
 --
 -- Procedimentos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Contatos` (IN `userNickName` VARCHAR(20))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `contatos` (IN `userNickName` VARCHAR(20))  NO SQL
 select (SELECT clientes.nickName FROM clientes WHERE clientes.nickName = IF(Messages.MsgTo = userNickName, Messages.MsgFrom,Messages.MsgTo)) as nickNameContato, (SELECT clientes.nomeCliente FROM clientes WHERE clientes.nickName = IF(Messages.MsgTo = userNickName, Messages.MsgFrom,Messages.MsgTo)) as Contato, Messages.Messages, messages.Date FROM messages INNER JOIN clientes on messages.MsgFrom = clientes.nickName OR messages.MsgTo = clientes.nickName WHERE Messages.MsgTo = userNickName OR Messages.MsgFrom = userNickName GROUP by Contato ORDER BY messages.Date DESC$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `countAnexos` (IN `nickName` VARCHAR(20), IN `contactNickName` VARCHAR(20))  NO SQL
+SELECT count(Messages.Idmessage) AS countAnexos From messages INNER JOIN anexo on anexo.mensagem = messages.Idmessage WHERE messages.MsgFrom = contactNickName AND Messages.MsgTo = nickName OR messages.MsgFrom = nickName AND Messages.MsgTo = contactNickName$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `messages` (IN `nickName` VARCHAR(20), IN `contactNickName` VARCHAR(20))  NO SQL
+SELECT *, DATE_FORMAT(messages.date, '%H:%i') as HourMsg From messages WHERE messages.MsgFrom = contactNickName AND Messages.MsgTo = nickName OR messages.MsgFrom = nickName AND Messages.MsgTo = contactNickName ORDER BY DATE_FORMAT(messages.date, '%d/%m/%Y %H:%i:%s') ASC$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `messagesWithAnexos` (IN `nickName` VARCHAR(20), IN `contactNickName` VARCHAR(20))  NO SQL
+SELECT Messages.Idmessage, "" as messages ,Messages.MsgFrom,"",Messages.Date as dataOrd, DATE_FORMAT(messages.date, '%H:%i') as HourMsg, arquivos.nome AS NomeArquivo, arquivos.nomeHash AS hashArquivo From messages INNER JOIN anexo on anexo.mensagem = Messages.Idmessage INNER JOIN arquivos ON arquivos.nomeHash = anexo.arquivo WHERE messages.MsgFrom = contactNickName AND Messages.MsgTo = nickName OR messages.MsgFrom = nickName AND Messages.MsgTo = contactNickName 
+UNION
+SELECT Messages.Idmessage, Messages.Messages, Messages.MsgFrom,Messages.MsgTo, Messages.Date as dataOrd, DATE_FORMAT(messages.date, '%H:%i') as HourMsg, "" AS NomeArquivo, "" AS hashArquivo From messages WHERE messages.MsgFrom = contactNickName AND Messages.MsgTo = nickName AND messages.Messages != "" OR messages.MsgFrom = nickName AND Messages.MsgTo = contactNickName AND messages.Messages != "" ORDER BY dataOrd$$
+
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `anexo`
+--
+
+CREATE TABLE `anexo` (
+  `anexoId` int(20) NOT NULL,
+  `arquivo` varchar(300) NOT NULL,
+  `mensagem` int(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `arquivos`
+--
+
+CREATE TABLE `arquivos` (
+  `nome` varchar(260) NOT NULL,
+  `nomeHash` varchar(300) NOT NULL,
+  `arquivo` longblob NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -102,7 +137,10 @@ INSERT INTO `messages` (`Idmessage`, `Messages`, `MsgFrom`, `MsgTo`, `Date`) VAL
 (39, 'blz mano', 'ally77', 'willGolden', '2021-03-11 18:28:45'),
 (40, 'Como vc tá?', 'ally77', 'willGolden', '2021-03-11 18:28:47'),
 (41, 'Traquilo', 'willGolden', 'ally77', '2021-03-11 18:29:47'),
-(42, 'g fd', 'ally77', 'willGolden', '2021-03-11 18:34:22');
+(42, 'g fd ', 'ally77', 'willGolden', '2021-03-11 18:34:22'),
+(43, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop', 'ally77', 'willGolden', '2021-03-12 13:03:03'),
+(44, '(҂`_´)\n         <,︻╦̵̵̿╤─ ҉     ~  •\n█۞███████]▄▄▄▄▄▄▄▄▄▄▃ ●●●\n▂▄▅█████████▅▄▃▂…\n[███████████████████]\n◥⊙▲⊙▲⊙▲⊙▲⊙▲⊙▲⊙\n', 'willGolden', 'rafa77', '2021-03-12 16:52:45'),
+(45, '\n(҂`_´) ,︻╦̵̵̿╤─ ҉ ~ • █۞███████]▄▄▄▄▄▄▄▄▄▄▃ ●●● ▂▄▅█████████▅▄▃▂… [███████████████████] ◥⊙▲⊙▲⊙▲⊙▲⊙▲⊙▲⊙', 'willGolden', 'rafa77', '2021-03-12 17:56:27');
 
 -- --------------------------------------------------------
 
@@ -118,6 +156,20 @@ CREATE TABLE `sessao` (
 --
 -- Índices para tabelas despejadas
 --
+
+--
+-- Índices para tabela `anexo`
+--
+ALTER TABLE `anexo`
+  ADD PRIMARY KEY (`anexoId`),
+  ADD KEY `arquivoAnexado` (`arquivo`),
+  ADD KEY `mensagemAnexada` (`mensagem`);
+
+--
+-- Índices para tabela `arquivos`
+--
+ALTER TABLE `arquivos`
+  ADD PRIMARY KEY (`nomeHash`);
 
 --
 -- Índices para tabela `clientes`
@@ -138,14 +190,27 @@ ALTER TABLE `messages`
 --
 
 --
+-- AUTO_INCREMENT de tabela `anexo`
+--
+ALTER TABLE `anexo`
+  MODIFY `anexoId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+
+--
 -- AUTO_INCREMENT de tabela `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `Idmessage` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `Idmessage` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=216;
 
 --
 -- Restrições para despejos de tabelas
 --
+
+--
+-- Limitadores para a tabela `anexo`
+--
+ALTER TABLE `anexo`
+  ADD CONSTRAINT `arquivoAnexado` FOREIGN KEY (`arquivo`) REFERENCES `arquivos` (`nomeHash`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `mensagemAnexada` FOREIGN KEY (`mensagem`) REFERENCES `messages` (`Idmessage`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `messages`

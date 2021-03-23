@@ -1,14 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
-
 import ConnectionFactory.Server;
 import Model.bean.Authenticated;
 import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -17,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import util.Communication;
 
 /**
@@ -27,6 +21,8 @@ public class Login extends javax.swing.JFrame {
 
     /**
      * Creates new form Login
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
      */
     public Login() throws IOException, ClassNotFoundException {
         initComponents();
@@ -160,10 +156,12 @@ public class Login extends javax.swing.JFrame {
     private void login() {
         Server server;
         String replyLogin = "";
+        String hashPassword;
+        
         try {
             server = new Server("localhost", 2134);
             Communication message = new Communication("LOGIN");
-            String hashPassword = getHashMd5(nickName.getText() + password.getText());
+            hashPassword = getHashMd5(nickName.getText() + password.getText());
             message.setParam("nickName", nickName.getText());
             message.setParam("password", hashPassword);
             replyLogin = (String) server.outPut_inPut(message).getParam("LOGINREPLY");
@@ -189,17 +187,15 @@ public class Login extends javax.swing.JFrame {
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
-        } catch (Exception ex) {
+        } catch (UnsupportedLookAndFeelException ex) {
             System.err.println("Failed to initialize LaF");
         }
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new Login().setVisible(true);
-                } catch (IOException | ClassNotFoundException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new Login().setVisible(true);
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }

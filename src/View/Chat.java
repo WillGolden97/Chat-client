@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package View;
 
 import Model.bean.Contact;
@@ -18,12 +23,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import static javax.swing.event.HyperlinkEvent.EventType.ACTIVATED;
 import util.Communication;
-
 /**
  *
  * @author William
  */
-public final class Chat extends javax.swing.JFrame {
+public class Chat extends javax.swing.JFrame {
 
     private Authenticated auth = new Authenticated();
     private List<Contact> contatos;
@@ -33,7 +37,7 @@ public final class Chat extends javax.swing.JFrame {
     private SendMessage sendMsg;
     private SelectorFile sf = new SelectorFile();
     private boolean selectedFile;
-
+    
     public Chat() {
         initComponents();
         send.setEnabled(false);
@@ -41,14 +45,32 @@ public final class Chat extends javax.swing.JFrame {
         contatos();
         setIconTop();
         componentsToggle(false);
-        setLocation(400, 150);
+        setLocation(400, 150);        
     }
-    
+
+    public void componentsToggle(boolean b) {
+        titleChat.setVisible(b);
+        characters.setVisible(b);
+        send.setVisible(b);
+        caixaDeEntradaScroll.setVisible(b);
+        campoMensagemScroll.setVisible(b);
+        emoji.setVisible(b);
+        file.setVisible(b);
+        chatIcon.setVisible(!b);
+    }
+
+    public TreatFiles getCurrentFile() {
+        return currentFile;
+    }
+
+    public void setCurrentFile(TreatFiles currentFile) {
+        this.currentFile = currentFile;
+    }
+          
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">      
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
         send = new javax.swing.JButton();
         caixaDeEntradaScroll = new javax.swing.JScrollPane();
         caixaDeEntrada = new javax.swing.JEditorPane();
@@ -63,10 +85,7 @@ public final class Chat extends javax.swing.JFrame {
         file = new javax.swing.JLabel();
         sendMessageLabel = new javax.swing.JLabel();
 
-        jTextField1.setText("jTextField1");
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(520, 400));
         setResizable(false);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
@@ -123,9 +142,6 @@ public final class Chat extends javax.swing.JFrame {
             }
         });
         jScrollPane4.setViewportView(contatosJTable);
-        if (contatosJTable.getColumnModel().getColumnCount() > 0) {
-            contatosJTable.getColumnModel().getColumn(0).setResizable(false);
-        }
 
         characters.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
         characters.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -141,9 +157,6 @@ public final class Chat extends javax.swing.JFrame {
             }
         });
         campoMensagemScroll.setViewportView(campoMensagem);
-        campoMensagemScroll = new javax.swing.JScrollPane(campoMensagem, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
 
         titleChat.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         titleChat.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -184,20 +197,17 @@ public final class Chat extends javax.swing.JFrame {
                             .addComponent(send, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(chatIcon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(titleChat, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                        .addComponent(titleChat, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(sendMessageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(caixaDeEntradaScroll)))
+                    .addComponent(caixaDeEntradaScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {emoji, file});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(titleChat, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -220,27 +230,7 @@ public final class Chat extends javax.swing.JFrame {
         );
 
         pack();
-    }  // </editor-fold>   
-    
-    public void componentsToggle(boolean b) {
-        titleChat.setVisible(b);
-        characters.setVisible(b);
-        send.setVisible(b);
-        caixaDeEntradaScroll.setVisible(b);
-        campoMensagemScroll.setVisible(b);
-        emoji.setVisible(b);
-        file.setVisible(b);
-        chatIcon.setVisible(!b);
-    }
-
-    public TreatFiles getCurrentFile() {
-        return currentFile;
-    }
-
-    public void setCurrentFile(TreatFiles currentFile) {
-        this.currentFile = currentFile;
-    }
-                 
+    }// </editor-fold>//GEN-END:initComponents
 
     private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
         try {
@@ -255,14 +245,6 @@ public final class Chat extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_sendActionPerformed
 
-    private void contatosJTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contatosJTableKeyReleased
-        Mensagens();
-        int row = contatosJTable.getSelectedRow();
-        campoMensagem.setText(campoTextos.get(row));
-        clearCurrenteFile();
-        componentsToggle(true);
-    }//GEN-LAST:event_contatosJTableKeyReleased
-
     private void caixaDeEntradaHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_caixaDeEntradaHyperlinkUpdate
         if (evt.getEventType() == ACTIVATED) {
             try {
@@ -276,7 +258,7 @@ public final class Chat extends javax.swing.JFrame {
                 TreatFiles tf = new TreatFiles();
                 //Coletando nome hash do arquivo
                 String hashName = ("" + evt.getURL()).split("/")[1];
-                // Setando valor como paramento para coleta com o BD 
+                // Setando valor como paramento para coleta com o BD
                 communication.setParam("nomeHash", hashName);
                 // Enviado comunicação parametrada, para servidor
                 communication = server.outPut_inPut(communication);
@@ -307,8 +289,8 @@ public final class Chat extends javax.swing.JFrame {
     private boolean isImage(String format) {
         return format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge") || format.toLowerCase().equals("gif");
     }
-
-
+    
+    
     private void contatosJTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contatosJTableMouseReleased
         Mensagens();
         int row = contatosJTable.getSelectedRow();
@@ -316,6 +298,33 @@ public final class Chat extends javax.swing.JFrame {
         clearCurrenteFile();
         componentsToggle(true);
     }//GEN-LAST:event_contatosJTableMouseReleased
+
+    private void contatosJTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contatosJTableKeyReleased
+        Mensagens();
+        int row = contatosJTable.getSelectedRow();
+        campoMensagem.setText(campoTextos.get(row));
+        clearCurrenteFile();
+        componentsToggle(true);
+    }//GEN-LAST:event_contatosJTableKeyReleased
+
+    private void campoMensagemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoMensagemKeyReleased
+        int count = campoMensagem.getText().length();
+        if (count > 0 && count <= 500 || selectedFile) {
+            send.setEnabled(true);
+        } else if (send.isEnabled()) {
+            send.setEnabled(false);
+        }
+        characters.setText(count + "/500");
+    }//GEN-LAST:event_campoMensagemKeyReleased
+
+    private void campoMensagemKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoMensagemKeyTyped
+        setCampoMensagem(campoMensagem.getText());
+    }//GEN-LAST:event_campoMensagemKeyTyped
+
+    private void fileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileMouseClicked
+        sf = new SelectorFile();
+        sf.toggleSelectorWindows(true);
+    }//GEN-LAST:event_fileMouseClicked
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         try {
@@ -336,26 +345,8 @@ public final class Chat extends javax.swing.JFrame {
             System.out.println(ex);
         }
     }//GEN-LAST:event_formWindowGainedFocus
-
-    private void fileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileMouseClicked
-        sf = new SelectorFile();
-        sf.toggleSelectorWindows(true);
-    }//GEN-LAST:event_fileMouseClicked
-
-    private void campoMensagemKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoMensagemKeyTyped
-        setCampoMensagem(campoMensagem.getText());
-    }//GEN-LAST:event_campoMensagemKeyTyped
-
-    private void campoMensagemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoMensagemKeyReleased
-        int count = campoMensagem.getText().length();
-        if (count > 0 && count <= 500 || selectedFile) {
-            send.setEnabled(true);
-        } else if (send.isEnabled()) {
-            send.setEnabled(false);
-        }
-        characters.setText(count + "/500");
-    }//GEN-LAST:event_campoMensagemKeyReleased
-
+                                     
+                               
     private void clearCurrenteFile() {
         sf = new SelectorFile();
         this.selectedFile = false;
@@ -471,10 +462,8 @@ public final class Chat extends javax.swing.JFrame {
     private javax.swing.JLabel emoji;
     private javax.swing.JLabel file;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton send;
     private javax.swing.JLabel sendMessageLabel;
     private javax.swing.JLabel titleChat;
     // End of variables declaration//GEN-END:variables
-
 }
