@@ -1,6 +1,8 @@
 package View;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -47,26 +49,38 @@ public class HtmlContent {
         return isFile;
     }
 
-    public String htmlAnexo(String nomeArquivo, String nomeHashArquivo) {
-        String html = "<div style=\"background-color:rgb(90,90,127);padding:10px 5px 10px 7px;border:1px solid white;\"> #img <a href=\"file:/#path\" style=\"color:white;font-size:12px;text-decoration:none;\" > #fileName </a> </div>";
-        String fileName = nomeHashArquivo;
-        String format = fileName.split("[.]")[1];
-        html = html.replace("#path", fileName);
+    private String midiaAttachment(String html, String name, String format) {
+        String icon = "/filesIcon.png";
+        boolean isAudio = format.toLowerCase().equals("ogg") || format.toLowerCase().equals("wav") || format.toLowerCase().equals("mp3");
+        boolean isImage = format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge") || format.toLowerCase().equals("gif");
+        if (isAudio) {
+            icon = "/audioIcon.png";
+        } else if (isImage) {
+            icon = "/ImageIcon.png";
+        }
+        html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0, 20) + "..." : name));
+        html = html.replace("#img", "<img src=\"" + file + "" + icon + "\" height=\"16\" />");
+        return html;
+    }
+
+    public String htmlAnexo(String nomeArquivo, String nomeHashArquivo)  {
+        String html = "<div style=\"background-color:rgb(90,90,127);padding:10px 5px 10px 7px;border:1px solid white;\"> #img <a href=\"file:/#name/#hashName\" style=\"color:white;font-size:12px;text-decoration:none;\" > #fileName </a> </div>";
+        String hashName = nomeHashArquivo;
+        String format = hashName.split("[.]")[1];
         String name = nomeArquivo + "." + format;
+        html = html.replace("#name", name);
+        html = html.replace("#hashName", hashName);
+
         String filePath = new File("Files\\Received\\" + format + "\\").getAbsoluteFile().toURI().toString();
-        if (isImage(format)) {
-            if (!isFile(name, format)) {
-                html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0, 20) + "..." : name));
-                html = html.replace("#img", "<img src='" + file + "/imageIcon.png' height=\"16\" />");
-            } else {
-                html = "<div style=\"background-color:rgb(90,90,127);border:1px solid white;\"> <img src='" + filePath + "/" + name + "' width=\"240\" /> </div>";
-            }
-        } else if (isAudio(format)) {
-            html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0, 20) + "..." : name));
-            html = html.replace("#img", "<img src='" + file + "/audioIcon.png' height=\"16\" />");
+        if (isFile(name, format) && isImage(format)) {
+            html = "<div style=\"background-color:rgb(90,90,127);border:1px solid white;\"> <img src='" + filePath + "/" + name + "' width=\"240\" /> </div>";
         } else {
-            html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0, 20) + "..." : name));
-            html = html.replace("#img", "<img src='" + file + "/filesIcon.png' height=\"16\" />");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(HtmlContent.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            html = midiaAttachment(html, name, format);
         }
         return html;
     }

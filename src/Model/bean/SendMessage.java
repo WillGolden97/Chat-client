@@ -6,10 +6,10 @@
 package Model.bean;
 
 import ConnectionFactory.Server;
-import util.Communication;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import util.Communication;
 
 /**
  *
@@ -61,3 +61,4 @@ public class SendMessage implements Runnable {
         }
     }
 }
+
