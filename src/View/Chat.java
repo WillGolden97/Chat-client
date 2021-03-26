@@ -7,7 +7,6 @@ package View;
 
 import Model.bean.Contact;
 import ConnectionFactory.Server;
-import Model.bean.Arquivos;
 import Model.bean.Authenticated;
 import Model.bean.DownloadFile;
 import javax.swing.table.DefaultTableModel;
@@ -15,12 +14,16 @@ import Model.bean.Message;
 import Model.bean.SendMessage;
 import Model.bean.TreatFiles;
 import java.awt.Toolkit;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import static javax.swing.event.HyperlinkEvent.EventType.ACTIVATED;
 import util.Communication;
 
@@ -28,16 +31,17 @@ import util.Communication;
  *
  * @author William
  */
-public class Chat extends javax.swing.JFrame {
+public final class Chat extends javax.swing.JFrame {
 
-    private Authenticated auth = new Authenticated();
+    private final Authenticated auth = new Authenticated();
     private List<Contact> contatos;
-    private List<String> campoTextos = new ArrayList<>();
-    private String nickName = auth.getLogin();
+    private final List<String> campoTextos = new ArrayList<>();
+    private final String nickName = auth.getLogin();
     private TreatFiles currentFile = new TreatFiles();
     private SendMessage sendMsg;
     private SelectorFile sf = new SelectorFile();
     private boolean selectedFile;
+    Map<String, Object> process;
 
     public Chat() {
         initComponents();
@@ -47,6 +51,15 @@ public class Chat extends javax.swing.JFrame {
         setIconTop();
         componentsToggle(false);
         setLocation(400, 150);
+        process = new HashMap<>();
+    }
+
+    public Object getProcess(String key) {
+        return process.get(key);
+    }
+
+    public void setProcess(String key, Object value) {
+        process.put(key, value);
     }
 
     public void componentsToggle(boolean b) {
@@ -251,32 +264,42 @@ public class Chat extends javax.swing.JFrame {
             String splitURLHasName = ("" + evt.getURL()).split("/")[2];
             String hashName = splitURLHasName;
             String name = splitURLName;
-            String pathName = downloadFile(hashName);
-
-            if (!isImage(hashName)) {
+            String[] splitFormat = name.split("[.]");
+            String format = splitFormat[splitFormat.length - 1];
+            boolean isFile = new File("Files\\Received\\" + format + "\\" + name).isFile();
+            String pathName = new File("Files\\Received\\" + format + "\\" + name).getPath();
+            if (!isFile) {
+                pathName = downloadFile(hashName);
+            }
+            if (!isImage(hashName) && isFile) {
                 try {
                     Runtime.getRuntime().exec("explorer.exe \"" + pathName + "\"");
                 } catch (IOException ex) {
                     Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } else {
+            } else if (isImage(hashName) && isFile) {
                 Mensagens();
             }
         }
     }//GEN-LAST:event_caixaDeEntradaHyperlinkUpdate
 
     private String downloadFile(String hash) {
-        DownloadFile downloadFile = new DownloadFile(hash);
-        Thread t = new Thread(downloadFile);
-        t.start();
-        /// GAMBIARRA. RESOLVER !!!!!
+        DownloadFile downloadFile;
+        Thread t;
+        String pathName = "";
         try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            t = (Thread) getProcess(hash);
+            if (t.isAlive()) {
+                JOptionPane.showMessageDialog(null, "Esse download já está em processo");
+            }
+        } catch (Exception ex) {
+            downloadFile = new DownloadFile(hash);
+            setProcess(hash, new Thread(downloadFile));
+            t = (Thread) getProcess(hash);
+            t.start();
+            pathName = downloadFile.getPathName();
         }
-        /// GAMBIARRA. RESOLVER !!!!!
-        return downloadFile.getPathName();
+        return pathName;
     }
 
     private boolean isImage(String fileName) {
@@ -403,7 +426,7 @@ public class Chat extends javax.swing.JFrame {
             String msg;
             caixaDeEntrada.setContentType("text/html");
             HtmlContent html = new HtmlContent();
-            msg = "<!DOCTYPE html><html><head><link type=\"text/css\" href=\"/style.css\" rel=\"stylesheet\"></head><body>";
+            msg = "<!DOCTYPE html><html><head></head><body>";
             for (Message m : message) {
                 if (m.getFrom().equals(nickName)) {
                     msg += html.htmlMsg("#383a59", "left", m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate());

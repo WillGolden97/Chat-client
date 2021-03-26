@@ -28,6 +28,7 @@ public class SendMessage implements Runnable {
         this.msg = Message;
         this.currentFile = currentFile;
     }
+    
        
 
     @Override

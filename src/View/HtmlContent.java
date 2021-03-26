@@ -1,8 +1,6 @@
 package View;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,9 +14,15 @@ import java.util.logging.Logger;
 public class HtmlContent {
 
     private final String file;
+    private final String fileIcon;
+    private final String audioIcon;
+    private final String imageIcon;
 
     public HtmlContent() {
         this.file = getPath();
+        this.audioIcon = file + "audioIcon.png";
+        this.imageIcon = file + "imageIcon.png";
+        this.fileIcon = file + "filesIcon.png";
     }
 
     private String getPath() {
@@ -50,16 +54,16 @@ public class HtmlContent {
     }
 
     private String midiaAttachment(String html, String name, String format) {
-        String icon = "/filesIcon.png";
+        String icon = fileIcon;
         boolean isAudio = format.toLowerCase().equals("ogg") || format.toLowerCase().equals("wav") || format.toLowerCase().equals("mp3");
         boolean isImage = format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge") || format.toLowerCase().equals("gif");
         if (isAudio) {
-            icon = "/audioIcon.png";
+            icon = audioIcon;
         } else if (isImage) {
-            icon = "/ImageIcon.png";
+            icon = imageIcon;
         }
-        html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0, 20) + "..." : name));
-        html = html.replace("#img", "<img src=\"" + file + "" + icon + "\" height=\"16\" />");
+        html = html.replace("#img", "<img src=\"" + icon +"\" height=\"16\" />");        
+        html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0,20) + "..." : name));     
         return html;
     }
 
@@ -75,11 +79,6 @@ public class HtmlContent {
         if (isFile(name, format) && isImage(format)) {
             html = "<div style=\"background-color:rgb(90,90,127);border:1px solid white;\"> <img src='" + filePath + "/" + name + "' width=\"240\" /> </div>";
         } else {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(HtmlContent.class.getName()).log(Level.SEVERE, null, ex);
-            }
             html = midiaAttachment(html, name, format);
         }
         return html;
