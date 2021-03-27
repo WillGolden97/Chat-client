@@ -48,5 +48,5 @@ public class Contact implements Serializable {
     public void setDate(String date) {
         this.date = date;
     }
-    
+
 }

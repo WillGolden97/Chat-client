@@ -100,25 +100,6 @@ public class TreatFiles extends Arquivos {
         }
     }
 
-    // Salvar arquivo renomeado para o próprio hash de soma do arquivo
-//    public void saveHashedFile() {
-//        // hash file
-//        String hash = getFileHash();
-//        // Formato
-//        String format = getFileFormat();
-//
-//        new File("Files").mkdir();
-//        new File("Files/Send").mkdir();
-//        new File("Files/Send/" + format).mkdir();
-//        Path path = Paths.get("Files/Send/" + format + "/" + hash + "." + format);
-//
-//        try {
-//            java.nio.file.Files.write(path, fileBytes);
-//        } catch (IOException ex) {
-//            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-
     // Coletar bytes[] a partir de arquivo localizado na própria maquina
     public void setBytes(String pathName) throws IOException {
         this.pathName = pathName;
@@ -129,12 +110,4 @@ public class TreatFiles extends Arquivos {
         return fileBytes;
     }        
 
-//    public void writeBin() throws IOException {
-//        FileWriter arq = new FileWriter("C:\\Users\\William\\Desktop\\file.bin");
-//        PrintWriter gravarArq = new PrintWriter(arq);
-//        for (int j = 0; j < fileBytes.length; j++) {
-//            gravarArq.printf(String.valueOf(fileBytes[j]));
-//        }
-//        arq.close();
-//    }
 }
