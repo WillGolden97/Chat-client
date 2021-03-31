@@ -35,33 +35,24 @@ public class SendMessage implements Runnable {
 
     @Override
     public void run() {
+        String hashName = "";
         try {
-            String hashName = "";
-            try {
-                msg.setNomeArquivo(currentFile.getFileName());
-                hashName = currentFile.getHashedNameFile() + "." + currentFile.getFileFormat();
-                msg.setHashArquivo(hashName);
-            } catch (NullPointerException ex) {
-                System.out.println("Sem anexo");
-            }
-            try {
-                communication.setParam("nomeHash", hashName);
-                communication = server.outPut_inPut(communication);
-                int checkFile = (int) communication.getParam("CHECKFILEREPLY");
-                if (checkFile == 0) {
-                    msg.setArquivo(currentFile.getBytes());
-                }
-                communication = new Communication("CREATEMESSAGE");
-                communication.setParam("SENDEDMESSAGE", msg);
-                communication = server.outPut_inPut(communication);
-                System.out.println(communication.getParam("STATUSMESSAGE"));
-            } catch (IOException ex) {
-                Logger.getLogger(SendMessage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SendMessage.class.getName()).log(Level.SEVERE, null, ex);
+            msg.setNomeArquivo(currentFile.getFileName());
+            hashName = currentFile.getHashedNameFile() + "." + currentFile.getFileFormat();
+            msg.setHashArquivo(hashName);
+        } catch (NullPointerException ex) {
+            System.out.println("Sem anexo");
         }
+        communication.setParam("nomeHash", hashName);
+        communication = server.outPut_inPut(communication);
+        int checkFile = (int) communication.getParam("CHECKFILEREPLY");
+        if (checkFile == 0) {
+            msg.setArquivo(currentFile.getBytes());
+        }
+        communication = new Communication("CREATEMESSAGE");
+        communication.setParam("SENDEDMESSAGE", msg);
+        communication = server.outPut_inPut(communication);
+        System.out.println(communication.getParam("STATUSMESSAGE"));
     }
 }
 

@@ -72,7 +72,7 @@ public class HtmlContent {
 
         String filePath = new File("Files\\Received\\" + format + "\\").getAbsoluteFile().toURI().toString();
         if (isFile(name, format) && isImage(format)) {
-            html = "<div style=\"background-color:rgb(90,90,127);border:1px solid white;\"> <img src='" + filePath + "/" + name + "' width=\"254\" /> </div>";
+            html = "<div style=\"background-color:rgb(90,90,127);border:1px solid white;\"><center> <img src='" + filePath + "/" + name + "' width=\"260\" /> </center></div>";
         } else {
             html = midiaAttachment(html, name, format);
         }

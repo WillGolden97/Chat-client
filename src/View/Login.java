@@ -1,7 +1,9 @@
 package View;
+
 import ConnectionFactory.Server;
 import Model.bean.Authenticated;
 import com.formdev.flatlaf.FlatDarkLaf;
+import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -21,13 +23,14 @@ public class Login extends javax.swing.JFrame {
 
     /**
      * Creates new form Login
+     *
      * @throws java.io.IOException
      * @throws java.lang.ClassNotFoundException
      */
     public Login() throws IOException, ClassNotFoundException {
         initComponents();
-        setIconTop ();
-        setLocation(500,250);
+        setIconTop();
+        setLocation(500, 250);
     }
 
     /**
@@ -46,15 +49,17 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         messageLogin = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        singUp = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        logar.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        logar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         logar.setText("LOGAR");
-        logar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                logarMouseReleased(evt);
+        logar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logarActionPerformed(evt);
             }
         });
 
@@ -72,64 +77,80 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("@");
+        jLabel1.setToolTipText("nickname");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/chat.png"))); // NOI18N
 
-        messageLogin.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        messageLogin.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         messageLogin.setForeground(new java.awt.Color(255, 51, 0));
         messageLogin.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("LOGIN");
+
+        singUp.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        singUp.setText("CADASTRAR");
+        singUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                singUpActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/passwordIcon.png"))); // NOI18N
+        jLabel3.setToolTipText("senha");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(68, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
-                            .addComponent(nickName))))
-                .addGap(99, 99, 99))
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(messageLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(70, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nickName, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(logar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(password, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(singUp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+                .addGap(99, 99, 99))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(5, 5, 5)
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nickName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(5, 5, 5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(logar)
-                .addGap(4, 4, 4)
-                .addComponent(messageLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(singUp)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(messageLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void logarMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logarMouseReleased
-        login();
-    }//GEN-LAST:event_logarMouseReleased
 
     private void passwordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordKeyReleased
         if (evt.getKeyCode() == 10) {
@@ -140,7 +161,19 @@ public class Login extends javax.swing.JFrame {
 
     private void nickNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nickNameKeyReleased
         messageLogin.setText("");
+        nickName.setText(nickName.getText().replaceAll("[^A-Za-z0-9]", ""));
     }//GEN-LAST:event_nickNameKeyReleased
+
+    private void singUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_singUpActionPerformed
+        SingUP sUP = new SingUP();
+        sUP.setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_singUpActionPerformed
+
+    private void logarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logarActionPerformed
+        login();
+        setMessageLoginColor(new Color(255,51,0));
+    }//GEN-LAST:event_logarActionPerformed
 
     public static String getHashMd5(String value) {
         MessageDigest md;
@@ -153,21 +186,25 @@ public class Login extends javax.swing.JFrame {
         return hash.toString(16);
     }
 
+    public void setMessageLogin(String value) {
+        messageLogin.setText(value);
+    }
+
+    public void setMessageLoginColor(Color value) {
+        messageLogin.setForeground(value);
+    }
+
     private void login() {
         Server server;
-        String replyLogin = "";
+        String replyLogin;
         String hashPassword;
-        
-        try {
-            server = new Server("localhost", 2134);
-            Communication message = new Communication("LOGIN");
-            hashPassword = getHashMd5(nickName.getText() + password.getText());
-            message.setParam("nickName", nickName.getText());
-            message.setParam("password", hashPassword);
-            replyLogin = (String) server.outPut_inPut(message).getParam("LOGINREPLY");
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        server = new Server("192.168.56.1", 2134);
+        Communication message = new Communication("LOGIN");
+        hashPassword = getHashMd5(nickName.getText() + password.getText());
+        message.setParam("nickName", nickName.getText());
+        message.setParam("password", hashPassword);
+        replyLogin = (String) server.outPut_inPut(message).getParam("LOGINREPLY");
         if (replyLogin.equals("OK")) {
             Authenticated auth = new Authenticated();
             auth.setLogin(nickName.getText());
@@ -178,9 +215,10 @@ public class Login extends javax.swing.JFrame {
         }
     }
 
-    private void setIconTop () {
+    private void setIconTop() {
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Images/chat.png")));
-    }     
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -203,10 +241,12 @@ public class Login extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JButton logar;
     private javax.swing.JLabel messageLogin;
     private javax.swing.JTextField nickName;
     private javax.swing.JPasswordField password;
+    private javax.swing.JButton singUp;
     // End of variables declaration//GEN-END:variables
 }

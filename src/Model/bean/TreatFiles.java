@@ -6,9 +6,12 @@
 package Model.bean;
 
 import View.Chat;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -89,12 +92,13 @@ public class TreatFiles extends Arquivos {
         new File("Files").mkdir();
         new File("Files/Received").mkdir();
         new File("Files/Received/" + format).mkdir();
+        new File("Files/Received/" + format).mkdir();        
         Path path = Paths.get("Files/Received/" + format + "/" + name + "." + format);
         setPathName(path.toString());
         System.out.println(path);
 
         try {
-            java.nio.file.Files.write(path, file);
+            Files.write(path, file);
         } catch (IOException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -108,6 +112,21 @@ public class TreatFiles extends Arquivos {
     
     public byte[] getBytes() {
         return fileBytes;
-    }        
-
+    }    
+    
+    public static BufferedImage resizeImage(BufferedImage image) { 
+        return resizeImage(image,50);
+    }
+    
+    public static BufferedImage resizeImage(BufferedImage image,int h) {
+        int oldH = image.getHeight();
+        int newH = h;
+        int oldW = image.getWidth();
+        int newW = (oldW*newH)/oldH;
+        BufferedImage new_img = new BufferedImage(newW,newH, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = new_img.createGraphics();
+        g.drawImage(image, 0, 0,newW,newH, null);
+        g.dispose();
+        return new_img;
+    }
 }

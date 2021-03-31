@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import util.Communication;
 
 /**
@@ -23,41 +26,54 @@ public class Server {
     private static String address;
     private static int door;
 
-    public Server(String address, int door) throws IOException, ClassNotFoundException {
+    public Server(String address, int door) {
         this.address = address;
-        this.door = door;  
+        this.door = door;
     }
-    
-    public Server() throws IOException, ClassNotFoundException {
-    
-    }   
 
-    public Communication outPut_inPut(Communication m) throws IOException, ClassNotFoundException {
-        socket = new Socket(address, door);          
-        outPut = new ObjectOutputStream(socket.getOutputStream());
-        outPut.writeObject(m);
-        outPut.flush();
-        Communication messages;
-        input = new ObjectInputStream(socket.getInputStream());
-        messages = (Communication) input.readObject();
-        close();   
-        return messages;        
+    public Server() throws IOException, ClassNotFoundException {
+
     }
-    
-    public void outPut(Communication m) throws IOException, ClassNotFoundException {
-        socket = new Socket(address, door);  
-        outPut = new ObjectOutputStream(socket.getOutputStream());
-        outPut.writeObject(m);
-        outPut.flush();      
-    } 
-    
-    public Communication inPut(Communication m) throws IOException, ClassNotFoundException {
-        Communication messages;
-        input = new ObjectInputStream(socket.getInputStream());
-        messages = (Communication) input.readObject();
-        close();   
-        return messages;        
-    }    
+
+    public Communication outPut_inPut(Communication m) {
+        Communication messages = null;
+        try {
+            socket = new Socket(address, door);
+            outPut = new ObjectOutputStream(socket.getOutputStream());
+            outPut.writeObject(m);
+            outPut.flush();
+            input = new ObjectInputStream(socket.getInputStream());
+            messages = (Communication) input.readObject();
+            close();
+        } catch (IOException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Erro de conexão! \n" + ex);
+        }
+        return messages;
+    }
+
+    public void outPut(Communication m) {
+        try {
+            socket = new Socket(address, door);
+            outPut = new ObjectOutputStream(socket.getOutputStream());
+            outPut.writeObject(m);
+            outPut.flush();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Erro de conexão! \n" + ex);
+        }
+
+    }
+
+    public Communication inPut(Communication m) {
+        Communication messages = null;
+        try {
+            input = new ObjectInputStream(socket.getInputStream());
+            messages = (Communication) input.readObject();
+            close();
+        } catch (IOException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Erro de conexão! \n" + ex);
+        }
+        return messages;
+    }
 
     public void close() throws IOException, ClassNotFoundException {
         outPut.close();

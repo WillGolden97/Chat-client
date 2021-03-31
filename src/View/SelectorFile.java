@@ -26,6 +26,11 @@ public class SelectorFile extends javax.swing.JFrame {
         currentFile.setFileName(filleChooser.getSelectedFile().getName());
         return currentFile;
     }
+    
+    public byte[] getBytes() throws IOException {
+        currentFile.setBytes(filleChooser.getSelectedFile().toString());
+        return currentFile.getBytes();
+    }    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
