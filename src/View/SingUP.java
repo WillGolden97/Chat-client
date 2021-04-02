@@ -12,9 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -67,6 +64,11 @@ public class SingUP extends javax.swing.JFrame {
             public void windowLostFocus(java.awt.event.WindowEvent evt) {
             }
         });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         selectPicButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         selectPicButton.setText("SELECIONAR FOTO");
@@ -116,7 +118,7 @@ public class SingUP extends javax.swing.JFrame {
         jLabel4.setText("CRIE SUA CONTA");
 
         profilPicLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        profilPicLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/profileMedium.png"))); // NOI18N
+        profilPicLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/profileLarge.png"))); // NOI18N
         profilPicLabel.setAlignmentX(0.5F);
         profilPicLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
 
@@ -134,11 +136,6 @@ public class SingUP extends javax.swing.JFrame {
 
         nickName.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         nickName.setToolTipText("nick name");
-        nickName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nickNameActionPerformed(evt);
-            }
-        });
         nickName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 nickNameKeyReleased(evt);
@@ -241,7 +238,7 @@ public class SingUP extends javax.swing.JFrame {
             this.currentFile = sf.getCurrentFile();
         } catch (Exception ex) {
             this.currentFile = null;
-            profilPicLabel.setIcon(new ImageIcon(getClass().getResource("/Images/profileMedium.png")));
+            profilPicLabel.setIcon(new ImageIcon(getClass().getResource("/Images/profileLarge.png")));
         }
     }//GEN-LAST:event_formWindowGainedFocus
 
@@ -254,20 +251,38 @@ public class SingUP extends javax.swing.JFrame {
     }//GEN-LAST:event_logarMouseReleased
 
     private void password1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_password1KeyReleased
-
+        if (evt.getKeyChar() == 10) {
+            cadastrar();
+        }
     }//GEN-LAST:event_password1KeyReleased
 
-    private void nickNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nickNameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nickNameActionPerformed
-
     private void nickNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nickNameKeyReleased
-        nickName.setText(nickName.getText().replaceAll("[^A-Za-z0-9]", ""));
+        nickName.setText(nickName.getText().replaceAll("[^A-Za-z0-9_]", ""));
         nickName.setText(limitText(nickName.getText()));
     }//GEN-LAST:event_nickNameKeyReleased
 
 
     private void logarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logarActionPerformed
+        cadastrar();
+    }//GEN-LAST:event_logarActionPerformed
+
+    private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nameActionPerformed
+
+    private void nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameKeyReleased
+        name.setText(limitText(name.getText()));
+    }//GEN-LAST:event_nameKeyReleased
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            new Login().setVisible(true);
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(SingUP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void cadastrar() {
         if (password1.getText().equals(password.getText())) {
 
             messageLogin.setText("");
@@ -292,15 +307,7 @@ public class SingUP extends javax.swing.JFrame {
         } else {
             messageLogin.setText("As senhas não são iguais!");
         }
-    }//GEN-LAST:event_logarActionPerformed
-
-    private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nameActionPerformed
-
-    private void nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameKeyReleased
-        name.setText(limitText(name.getText()));
-    }//GEN-LAST:event_nameKeyReleased
+    }
 
     private String limitText(String text) {
         return (text.length() > 20) ? text.substring(0, 20) : text;

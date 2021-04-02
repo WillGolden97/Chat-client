@@ -161,7 +161,7 @@ public class Login extends javax.swing.JFrame {
 
     private void nickNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nickNameKeyReleased
         messageLogin.setText("");
-        nickName.setText(nickName.getText().replaceAll("[^A-Za-z0-9]", ""));
+        nickName.setText(nickName.getText().replaceAll("[^A-Za-z0-9_]", ""));
     }//GEN-LAST:event_nickNameKeyReleased
 
     private void singUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_singUpActionPerformed
@@ -172,7 +172,7 @@ public class Login extends javax.swing.JFrame {
 
     private void logarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logarActionPerformed
         login();
-        setMessageLoginColor(new Color(255,51,0));
+        setMessageLoginColor(new Color(255, 51, 0));
     }//GEN-LAST:event_logarActionPerformed
 
     public static String getHashMd5(String value) {

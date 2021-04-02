@@ -52,23 +52,19 @@ public class CreateNewAccount implements Runnable {
     @Override
     public void run() {
         String hashPassword;
+        server = new Server();
+        Communication message = new Communication("CREATEACCOUNT");
+        hashPassword = getHashMd5(nickName + password);
         try {
-            server = new Server();
-            Communication message = new Communication("CREATEACCOUNT");
-            hashPassword = getHashMd5(nickName + password);
-            try {
-                message.setParam("picture", picture);
-                message.setParam("format", format);
-            } catch (NullPointerException ex) {
-                System.out.print("Sem foto :" + ex);
-            }
-            message.setParam("name", name);
-            message.setParam("nickName", nickName);
-            message.setParam("password", hashPassword);
-            replyLogin = (String) server.outPut_inPut(message).getParam("CREATEACCOUNTREPLY");
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            message.setParam("picture", picture);
+            message.setParam("format", format);
+        } catch (NullPointerException ex) {
+            System.out.print("Sem foto :" + ex);
         }
+        message.setParam("name", name);
+        message.setParam("nickName", nickName);
+        message.setParam("password", hashPassword);
+        replyLogin = (String) server.outPut_inPut(message).getParam("CREATEACCOUNTREPLY");
         if (replyLogin.equals("OK")) {
             try {
                 Login l = new Login();

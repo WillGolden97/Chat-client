@@ -47,7 +47,11 @@ public class SendMessage implements Runnable {
         communication = server.outPut_inPut(communication);
         int checkFile = (int) communication.getParam("CHECKFILEREPLY");
         if (checkFile == 0) {
+            try {
             msg.setArquivo(currentFile.getBytes());
+            } catch (NullPointerException ex) {
+              System.out.println("Sem envio de arquivo");
+            }
         }
         communication = new Communication("CREATEMESSAGE");
         communication.setParam("SENDEDMESSAGE", msg);

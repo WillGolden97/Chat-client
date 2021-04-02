@@ -67,7 +67,7 @@ public class SaveProfileImage implements Runnable {
             } catch (NullPointerException ex) {
 
             }
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

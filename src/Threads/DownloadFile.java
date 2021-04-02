@@ -70,7 +70,7 @@ public class DownloadFile implements Runnable {
                     Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
