@@ -63,7 +63,7 @@ public class DownloadFile implements Runnable {
             tf.saveRenomedFile();
             // Abrindo arquivo
             setPathName(tf.getPathName());
-            if (!isImage(hashName)) {
+            if (!isImage(hashName) && !isAudio(hashName)) {
                 try {
                     Runtime.getRuntime().exec("explorer.exe \"" + getPathName() + "\"");
                 } catch (IOException ex) {
@@ -74,11 +74,19 @@ public class DownloadFile implements Runnable {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
 
     private boolean isImage(String fileName) {
         String[] spliPoint = fileName.split("[.]");
         String format = spliPoint[spliPoint.length - 1];
         return format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge") || format.toLowerCase().equals("gif");
+    }
+
+    private boolean isAudio(String fileName) {
+        String[] spliPoint = fileName.split("[.]");
+        String format = spliPoint[spliPoint.length - 1];
+        return format.toLowerCase().equals("wav") || format.toLowerCase().equals("mp3");
     }
 
 }

@@ -117,6 +117,7 @@ public class SingUP extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("CRIE SUA CONTA");
 
+        profilPicLabel.setBackground(new java.awt.Color(255, 255, 255));
         profilPicLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         profilPicLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/profileLarge.png"))); // NOI18N
         profilPicLabel.setAlignmentX(0.5F);
