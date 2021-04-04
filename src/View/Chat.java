@@ -7,8 +7,8 @@ package View;
 
 import Model.bean.Contact;
 import ConnectionFactory.Server;
+import Model.bean.Arquivos;
 import Model.bean.Authenticated;
-import Threads.DownloadFile;
 import Model.bean.Message;
 import Model.bean.TreatFiles;
 import Threads.PlayAudio;
@@ -58,10 +58,13 @@ public final class Chat extends javax.swing.JFrame {
     private DefaultListModel contactListDefaultListModel = new DefaultListModel();
     private String currentAudio = "";
     private Thread threadAudio;
+    // DownloadFile 
+    private String hashDownloadFileThread;
+    private String nameDownloadFileThread;
     // Send message
     private Message msg;
-    private Server serverMessage = new Server();
-    private Communication communicationMessage;
+    // Delete Message
+    private int idDeleteThread;
 
     public Chat() {
         initComponents();
@@ -106,6 +109,7 @@ public final class Chat extends javax.swing.JFrame {
         characters = new javax.swing.JLabel();
         emoji = new javax.swing.JLabel();
         file = new javax.swing.JLabel();
+        loadingLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         profileIconInfo = new javax.swing.JLabel();
         nameInfo1 = new javax.swing.JLabel();
@@ -204,33 +208,40 @@ public final class Chat extends javax.swing.JFrame {
             }
         });
 
+        loadingLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
         javax.swing.GroupLayout chatPanelLayout = new javax.swing.GroupLayout(chatPanel);
         chatPanel.setLayout(chatPanelLayout);
         chatPanelLayout.setHorizontalGroup(
             chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(caixaDeEntradaScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
             .addGroup(chatPanelLayout.createSequentialGroup()
-                .addComponent(profilePicLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(titleChat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chatPanelLayout.createSequentialGroup()
-                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(file, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                    .addComponent(emoji, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, 0)
-                .addComponent(campoMensagemScroll)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(send, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(characters, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7))
+                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(chatPanelLayout.createSequentialGroup()
+                        .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(file, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                            .addComponent(emoji, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(5, 5, 5)
+                        .addComponent(campoMensagemScroll)
+                        .addGap(5, 5, 5)
+                        .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(characters, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(send, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)))
+                    .addComponent(caixaDeEntradaScroll, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, chatPanelLayout.createSequentialGroup()
+                        .addComponent(profilePicLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(titleChat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(loadingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, 0))
         );
         chatPanelLayout.setVerticalGroup(
             chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(chatPanelLayout.createSequentialGroup()
                 .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(titleChat, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(profilePicLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(profilePicLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(loadingLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(caixaDeEntradaScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
@@ -285,7 +296,7 @@ public final class Chat extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(130, 130, 130)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(profileIconInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, Short.MAX_VALUE)
+                            .addComponent(profileIconInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(nameInfo)
                             .addComponent(nickNameInfo))))
                 .addGap(154, 154, 154))
@@ -374,8 +385,9 @@ public final class Chat extends javax.swing.JFrame {
                         .addComponent(addClient)
                         .addGap(10, 10, 10)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chatIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chaTabbedPanel)))
+                    .addComponent(chaTabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 467, Short.MAX_VALUE)
+                    .addComponent(chatIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {contatcsScrollPane, jLabel1});
@@ -442,26 +454,23 @@ public final class Chat extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_sendActionPerformed
 
-    private String downloadFile(String hash) {
-        DownloadFile downloadFile;
+    private void downloadFile(String hash, String name) {
+        this.hashDownloadFileThread = hash;
+        this.nameDownloadFileThread = name;
         Thread t;
-        String pathName = "";
         try {
             t = (Thread) getProcess(hash);
             if (t.isAlive()) {
                 JOptionPane.showMessageDialog(null, "Esse download já está andamento");
             } else {
                 setProcess(hash, null);
-                downloadFile(hash);
+                downloadFile(hash, name);
             }
         } catch (NullPointerException ex) {
-            downloadFile = new DownloadFile(hash);
             setProcess(hash, new Thread(downloadFile));
             t = (Thread) getProcess(hash);
             t.start();
-            pathName = downloadFile.getPathName();
         }
-        return pathName;
     }
 
     private boolean isImage(String fileName) {
@@ -549,22 +558,11 @@ public final class Chat extends javax.swing.JFrame {
                 String pathNameDestination = new File("Files\\Received\\" + format + "\\" + hash + "\\" + name).toString();
                 boolean isFile = new File(pathNameDestination).isFile();
                 if (!isFile) {
-                    downloadFile(hashName);
-                }
-                if (isImage(hashName)) {
-                    while (true) {
-                        isFile = new File(pathNameDestination).isFile();
-                        if (isFile) {
-                            Mensagens();
-                            break;
-                        }
-                    }
-                } else if (isAudio(hashName)) {
-                    if (isFile) {
-                        playAudio(pathNameDestination, name);
-                    }
+                    downloadFile(hashName, name);
                 } else {
-                    if (isFile) {
+                    if (isAudio(hashName)) {
+                        playAudio(pathNameDestination, name);
+                    } else {
                         try {
                             Runtime.getRuntime().exec("explorer.exe \"" + pathNameDestination + "\"");
                         } catch (IOException ex) {
@@ -607,13 +605,9 @@ public final class Chat extends javax.swing.JFrame {
     }
 
     private void deleteMessage(int id) {
-        Server server = new Server();
-        Communication communication = new Communication("DELETEMESSAGE");
-        communication.setParam("idMessage", id);
-        communication = server.outPut_inPut(communication);
-        System.out.print(communication.getParam("STATUSMESSAGE"));
-        Mensagens();
-        clearCurrenteFile();
+        this.idDeleteThread = id;
+        Thread t = new Thread(deleteMessage);
+        t.start();
     }
 
     private void addClientMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addClientMouseClicked
@@ -701,10 +695,11 @@ public final class Chat extends javax.swing.JFrame {
 
     public void enviarMensagem() throws IOException, ClassNotFoundException {
         int row = contactsList.getSelectedIndex();
-        String Message = campoMensagem.getText();
-        String From = nickName;
-        String To = getContatos().get(row).getNickName();
-        msg = new Message(Message, From, To);
+        Message message = new Message();
+        message.setMessage(campoMensagem.getText());
+        message.setFrom(nickName);
+        message.setTo(getContatos().get(row).getNickName());
+        this.msg = message;
         Thread t = new Thread(sendMessage);
         t.start();
     }
@@ -732,19 +727,19 @@ public final class Chat extends javax.swing.JFrame {
             setProfileIcon(contactNickName, profileIconInfo, "Large");
             communication = server.outPut_inPut(communication);
             List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
-            String msg;
+            String htmlMsg;
             caixaDeEntrada.setContentType("text/html");
             HtmlContent html = new HtmlContent();
-            msg = "<!DOCTYPE html><html><head></head><body>";
+            htmlMsg = "<!DOCTYPE html><html><head></head><body>";
             for (Message m : message) {
                 if (m.getFrom().equals(nickName)) {
-                    msg += html.htmlMsg("#383a59", "left", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate());
+                    htmlMsg += html.htmlMsg("#383a59", "left", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate());
                 } else {
-                    msg += html.htmlMsg("#282a36", "right", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate());
+                    htmlMsg += html.htmlMsg("#282a36", "right", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate());
                 }
             }
-            msg += "</body></html>";
-            setCaixadeEntrada(msg);
+            htmlMsg += "</body></html>";
+            setCaixadeEntrada(htmlMsg);
         } catch (NullPointerException | NoClassDefFoundError | ArrayIndexOutOfBoundsException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -812,47 +807,121 @@ public final class Chat extends javax.swing.JFrame {
     private final Runnable sendMessage = new Runnable() {
         @Override
         public void run() {
-            communicationMessage = new Communication("CHECKFILE");
+            TreatFiles file = currentFile;
+            Message message = msg;
+            Server server = new Server();
+            Communication communication;
+            communication = new Communication("CHECKFILE");
             String hashName = "";
+            clearCurrenteFile();
+            setCampoMensagem("");
+            campoMensagem.setText("");
+            send.setEnabled(false);
+            loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
+            loadingLabel.setToolTipText("Enviando mensagem ...");
             try {
-                msg.setNomeArquivo(currentFile.getFileName());
-                hashName = currentFile.getHashedNameFile() + "." + currentFile.getFileFormat();
-                msg.setHashArquivo(hashName);
+                message.setNomeArquivo(file.getFileName());
+                hashName = file.getHashedNameFile() + "." + file.getFileFormat();
+                message.setHashArquivo(hashName);
 
             } catch (NullPointerException ex) {
                 System.out.println("Sem anexo");
             }
-            communicationMessage.setParam("nomeHash", hashName);
-            communicationMessage = serverMessage.outPut_inPut(communicationMessage);
-            int checkFile = (int) communicationMessage.getParam("CHECKFILEREPLY");
+            communication.setParam("nomeHash", hashName);
+            communication = server.outPut_inPut(communication);
+            int checkFile = (int) communication.getParam("CHECKFILEREPLY");
             if (checkFile == 0) {
-                String[] spliPoint = msg.getHashArquivo().split("[.]");
-                String format = spliPoint[spliPoint.length - 1];
-                boolean isImage = format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge");
                 try {
+                    String[] spliPoint = message.getHashArquivo().split("[.]");
+                    String format = spliPoint[spliPoint.length - 1];
+                    boolean isImage = format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge");
                     if (isImage) {
-                        msg.setArquivo(currentFile.resizeImage(currentFile.getBytes(), 1024, currentFile.getFileFormat()));
+                        message.setArquivo(file.resizeImage(file.getBytes(), 1024, file.getFileFormat()));
                     } else {
-                        msg.setArquivo(currentFile.getBytes());
+                        message.setArquivo(file.getBytes());
                     }
                 } catch (NullPointerException ex) {
                     System.out.println("Sem envio de arquivo");
                 }
             }
-            communicationMessage = new Communication("CREATEMESSAGE");
-            communicationMessage.setParam("SENDEDMESSAGE", msg);
-            communicationMessage = serverMessage.outPut_inPut(communicationMessage);
-            System.out.println(communicationMessage.getParam("STATUSMESSAGE"));
+            communication = new Communication("CREATEMESSAGE");
+            communication.setParam("SENDEDMESSAGE", message);
+            communication = server.outPut_inPut(communication);
+            System.out.println(communication.getParam("STATUSMESSAGE"));
             try {
                 Mensagens();
                 contatos();
                 contactsList.setSelectedIndex(0);
-                clearCurrenteFile();
-                setCampoMensagem("");
-                campoMensagem.setText("");
-                send.setEnabled(false);
             } catch (NullPointerException ex) {
             }
+            loadingLabel.setIcon(null);
+            loadingLabel.setToolTipText("");
+        }
+    };
+
+    private final Runnable downloadFile = new Runnable() {
+        @Override
+        public void run() {
+
+            //Instanciando objeto que manipula arquivos
+            TreatFiles tf = new TreatFiles();
+            loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
+            String download = "Baixando : " + nameDownloadFileThread + "\n";
+            String downloadList;
+            try {
+                downloadList = (loadingLabel.getToolTipText().length() == 0) ? ("") : (loadingLabel.getToolTipText());
+            } catch (NullPointerException ex) {
+                downloadList = "";
+            }
+            loadingLabel.setToolTipText(download + downloadList);
+            try {
+                // Abrir conexão socket
+                Server server = new Server();
+                // Instanciando objeto de comunicação com o servidor
+                Communication communication = new Communication("DOWNLOADFILE");
+                //Instanciando objeto que receber propriedade dos arquivo
+                Arquivos arquivos;
+                //Coletando nome hash do arquivo
+                String hashName = hashDownloadFileThread;
+                // Setando valor como paramento para coleta com o BD
+                communication.setParam("nomeHash", hashName);
+                // Enviado comunicação parametrada, para servidor
+                communication = server.outPut_inPut(communication);
+                // Coletando informações retornada do servidor
+                arquivos = (Arquivos) communication.getParam("DOWNLOADFILEREPLY");
+                // Setando valor retornado do para o objeto de manipulação de arquivos
+                tf.setNomeArquivo(arquivos.getNomeArquivo());
+                tf.setHashArquivo(arquivos.getHashArquivo());
+                tf.setArquivo(arquivos.getArquivo());
+                // Salvando arquivo em diretorio responsável pelo download de arquivo do cliente
+                tf.saveRenomedFile();
+                // Abrindo arquivo
+                if (isImage(hashName)) {
+                    Mensagens();
+                } else if (isAudio(hashName)) {
+                    playAudio(tf.getPathName(), tf.getFileName() + "." + tf.getFileFormat());
+                }
+                loadingLabel.setToolTipText(loadingLabel.getToolTipText().replace(download, ""));
+                if (loadingLabel.getToolTipText().equals("")) {
+                    loadingLabel.setToolTipText(null);
+                }
+                loadingLabel.setIcon(null);
+            } catch (IOException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    };
+
+    private final Runnable deleteMessage = new Runnable() {
+        @Override
+        public void run() {
+            Server server = new Server();
+            Communication communication = new Communication("DELETEMESSAGE");
+            communication.setParam("idMessage", idDeleteThread);
+            communication = server.outPut_inPut(communication);
+            System.out.print(communication.getParam("STATUSMESSAGE"));
+            Mensagens();
+            clearCurrenteFile();
         }
     };
 
@@ -874,6 +943,7 @@ public final class Chat extends javax.swing.JFrame {
     private javax.swing.JLabel file;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel loadingLabel;
     private javax.swing.JPopupMenu messageOption;
     private javax.swing.JTextField nameInfo;
     private javax.swing.JLabel nameInfo1;

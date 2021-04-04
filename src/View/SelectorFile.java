@@ -4,6 +4,7 @@ import Model.bean.TreatFiles;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class SelectorFile extends javax.swing.JFrame {
 
@@ -26,6 +27,11 @@ public class SelectorFile extends javax.swing.JFrame {
         System.out.println("Nome do arquivo :" + filleChooser.getSelectedFile().getName());
         currentFile.setBytes(filleChooser.getSelectedFile().toString());
         currentFile.setFileName(filleChooser.getSelectedFile().getName());
+        double fileSize = currentFile.getBytes().length/1000000;
+        if(fileSize > 20.48) {
+            JOptionPane.showMessageDialog(null,"Envie arquivo de no máximo 20 MB!\nEsse arquivo tem "+fileSize+" MB!");
+            currentFile = null;
+        }
         return currentFile;
     }
     

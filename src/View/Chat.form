@@ -58,9 +58,10 @@
                   </Group>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="chaTabbedPanel" pref="467" max="32767" attributes="0"/>
                   <Component id="chatIcon" max="32767" attributes="0"/>
-                  <Component id="chaTabbedPanel" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -117,25 +118,31 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="caixaDeEntradaScroll" pref="484" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="profilePicLabel" min="-2" pref="50" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="titleChat" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="file" pref="33" max="32767" attributes="0"/>
-                          <Component id="emoji" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="file" pref="33" max="32767" attributes="0"/>
+                                  <Component id="emoji" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                              <Component id="campoMensagemScroll" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="characters" min="-2" pref="58" max="-2" attributes="0"/>
+                                  <Component id="send" pref="64" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="caixaDeEntradaScroll" alignment="0" pref="462" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="profilePicLabel" min="-2" pref="50" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                              <Component id="titleChat" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                              <Component id="loadingLabel" min="-2" pref="50" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="campoMensagemScroll" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="send" alignment="1" min="-2" pref="58" max="-2" attributes="0"/>
-                          <Component id="characters" alignment="1" min="-2" pref="58" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -145,6 +152,7 @@
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="titleChat" linkSize="1" alignment="0" max="32767" attributes="0"/>
                           <Component id="profilePicLabel" linkSize="1" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
+                          <Component id="loadingLabel" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="caixaDeEntradaScroll" pref="236" max="32767" attributes="0"/>
@@ -265,6 +273,11 @@
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fileMouseClicked"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JLabel" name="loadingLabel">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel1">
@@ -291,7 +304,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="130" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="profileIconInfo" pref="200" max="32767" attributes="0"/>
+                                  <Component id="profileIconInfo" max="32767" attributes="0"/>
                                   <Component id="nameInfo" alignment="0" max="32767" attributes="0"/>
                                   <Component id="nickNameInfo" alignment="0" max="32767" attributes="0"/>
                               </Group>

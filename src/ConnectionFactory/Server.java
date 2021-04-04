@@ -45,6 +45,7 @@ public class Server {
             close();
         } catch (IOException | ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, "Erro de conexão! \n" + ex);
+            System.exit(0);
         }
         return messages;
     }
@@ -57,6 +58,7 @@ public class Server {
             outPut.flush();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Erro de conexão! \n" + ex);
+            System.exit(0);
         }
 
     }
@@ -69,6 +71,7 @@ public class Server {
             close();
         } catch (IOException | ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, "Erro de conexão! \n" + ex);
+            System.exit(0);
         }
         return messages;
     }

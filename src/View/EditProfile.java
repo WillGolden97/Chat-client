@@ -42,7 +42,6 @@ public class EditProfile extends javax.swing.JFrame {
         setProfilePic();
         searchContact();
         togglePasswordFields(false);
-        System.out.print("Altura " + getHeight());
         setSize(getWidth(), 484);
     }
 
