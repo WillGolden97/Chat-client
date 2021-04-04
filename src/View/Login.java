@@ -5,10 +5,13 @@ import Model.bean.Authenticated;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -198,8 +201,28 @@ public class Login extends javax.swing.JFrame {
         Server server;
         String replyLogin;
         String hashPassword;
+        
+        File myObj = new File("server.ini");
+        Scanner myReader;
+        String addres = "";
+        int door = 0;
+        try {
+            myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                if (data.contains("Address:")) {
+                    data = data.split("Address:")[1];
+                    addres = data;
+                } else if (data.contains("Door:")) {
+                    data = data.split("Door:")[1];
+                    door = Integer.parseInt(data);
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        server = new Server("192.168.56.1", 2134);
+        server = new Server(addres, door);
         Communication message = new Communication("LOGIN");
         hashPassword = getHashMd5(nickName.getText() + password.getText());
         message.setParam("nickName", nickName.getText());
