@@ -107,10 +107,9 @@ public final class Chat extends javax.swing.JFrame {
         campoMensagem = new javax.swing.JTextPane();
         send = new javax.swing.JButton();
         characters = new javax.swing.JLabel();
-        emoji = new javax.swing.JLabel();
         file = new javax.swing.JLabel();
         loadingLabel = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        infoPanel = new javax.swing.JPanel();
         profileIconInfo = new javax.swing.JLabel();
         nameInfo1 = new javax.swing.JLabel();
         nickNameInfo2 = new javax.swing.JLabel();
@@ -196,9 +195,6 @@ public final class Chat extends javax.swing.JFrame {
         characters.setText("000/500");
         characters.setToolTipText("");
 
-        emoji.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        emoji.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/emoji.png"))); // NOI18N
-
         file.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         file.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/file.png"))); // NOI18N
         file.setToolTipText("nome do arquivo");
@@ -214,25 +210,21 @@ public final class Chat extends javax.swing.JFrame {
         chatPanel.setLayout(chatPanelLayout);
         chatPanelLayout.setHorizontalGroup(
             chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(caixaDeEntradaScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
             .addGroup(chatPanelLayout.createSequentialGroup()
-                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(chatPanelLayout.createSequentialGroup()
-                        .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(file, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                            .addComponent(emoji, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(5, 5, 5)
-                        .addComponent(campoMensagemScroll)
-                        .addGap(5, 5, 5)
-                        .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(characters, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(send, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)))
-                    .addComponent(caixaDeEntradaScroll, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, chatPanelLayout.createSequentialGroup()
-                        .addComponent(profilePicLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(titleChat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(loadingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(profilePicLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(titleChat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(loadingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chatPanelLayout.createSequentialGroup()
+                .addComponent(file, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(campoMensagemScroll)
+                .addGap(5, 5, 5)
+                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(characters, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0))
         );
         chatPanelLayout.setVerticalGroup(
@@ -244,18 +236,17 @@ public final class Chat extends javax.swing.JFrame {
                     .addComponent(loadingLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(caixaDeEntradaScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(chatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(chatPanelLayout.createSequentialGroup()
+                            .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(characters, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(campoMensagemScroll, javax.swing.GroupLayout.Alignment.LEADING))
                     .addGroup(chatPanelLayout.createSequentialGroup()
-                        .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(characters, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(chatPanelLayout.createSequentialGroup()
-                        .addComponent(emoji, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(file, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(campoMensagemScroll, javax.swing.GroupLayout.Alignment.LEADING))
-                .addGap(0, 0, 0))
+                        .addGap(1, 1, 1)
+                        .addComponent(file, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0))))
         );
 
         chatPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {profilePicLabel, titleChat});
@@ -282,42 +273,42 @@ public final class Chat extends javax.swing.JFrame {
         nickNameInfo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         nickNameInfo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout infoPanelLayout = new javax.swing.GroupLayout(infoPanel);
+        infoPanel.setLayout(infoPanelLayout);
+        infoPanelLayout.setHorizontalGroup(
+            infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(infoPanelLayout.createSequentialGroup()
+                .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(infoPanelLayout.createSequentialGroup()
                         .addGap(25, 25, 25)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(nameInfo1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(nickNameInfo2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(infoPanelLayout.createSequentialGroup()
                         .addGap(130, 130, 130)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(profileIconInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(nameInfo)
-                            .addComponent(nickNameInfo))))
-                .addGap(154, 154, 154))
+                        .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nickNameInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(profileIconInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(127, 127, 127))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        infoPanelLayout.setVerticalGroup(
+            infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(infoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(profileIconInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(nameInfo1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(nickNameInfo2, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                     .addComponent(nickNameInfo))
                 .addContainerGap(42, Short.MAX_VALUE))
         );
 
-        chaTabbedPanel.addTab("Info", jPanel1);
+        chaTabbedPanel.addTab("Info", infoPanel);
 
         contactsList.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         contactsList.setModel(new javax.swing.AbstractListModel<String>() {
@@ -385,8 +376,8 @@ public final class Chat extends javax.swing.JFrame {
                         .addComponent(addClient)
                         .addGap(10, 10, 10)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chaTabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 467, Short.MAX_VALUE)
-                    .addComponent(chatIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(chatIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chaTabbedPanel))
                 .addGap(0, 0, 0))
         );
 
@@ -490,9 +481,23 @@ public final class Chat extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && campoMensagem.getText().length() > 0) {
             try {
                 if (campoMensagem.getText().length() == 2) {
-                    campoMensagem.setText("");
+                    try {
+                        if (currentFile.getBytes() != null) {
+                            campoMensagem.setText("");
+                            enviarMensagem();
+                        }
+                    } catch (NullPointerException ex) {
+                        campoMensagem.setText("");
+                        send.setEnabled(false);
+                    }
+                } else {
+                    if (campoMensagem.getText().length() <= 500) {
+                        enviarMensagem();
+                    } else if (campoMensagem.getText().length() <= 502) {
+                        campoMensagem.setText(campoMensagem.getText().substring(0, 500));
+                        enviarMensagem();
+                    }
                 }
-                enviarMensagem();
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -814,11 +819,20 @@ public final class Chat extends javax.swing.JFrame {
             communication = new Communication("CHECKFILE");
             String hashName = "";
             clearCurrenteFile();
+            characters.setText("000/500");
             setCampoMensagem("");
             campoMensagem.setText("");
             send.setEnabled(false);
+            String toolTipMgsList;
+            try {
+                toolTipMgsList = (loadingLabel.getToolTipText().length() == 0) ? ("") : (loadingLabel.getToolTipText());
+            } catch (NullPointerException ex) {
+                toolTipMgsList = "";
+            }
+            String toolTipMgs = "Enviando mensagem ...\n";
+            toolTipMgsList = toolTipMgs + toolTipMgsList;
             loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
-            loadingLabel.setToolTipText("Enviando mensagem ...");
+            loadingLabel.setToolTipText(toolTipMgsList);
             try {
                 message.setNomeArquivo(file.getFileName());
                 hashName = file.getHashedNameFile() + "." + file.getFileFormat();
@@ -855,14 +869,16 @@ public final class Chat extends javax.swing.JFrame {
             } catch (NullPointerException ex) {
             }
             loadingLabel.setIcon(null);
-            loadingLabel.setToolTipText("");
+            loadingLabel.setToolTipText(loadingLabel.getText().replace(toolTipMgs, ""));
+            if (loadingLabel.getToolTipText().equals("")) {
+                loadingLabel.setToolTipText(null);
+            }
         }
     };
 
     private final Runnable downloadFile = new Runnable() {
         @Override
         public void run() {
-
             //Instanciando objeto que manipula arquivos
             TreatFiles tf = new TreatFiles();
             loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
@@ -939,10 +955,9 @@ public final class Chat extends javax.swing.JFrame {
     private javax.swing.JScrollPane contatcsScrollPane;
     private javax.swing.JMenu deleteItem;
     private javax.swing.JLabel editProfileLabel;
-    private javax.swing.JLabel emoji;
     private javax.swing.JLabel file;
+    private javax.swing.JPanel infoPanel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel loadingLabel;
     private javax.swing.JPopupMenu messageOption;
     private javax.swing.JTextField nameInfo;
