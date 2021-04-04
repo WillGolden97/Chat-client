@@ -201,28 +201,31 @@ public class Login extends javax.swing.JFrame {
         Server server;
         String replyLogin;
         String hashPassword;
-        
+
         File myObj = new File("server.ini");
         Scanner myReader;
-        String address = "";
-        int door = 0;
+        String host = "";
+        int port = 0;
         try {
             myReader = new Scanner(myObj);
+            int cont = 0;
             while (myReader.hasNextLine()) {
+
                 String data = myReader.nextLine();
-                if (data.replaceAll(" ","").contains("Address:")) {
-                    data = data.replaceAll(" ","").split("Address:")[1];
-                    address = data;
-                } else if (data.replaceAll(" ","").contains("Door:")) {
-                    data = data.replaceAll(" ","").split("Door:")[1];
-                    door = Integer.parseInt(data);
+                if (cont == 0) {
+                    data = data.replaceAll(" ", "").split(":")[1];
+                    host = data;
+                } else if (cont == 1) {
+                    data = data.replaceAll(" ", "").split(":")[1];
+                    port = Integer.parseInt(data);
                 }
+                cont++;
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        server = new Server(address, door);
+        server = new Server(host, port);
         Communication message = new Communication("LOGIN");
         hashPassword = getHashMd5(nickName.getText() + password.getText());
         message.setParam("nickName", nickName.getText());
