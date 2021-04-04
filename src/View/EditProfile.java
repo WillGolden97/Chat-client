@@ -304,7 +304,9 @@ public class EditProfile extends javax.swing.JFrame {
     }//GEN-LAST:event_passwordKeyReleased
 
     private void password1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_password1KeyReleased
-        if (evt.getKeyChar() == 10) {
+        if (evt.getKeyChar() == 10 && passwordFieldsEnable) {
+            editarPassword();
+        } else if (evt.getKeyChar() == 10 && !passwordFieldsEnable) {
             editar();
         }
     }//GEN-LAST:event_password1KeyReleased
@@ -361,7 +363,7 @@ public class EditProfile extends javax.swing.JFrame {
         Server server;
         server = new Server();
         Communication message = new Communication("SEARCHCONTACT");
-        message.setParam("nickName",nickName);
+        message.setParam("nickName", nickName);
         Contact c;
         try {
             c = (Contact) server.outPut_inPut(message).getParam("SEARCHCONTACTREPLY");
