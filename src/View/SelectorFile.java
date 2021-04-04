@@ -2,6 +2,8 @@ package View;
 
 import Model.bean.TreatFiles;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SelectorFile extends javax.swing.JFrame {
 
@@ -32,6 +34,14 @@ public class SelectorFile extends javax.swing.JFrame {
         return currentFile.getBytes();
     }    
 
+    public void setBytes(byte[] file) {
+        try {
+            currentFile.setBytes(file);
+        } catch (IOException ex) {
+            Logger.getLogger(SelectorFile.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }     
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

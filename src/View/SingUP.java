@@ -8,6 +8,7 @@ package View;
 import ConnectionFactory.Server;
 import Model.bean.TreatFiles;
 import Threads.CreateNewAccount;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class SingUP extends javax.swing.JFrame {
     public SingUP() {
         initComponents();
         setLocation(400, 150);
+        setIconTop();
     }
 
     /**
@@ -145,11 +147,6 @@ public class SingUP extends javax.swing.JFrame {
 
         name.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         name.setToolTipText("nome");
-        name.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameActionPerformed(evt);
-            }
-        });
         name.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 nameKeyReleased(evt);
@@ -237,11 +234,13 @@ public class SingUP extends javax.swing.JFrame {
             bi = currentFile.resizeImage(bi, 200);
             profilPicLabel.setIcon(new ImageIcon(bi));
             this.currentFile = sf.getCurrentFile();
+            this.currentFile.setBytes(currentFile.toByteArray(bi, currentFile.getFileFormat()));
         } catch (Exception ex) {
             this.currentFile = null;
             profilPicLabel.setIcon(new ImageIcon(getClass().getResource("/Images/profileLarge.png")));
         }
     }//GEN-LAST:event_formWindowGainedFocus
+
 
     private void passwordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordKeyReleased
 
@@ -267,10 +266,6 @@ public class SingUP extends javax.swing.JFrame {
         cadastrar();
     }//GEN-LAST:event_logarActionPerformed
 
-    private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nameActionPerformed
-
     private void nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameKeyReleased
         name.setText(limitText(name.getText()));
     }//GEN-LAST:event_nameKeyReleased
@@ -278,6 +273,7 @@ public class SingUP extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         try {
             new Login().setVisible(true);
+            dispose();
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(SingUP.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -328,8 +324,8 @@ public class SingUP extends javax.swing.JFrame {
         return i;
     }
 
-    public void createNewAccount() {
-
+    private void setIconTop() {
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Images/chat.png")));
     }
 
 

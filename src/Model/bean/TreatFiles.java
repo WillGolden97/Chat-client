@@ -8,8 +8,11 @@ package Model.bean;
 import View.Chat;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,6 +21,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -26,9 +30,9 @@ import java.util.logging.Logger;
 public class TreatFiles extends Arquivos {
 
     private String pathName;
-    private String fileName;     
+    private String fileName;
     private byte[] fileBytes = null;
-    
+
     public String getPathName() {
         return pathName;
     }
@@ -37,18 +41,17 @@ public class TreatFiles extends Arquivos {
         this.pathName = pathName;
     }
 
-
     //Não usado ainda private String fileName; public String getFileName() {
-     public void setFileName(String fileName) { 
+    public void setFileName(String fileName) {
         String[] pointArr = fileName.split("[.]");
-        String withoutFormat = pointArr[pointArr.length-1];
-        withoutFormat = fileName.replace("."+withoutFormat,"");
+        String withoutFormat = pointArr[pointArr.length - 1];
+        withoutFormat = fileName.replace("." + withoutFormat, "");
         this.fileName = withoutFormat;
-     }
-      
-    public String getFileName() {      
+    }
+
+    public String getFileName() {
         return fileName;
-    }    
+    }
 
     // Gerar soma hash de arquivo 
     public String getHashedNameFile() {
@@ -62,7 +65,7 @@ public class TreatFiles extends Arquivos {
             hash = hashInt.toString(16);
         } catch (NullPointerException | NoSuchAlgorithmException e) {
 
-        } 
+        }
         return hash;
     }
 
@@ -86,16 +89,18 @@ public class TreatFiles extends Arquivos {
         String name = getNomeArquivo();
         // Formato
         String format = getFileHashedFormat();
+        //        
+        String hash = getHashArquivo().split("[.]")[0];
+        System.out.print(hash);
         // Arquivo
         byte[] file = getArquivo();
 
         new File("Files").mkdir();
         new File("Files/Received").mkdir();
         new File("Files/Received/" + format).mkdir();
-        new File("Files/Received/" + format).mkdir();        
-        Path path = Paths.get("Files/Received/" + format + "/" + name + "." + format);
+        new File("Files/Received/" + format + "/" + hash + "/").mkdir();
+        Path path = Paths.get("Files/Received/" + format + "/" + hash + "/" + name + "." + format);
         setPathName(path.toString());
-        System.out.println(path);
 
         try {
             Files.write(path, file);
@@ -107,26 +112,50 @@ public class TreatFiles extends Arquivos {
     // Coletar bytes[] a partir de arquivo localizado na própria maquina
     public void setBytes(String pathName) throws IOException {
         this.pathName = pathName;
-            this.fileBytes = java.nio.file.Files.readAllBytes(Paths.get(pathName));
+        this.fileBytes = java.nio.file.Files.readAllBytes(Paths.get(pathName));
     }
-    
+
+    public void setBytes(byte[] fileBytes) throws IOException {
+        this.fileBytes = fileBytes;
+    }
+
     public byte[] getBytes() {
         return fileBytes;
-    }    
-    
-    public static BufferedImage resizeImage(BufferedImage image) { 
-        return resizeImage(image,50);
     }
-    
-    public static BufferedImage resizeImage(BufferedImage image,int h) {
+
+    public static BufferedImage resizeImage(BufferedImage image) {
+        return resizeImage(image, 50);
+    }
+
+    public static BufferedImage resizeImage(BufferedImage image, int h) {
         int oldH = image.getHeight();
         int newH = h;
         int oldW = image.getWidth();
-        int newW = (oldW*newH)/oldH;
-        BufferedImage new_img = new BufferedImage(newW,newH, BufferedImage.TYPE_INT_RGB);
+        int newW = (oldW * newH) / oldH;
+        BufferedImage new_img = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = new_img.createGraphics();
-        g.drawImage(image, 0, 0,newW,newH, null);
+        g.drawImage(image, 0, 0, newW, newH, null);
         g.dispose();
         return new_img;
+    }
+
+    public static byte[] resizeImage(byte[] byteImage, int h, String format) {
+        InputStream is = new ByteArrayInputStream(byteImage);
+        BufferedImage bi;
+        try {
+            bi = ImageIO.read(is);
+            bi = resizeImage(bi, h);
+            byteImage = toByteArray(bi, "jpg");
+        } catch (IOException ex) {
+            Logger.getLogger(TreatFiles.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return byteImage;
+    }
+
+    public static byte[] toByteArray(BufferedImage bi, String format) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bi, format, baos);
+        byte[] bytes = baos.toByteArray();
+        return bytes;
     }
 }

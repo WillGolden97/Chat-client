@@ -79,6 +79,7 @@ public class Player
 	 */
 	public Player(InputStream stream) throws JavaLayerException
 	{
+		
 		this(stream, null);	
 	}
 	

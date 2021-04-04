@@ -86,7 +86,7 @@ public class DownloadFile implements Runnable {
     private boolean isAudio(String fileName) {
         String[] spliPoint = fileName.split("[.]");
         String format = spliPoint[spliPoint.length - 1];
-        return format.toLowerCase().equals("wav") || format.toLowerCase().equals("mp3");
+        return format.toLowerCase().equals("mp3");
     }
 
 }

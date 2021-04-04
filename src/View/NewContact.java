@@ -11,6 +11,7 @@ import Model.bean.Contact;
 import Model.bean.ProfilePic;
 import Model.bean.TreatFiles;
 import Threads.SaveProfileImage;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class NewContact extends javax.swing.JFrame {
     public NewContact() {
         initComponents();
         setDefaultBorder(searchNickName);
+        setIconTop();
     }
 
     private void setDefaultBorder(JTextField label) {
@@ -53,7 +55,7 @@ public class NewContact extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        profilePicLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         nomeLabel = new javax.swing.JLabel();
@@ -65,17 +67,14 @@ public class NewContact extends javax.swing.JFrame {
         setTitle("Adicionar contato");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
         });
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/profileLarge.png"))); // NOI18N
-        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        profilePicLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        profilePicLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/profileLarge.png"))); // NOI18N
+        profilePicLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -133,7 +132,7 @@ public class NewContact extends javax.swing.JFrame {
                     .addComponent(nickNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(nomeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(profilePicLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(searchNickName))
                 .addGap(10, 10, 10)
@@ -144,7 +143,7 @@ public class NewContact extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(profilePicLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(addCotact, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -186,10 +185,6 @@ public class NewContact extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addCotactMouseClicked
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-
-    }//GEN-LAST:event_formWindowClosed
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         Chat chat = new Chat();
         chat.setVisible(true);
@@ -211,7 +206,7 @@ public class NewContact extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Usuário inexistente");
             }
             chat.setVisible(true);
-            setVisible(false);
+            dispose();
         }
     }//GEN-LAST:event_searchNickNameKeyReleased
 
@@ -283,21 +278,26 @@ public class NewContact extends javax.swing.JFrame {
             InputStream is = new ByteArrayInputStream(profilepic.getPicture());
             BufferedImage bi = ImageIO.read(is);
             bi = treatFile.resizeImage(bi, 200);
-            jLabel1.setIcon(new ImageIcon(bi));
+            profilePicLabel.setIcon(new ImageIcon(bi));
         } catch (NullPointerException | IOException ex) {
-            jLabel1.setIcon(new ImageIcon(getClass().getResource("/Images/profileLarge.png")));
+            profilePicLabel.setIcon(new ImageIcon(getClass().getResource("/Images/profileLarge.png")));
         }
     }
+    
+    private void setIconTop() {
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Images/AddCLient.png")));
+    }
+
     /**
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addCotact;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel nickNameLabel;
     private javax.swing.JLabel nomeLabel;
+    private javax.swing.JLabel profilePicLabel;
     private javax.swing.JLabel search;
     private javax.swing.JTextField searchNickName;
     // End of variables declaration//GEN-END:variables

@@ -22,13 +22,13 @@ import util.Communication;
  */
 public class CreateNewAccount implements Runnable {
 
-    Server server;
-    String replyLogin = "";
-    byte[] picture;
-    String format;
-    String name;
-    String nickName;
-    String password;
+    private Server server;
+    private String replyLogin = "";
+    private final byte[] picture;
+    private final String format;
+    private final String name;
+    private final String nickName;
+    private final String password;
 
     public CreateNewAccount(byte[] picture, String format, String name, String nickName, String password) {
         this.picture = picture;
