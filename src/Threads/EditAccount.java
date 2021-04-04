@@ -64,7 +64,7 @@ public class EditAccount implements Runnable {
         }
         message.setParam("name", name);
         replyLogin = (String) server.outPut_inPut(message).getParam("EDITACCOUNTREPLY");
-        JOptionPane.showMessageDialog(null, "Perfil atualizado com sucesso!\n" + replyLogin);
+        JOptionPane.showMessageDialog(null, "\n" + replyLogin);
 
     }
 
