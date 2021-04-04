@@ -210,11 +210,11 @@ public class Login extends javax.swing.JFrame {
             myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
-                if (data.contains("Address:")) {
-                    data = data.split("Address:")[1];
+                if (data.replaceAll(" ","").contains("Address:")) {
+                    data = data.replaceAll(" ","").split("Address:")[1];
                     addres = data;
-                } else if (data.contains("Door:")) {
-                    data = data.split("Door:")[1];
+                } else if (data.replaceAll(" ","").contains("Door:")) {
+                    data = data.replaceAll(" ","").split("Door:")[1];
                     door = Integer.parseInt(data);
                 }
             }

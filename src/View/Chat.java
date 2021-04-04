@@ -915,7 +915,7 @@ public final class Chat extends javax.swing.JFrame {
                 if (isImage(hashName)) {
                     Mensagens();
                 } else if (isAudio(hashName)) {
-                    playAudio(tf.getPathName(), tf.getFileName() + "." + tf.getFileFormat());
+                    playAudio(tf.getPathName(), tf.getNomeArquivo() + "." + tf.getFileFormat());
                 }
                 loadingLabel.setToolTipText(loadingLabel.getToolTipText().replace(download, ""));
                 if (loadingLabel.getToolTipText().equals("")) {
