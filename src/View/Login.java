@@ -204,7 +204,7 @@ public class Login extends javax.swing.JFrame {
         
         File myObj = new File("server.ini");
         Scanner myReader;
-        String addres = "";
+        String address = "";
         int door = 0;
         try {
             myReader = new Scanner(myObj);
@@ -212,7 +212,7 @@ public class Login extends javax.swing.JFrame {
                 String data = myReader.nextLine();
                 if (data.replaceAll(" ","").contains("Address:")) {
                     data = data.replaceAll(" ","").split("Address:")[1];
-                    addres = data;
+                    address = data;
                 } else if (data.replaceAll(" ","").contains("Door:")) {
                     data = data.replaceAll(" ","").split("Door:")[1];
                     door = Integer.parseInt(data);
@@ -222,7 +222,7 @@ public class Login extends javax.swing.JFrame {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        server = new Server(addres, door);
+        server = new Server(address, door);
         Communication message = new Communication("LOGIN");
         hashPassword = getHashMd5(nickName.getText() + password.getText());
         message.setParam("nickName", nickName.getText());
