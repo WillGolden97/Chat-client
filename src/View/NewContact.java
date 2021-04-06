@@ -29,12 +29,14 @@ import util.Communication;
  */
 public class NewContact extends javax.swing.JFrame {
 
-    TreatFiles treatFile = new TreatFiles();
-    Contact contact = new Contact();
-    Authenticated Authenticated = new Authenticated();
-    String nickName = Authenticated.getLogin();
+    private final TreatFiles treatFile = new TreatFiles();
+    private Contact contact = new Contact();
+    private final Authenticated Authenticated = new Authenticated();
+    private final String nickName;
+    private boolean emptyUser = true;
 
     public NewContact() {
+        this.nickName = Authenticated.getLogin();
         initComponents();
         setDefaultBorder(searchNickName);
         setIconTop();
@@ -166,7 +168,11 @@ public class NewContact extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMouseClicked
-        searchContact();
+        if (checkNickName() == 1) {
+            searchContact();
+        } else {
+            JOptionPane.showMessageDialog(null, "Usuário inexistente");
+        }
     }//GEN-LAST:event_searchMouseClicked
 
     private void addCotactMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addCotactMouseClicked
@@ -192,21 +198,23 @@ public class NewContact extends javax.swing.JFrame {
 
     private void searchNickNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchNickNameKeyReleased
         if (evt.getKeyCode() == 10) {
-            Chat chat = new Chat();
-            if (checkNickName() == 1) {
-                if (checkContact() == 0 && !nickName.equals(searchNickName.getText())) {
-                    searchContact();
-
-                    chat.addContact(contact);
-                    saveProfilesPic();
-
+            if (emptyUser) {
+                Chat chat = new Chat();
+                if (checkNickName() == 1) {
+                    if (checkContact() == 0 && !nickName.equals(searchNickName.getText())) {
+                        searchContact();
+                        chat.addContact(contact);
+                        saveProfilesPic();
+                    }
+                    chat.setVisible(true);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Usuário inexistente");
+                    emptyUser = false;
                 }
-
             } else {
-                JOptionPane.showMessageDialog(null, "Usuário inexistente");
+                emptyUser = true;
             }
-            chat.setVisible(true);
-            dispose();
         }
     }//GEN-LAST:event_searchNickNameKeyReleased
 
@@ -283,10 +291,11 @@ public class NewContact extends javax.swing.JFrame {
             profilePicLabel.setIcon(new ImageIcon(getClass().getResource("/Images/profileLarge.png")));
         }
     }
-    
+
     private void setIconTop() {
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Images/AddCLient.png")));
     }
+
 
     /**
      * @param args the command line arguments
