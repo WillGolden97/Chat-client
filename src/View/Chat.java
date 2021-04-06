@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,6 @@ public final class Chat extends javax.swing.JFrame {
 
     private final Authenticated auth = new Authenticated();
     private List<Contact> contatos;
-    private List<String> campoTextos = new ArrayList<>();
     private final String nickName = auth.getLogin();
     private TreatFiles currentFile = new TreatFiles();
     private SelectorFile sf = new SelectorFile();
@@ -68,6 +66,10 @@ public final class Chat extends javax.swing.JFrame {
     // Thread read Messages 
     private boolean messageRead;
     private Thread messageThread;
+    // Current contact 
+    private Contact currenContact;
+    // Added contact 
+    private boolean addedContact;
 
     public Chat() {
         initComponents();
@@ -85,10 +87,8 @@ public final class Chat extends javax.swing.JFrame {
     }
 
     public void addContact(Contact contact) {
-        campoTextos.add("");
         contatos.add(contact);
-        contactListDefaultListModel.addElement(" " + contact.getNome());
-        contactsList.setSelectedIndex(contactsList.getModel().getSize() - 1);
+        currenContact = contact;
         componentsToggle(true);
         if (messageRead) {
             messageThread.stop();
@@ -96,6 +96,7 @@ public final class Chat extends javax.swing.JFrame {
         }
         messageThread = new Thread(Mensagens);
         messageThread.start();
+        addedContact = true;
     }
 
     public void selectContact(int value) {
@@ -188,9 +189,6 @@ public final class Chat extends javax.swing.JFrame {
         campoMensagem.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 campoMensagemKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                campoMensagemKeyTyped(evt);
             }
         });
         campoMensagemScroll.setViewportView(campoMensagem);
@@ -518,16 +516,19 @@ public final class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_campoMensagemKeyReleased
 
 
-    private void campoMensagemKeyTyped(KeyEvent evt) {//GEN-FIRST:event_campoMensagemKeyTyped
-        setCampoMensagem(campoMensagem.getText());
-    }//GEN-LAST:event_campoMensagemKeyTyped
-
     private void fileMouseClicked(MouseEvent evt) {//GEN-FIRST:event_fileMouseClicked
         sf = new SelectorFile();
         sf.toggleSelectorWindows(true);
     }//GEN-LAST:event_fileMouseClicked
 
     private void formWindowGainedFocus(WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        if (addedContact) {
+            addedContact = false;
+        } else {
+            int selectedContact = contactsList.getSelectedIndex();
+            contatos();
+            contactsList.setSelectedIndex(selectedContact);
+        }
         if (!contactsList.isSelectionEmpty()) {
             if (messageRead) {
                 messageThread.stop();
@@ -659,18 +660,13 @@ public final class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_editProfileLabelMouseClicked
 
     private void contactExchange() {
+        currenContact = getContatos().get(contactsList.getSelectedIndex());
         if (messageRead) {
             messageThread.stop();
             messageRead = false;
         }
         messageThread = new Thread(Mensagens);
         messageThread.start();
-        int row = contactsList.getSelectedIndex();
-        try {
-            campoMensagem.setText(campoTextos.get(row));
-        } catch (IndexOutOfBoundsException ex) {
-            campoMensagem.setText("");
-        }
         clearCurrenteFile();
         componentsToggle(true);
         sendMessageControl();
@@ -681,12 +677,6 @@ public final class Chat extends javax.swing.JFrame {
         this.selectedFile = false;
         currentFile = null;
         file.setIcon(new ImageIcon(getClass().getResource("/Images/file.png")));
-    }
-
-    private void setCampoMensagem(String value) {
-        int row;
-        row = contactsList.getSelectedIndex();
-        campoTextos.set(row, value);
     }
 
     private void sendMessageControl() {
@@ -720,11 +710,10 @@ public final class Chat extends javax.swing.JFrame {
     }
 
     public void enviarMensagem() throws IOException, ClassNotFoundException {
-        int row = contactsList.getSelectedIndex();
         Message message = new Message();
         message.setMessage(campoMensagem.getText());
         message.setFrom(nickName);
-        message.setTo(getContatos().get(row).getNickName());
+        message.setTo(currenContact.getNickName());
         this.msg = message;
         Thread t = new Thread(sendMessage);
         t.start();
@@ -735,17 +724,16 @@ public final class Chat extends javax.swing.JFrame {
         public void run() {
             messageRead = true;
             try {
-                int row = contactsList.getSelectedIndex();
-                String contactNickName = getContatos().get(row).getNickName();
-                String contactName = getContatos().get(row).getNome();
+                String contactNickName = currenContact.getNickName();
+                String contactName = currenContact.getNome();
                 Server server = new Server();
                 Communication communication = new Communication("MESSAGE");
                 communication.setParam("nickName", nickName);
                 communication.setParam("contactNickName", contactNickName);
                 setProfileIcon(contactNickName, profilePicLabel);
                 // Titulo do chat e janela
-                setTitle("Chat - @" + nickName + " - Contact - @" + getContatos().get(row).getNickName());
-                titleChat.setText(" " + getContatos().get(row).getNome());
+                setTitle("Chat - @" + nickName + " - Contact - @" + currenContact.getNickName());
+                titleChat.setText(" " + currenContact.getNome());
                 // Setando informações de usuário
                 nameInfo.setEditable(true);
                 nameInfo.setText(contactName);
@@ -788,10 +776,8 @@ public final class Chat extends javax.swing.JFrame {
     }
 
     public void readContatosList() throws IOException, ClassNotFoundException {
-        campoTextos = new ArrayList<>();
         contactListDefaultListModel = new DefaultListModel<>();
         getContatos().forEach((c) -> {
-            campoTextos.add("");
             contactListDefaultListModel.addElement(
                     " " + c.getNome());
         });
@@ -844,7 +830,6 @@ public final class Chat extends javax.swing.JFrame {
             String hashName = "";
             clearCurrenteFile();
             characters.setText("000/500");
-            setCampoMensagem("");
             campoMensagem.setText("");
             send.setEnabled(false);
             String toolTipMgsList;
@@ -976,6 +961,7 @@ public final class Chat extends javax.swing.JFrame {
             }
             messageThread = new Thread(Mensagens);
             messageThread.start();
+            contatos();
             clearCurrenteFile();
         }
     };
