@@ -35,7 +35,6 @@ public class EditProfile extends javax.swing.JFrame {
 
     public EditProfile(String nickName) {
         initComponents();
-        setLocation(400, 150);
         setIconTop();
         this.nickName = nickName;
         nickNameLabel.setText(" " + nickName);

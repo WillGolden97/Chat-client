@@ -490,9 +490,11 @@ public final class Chat extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && campoMensagem.getText().length() > 0) {
             try {
                 if (campoMensagem.getText().length() == 2) {
-                   try {
-                        campoMensagem.setText("");
-                        enviarMensagem();
+                    try {
+                        if (currentFile.getBytes() != null) {
+                            campoMensagem.setText("");
+                            enviarMensagem();
+                        }
                     } catch (NullPointerException ex) {
                         campoMensagem.setText("");
                         send.setEnabled(false);
@@ -546,6 +548,9 @@ public final class Chat extends javax.swing.JFrame {
                 currentFile = new TreatFiles();
             } catch (IOException ex) {
                 System.out.println("Arquivo não selecionado : " + ex);
+            } catch (OutOfMemoryError ex) {
+                JOptionPane.showMessageDialog(null, "Envie arquivo de no máximo 20 MB!");
+                sf.setCurrentFile(null);
             }
         }
     }//GEN-LAST:event_formWindowGainedFocus
@@ -634,7 +639,7 @@ public final class Chat extends javax.swing.JFrame {
     private void addClientMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addClientMouseClicked
         NewContact newContact = new NewContact();
         newContact.setVisible(true);
-        newContact.setLocation(400, 150);
+        newContact.setLocation(getLocation());
         playAudio(currentAudio, "");
         dispose();
     }//GEN-LAST:event_addClientMouseClicked
@@ -655,6 +660,7 @@ public final class Chat extends javax.swing.JFrame {
 
     private void editProfileLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editProfileLabelMouseClicked
         EditProfile editProfile = new EditProfile(nickName);
+        editProfile.setLocation(getLocation());
         editProfile.setVisible(true);
     }//GEN-LAST:event_editProfileLabelMouseClicked
 
