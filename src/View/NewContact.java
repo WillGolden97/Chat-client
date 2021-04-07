@@ -232,13 +232,12 @@ public class NewContact extends javax.swing.JFrame {
         server = new Server();
         Communication message = new Communication("SEARCHCONTACT");
         message.setParam("nickName", searchNickName.getText());
-        Contact c;
-        try {
-            c = (Contact) server.outPut_inPut(message).getParam("SEARCHCONTACTREPLY");
+        Contact c = (Contact) server.outPut_inPut(message).getParam("SEARCHCONTACTREPLY");
+        if (c != null) {
             nomeLabel.setText(" " + c.getNome());
             nickNameLabel.setText(" @" + c.getNickName());
             this.contact = c;
-        } catch (NullPointerException ex) {
+        } else {
             nomeLabel.setText("");
             nickNameLabel.setText("");
         }
@@ -252,11 +251,7 @@ public class NewContact extends javax.swing.JFrame {
         Communication message = new Communication("CHECKCONTACT");
         message.setParam("nickName", nickName);
         message.setParam("contactNickName", searchNickName.getText());
-        try {
-            i = (int) server.outPut_inPut(message).getParam("CHECKCONTACTREPLY");
-        } catch (NullPointerException ex) {
-            i = 0;
-        }
+        i = (int) server.outPut_inPut(message).getParam("CHECKCONTACTREPLY");
         return i;
     }
 
@@ -266,11 +261,7 @@ public class NewContact extends javax.swing.JFrame {
         server = new Server();
         Communication message = new Communication("CHECKCLIENT");
         message.setParam("nickName", searchNickName.getText());
-        try {
-            i = (int) server.outPut_inPut(message).getParam("CHECKCLIENTREPLY");
-        } catch (NullPointerException ex) {
-            i = 0;
-        }
+        i = (int) server.outPut_inPut(message).getParam("CHECKCLIENTREPLY");
         return i;
     }
 
@@ -295,7 +286,6 @@ public class NewContact extends javax.swing.JFrame {
     private void setIconTop() {
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Images/AddCLient.png")));
     }
-
 
     /**
      * @param args the command line arguments

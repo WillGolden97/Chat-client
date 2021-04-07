@@ -12,6 +12,7 @@ import View.Chat;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -64,7 +65,7 @@ public class SaveProfileImage implements Runnable {
                 new File("Files/Contacts/ProfilePic/"+sizeFolder+"/" + nickName).mkdir();
                 Path path = Paths.get("Files/Contacts/ProfilePic/"+sizeFolder+"/" + nickName + "/" + nickName + ".jpg");
                 ImageIO.write(bi, "jpg", new File(path.toString()));
-            } catch (NullPointerException ex) {
+            } catch (NullPointerException | FileNotFoundException ex) {
 
             }
         } catch (IOException ex) {

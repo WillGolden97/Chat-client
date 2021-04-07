@@ -55,7 +55,7 @@ public final class Chat extends javax.swing.JFrame {
     private final Map<String, Object> process;
     private DefaultListModel contactListDefaultListModel = new DefaultListModel();
     private String currentAudio = "";
-    private Thread threadAudio;
+    private Thread threadAudio = null;
     // DownloadFile 
     private String hashDownloadFileThread;
     private String nameDownloadFileThread;
@@ -458,7 +458,7 @@ public final class Chat extends javax.swing.JFrame {
         this.hashDownloadFileThread = hash;
         this.nameDownloadFileThread = name;
         Thread t;
-        try {
+        if (((Thread) getProcess(hash)) != null) {
             t = (Thread) getProcess(hash);
             if (t.isAlive()) {
                 JOptionPane.showMessageDialog(null, "Esse download já está andamento");
@@ -466,7 +466,7 @@ public final class Chat extends javax.swing.JFrame {
                 setProcess(hash, null);
                 downloadFile(hash, name);
             }
-        } catch (NullPointerException ex) {
+        } else {
             setProcess(hash, new Thread(downloadFile));
             t = (Thread) getProcess(hash);
             t.start();
@@ -490,11 +490,9 @@ public final class Chat extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && campoMensagem.getText().length() > 0) {
             try {
                 if (campoMensagem.getText().length() == 2) {
-                    try {
-                        if (currentFile.getBytes() != null) {
-                            campoMensagem.setText("");
-                            enviarMensagem();
-                        }
+                   try {
+                        campoMensagem.setText("");
+                        enviarMensagem();
                     } catch (NullPointerException ex) {
                         campoMensagem.setText("");
                         send.setEnabled(false);
@@ -536,6 +534,7 @@ public final class Chat extends javax.swing.JFrame {
             }
             messageThread = new Thread(Mensagens);
             messageThread.start();
+
             try {
                 this.currentFile = sf.getCurrentFile();
                 file.setToolTipText(currentFile.getFileName() + "." + currentFile.getFileFormat());
@@ -604,10 +603,10 @@ public final class Chat extends javax.swing.JFrame {
 
     private void playAudio(String path, String name) {
         PlayAudio playAudio = new PlayAudio(path);
-        try {
+        if (threadAudio != null) {
             threadAudio.stop();
-        } catch (NullPointerException ex) {
-            // Audio já parado ou já existe
+        } else {
+            System.out.println("Audio já parado ou já existe");
         }
         if (!currentAudio.equals(path)) {
             threadAudio = new Thread(playAudio);
@@ -616,12 +615,12 @@ public final class Chat extends javax.swing.JFrame {
             pauseAudio.setVisible(true);
             pauseAudio.setToolTipText(name);
         } else {
-            try {
+            if (threadAudio != null) {
                 threadAudio.stop();
                 this.currentAudio = "";
                 pauseAudio.setVisible(false);
-            } catch (NullPointerException ex) {
-                // Audio já parado ou já existe
+            } else {
+                System.out.println("Audio já parado ou já existe");
             }
         }
     }
@@ -723,7 +722,7 @@ public final class Chat extends javax.swing.JFrame {
         @Override
         public void run() {
             messageRead = true;
-            try {
+            if (currenContact != null) {
                 String contactNickName = currenContact.getNickName();
                 String contactName = currenContact.getNome();
                 Server server = new Server();
@@ -745,19 +744,20 @@ public final class Chat extends javax.swing.JFrame {
                 communication = server.outPut_inPut(communication);
                 List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
                 String htmlMsg;
+                String msg = "";
                 HtmlContent html = new HtmlContent();
                 htmlMsg = "<!DOCTYPE html><html><head></head><body>";
                 for (Message m : message) {
                     if (m.getFrom().equals(nickName)) {
-                        htmlMsg += html.htmlMsg("#383a59", "left", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate());
+                        msg = html.htmlMsg("#383a59", "left", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + msg;
                     } else {
-                        htmlMsg += html.htmlMsg("#282a36", "right", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate());
+                        msg = html.htmlMsg("#282a36", "right", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + msg;
                     }
                 }
-                htmlMsg += "</body></html>";
+                htmlMsg += msg + "</body></html>";
                 setCaixadeEntrada(htmlMsg);
-            } catch (NullPointerException | NoClassDefFoundError | ArrayIndexOutOfBoundsException ex) {
-                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            } else {
+                System.out.print("Mensagem não selecionada");
             }
         }
     };
@@ -810,7 +810,7 @@ public final class Chat extends javax.swing.JFrame {
             InputStream is = new ByteArrayInputStream(imageBytes);
             BufferedImage bi = ImageIO.read(is);
             label.setIcon(new ImageIcon(bi));
-        } catch (IOException | IndexOutOfBoundsException | NullPointerException ex) {
+        } catch (IOException ex) {
             System.out.print("Não localizada imagem!");
         }
     }
@@ -833,20 +833,16 @@ public final class Chat extends javax.swing.JFrame {
             campoMensagem.setText("");
             send.setEnabled(false);
             String toolTipMgsList;
-            try {
-                toolTipMgsList = (loadingLabel.getToolTipText().length() == 0) ? ("") : (loadingLabel.getToolTipText());
-            } catch (NullPointerException ex) {
-                toolTipMgsList = "";
-            }
+            toolTipMgsList = (loadingLabel.getToolTipText() == null) ? ("") : (loadingLabel.getToolTipText());
             String toolTipMgs = "Enviando mensagem ...\n";
             toolTipMgsList = toolTipMgs + toolTipMgsList;
             loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
             loadingLabel.setToolTipText(toolTipMgsList);
+
             try {
                 message.setNomeArquivo(file.getFileName());
                 hashName = file.getHashedNameFile() + "." + file.getFileFormat();
                 message.setHashArquivo(hashName);
-
             } catch (NullPointerException ex) {
                 System.out.println("Sem anexo");
             }
@@ -871,7 +867,7 @@ public final class Chat extends javax.swing.JFrame {
             communication.setParam("SENDEDMESSAGE", message);
             communication = server.outPut_inPut(communication);
             System.out.println(communication.getParam("STATUSMESSAGE"));
-            try {
+            if (messageThread != null) {
                 if (messageRead) {
                     messageThread.stop();
                     messageRead = false;
@@ -880,12 +876,13 @@ public final class Chat extends javax.swing.JFrame {
                 messageThread.start();
                 contatos();
                 contactsList.setSelectedIndex(0);
-            } catch (NullPointerException ex) {
+            } else {
+                System.out.print("Já iniciado ou não existente");
             }
-            loadingLabel.setIcon(null);
             loadingLabel.setToolTipText(loadingLabel.getText().replace(toolTipMgs, ""));
             if (loadingLabel.getToolTipText().equals("")) {
                 loadingLabel.setToolTipText(null);
+                loadingLabel.setIcon(null);
             }
         }
     };
@@ -898,11 +895,7 @@ public final class Chat extends javax.swing.JFrame {
             loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
             String download = "Baixando : " + nameDownloadFileThread + "\n";
             String downloadList;
-            try {
-                downloadList = (loadingLabel.getToolTipText().length() == 0) ? ("") : (loadingLabel.getToolTipText());
-            } catch (NullPointerException ex) {
-                downloadList = "";
-            }
+            downloadList = (loadingLabel.getToolTipText() == null) ? ("") : (loadingLabel.getToolTipText());
             loadingLabel.setToolTipText(download + downloadList);
             try {
                 // Abrir conexão socket
@@ -939,8 +932,8 @@ public final class Chat extends javax.swing.JFrame {
                 loadingLabel.setToolTipText(loadingLabel.getToolTipText().replace(download, ""));
                 if (loadingLabel.getToolTipText().equals("")) {
                     loadingLabel.setToolTipText(null);
+                    loadingLabel.setIcon(null);
                 }
-                loadingLabel.setIcon(null);
             } catch (IOException ex) {
                 Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
             }
