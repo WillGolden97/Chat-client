@@ -13,6 +13,7 @@ import Model.bean.Message;
 import Model.bean.TreatFiles;
 import Threads.PlayAudio;
 import Threads.SaveProfileImage;
+import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -67,9 +68,11 @@ public final class Chat extends javax.swing.JFrame {
     private boolean messageRead;
     private Thread messageThread;
     // Current contact 
-    private Contact currenContact;
+    private Contact currenContact = null;
     // Added contact 
     private boolean addedContact;
+    // Trigger call message   
+    private boolean selectMessage = false;
 
     public Chat() {
         initComponents();
@@ -77,30 +80,13 @@ public final class Chat extends javax.swing.JFrame {
         setDefaultBorder(nameInfo);
         setDefaultBorder(nickNameInfo);
         setDefaultBorder(campoMensagem);
-        contatos();
+        contacts();
         setIconTop();
         componentsToggle(false);
         setLocation(400, 150);
         contactsList.setFixedCellHeight(40);
         process = new HashMap<>();
         pauseAudio.setVisible(false);
-    }
-
-    public void addContact(Contact contact) {
-        contatos.add(contact);
-        currenContact = contact;
-        componentsToggle(true);
-        if (messageRead) {
-            messageThread.stop();
-            messageRead = false;
-        }
-        messageThread = new Thread(Mensagens);
-        messageThread.start();
-        addedContact = true;
-    }
-
-    public void selectContact(int value) {
-        contactsList.setSelectedIndex(value);
     }
 
     @SuppressWarnings("unchecked")
@@ -413,6 +399,23 @@ public final class Chat extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void addContact(Contact contact) {
+        contatos.add(contact);
+        currenContact = contact;
+        componentsToggle(true);
+        if (messageRead) {
+            messageThread.stop();
+            messageRead = false;
+        }
+        messageThread = new Thread(Messages);
+        messageThread.start();
+        addedContact = true;
+    }
+
+    public void selectContact(int value) {
+        contactsList.setSelectedIndex(value);
+    }
+
     private void setDefaultBorder(JTextField label) {
         label.setBorder(BorderFactory.createCompoundBorder(
                 label.getBorder(),
@@ -526,17 +529,10 @@ public final class Chat extends javax.swing.JFrame {
             addedContact = false;
         } else {
             int selectedContact = contactsList.getSelectedIndex();
-            contatos();
+            contacts();
             contactsList.setSelectedIndex(selectedContact);
         }
         if (!contactsList.isSelectionEmpty()) {
-            if (messageRead) {
-                messageThread.stop();
-                messageRead = false;
-            }
-            messageThread = new Thread(Mensagens);
-            messageThread.start();
-
             try {
                 this.currentFile = sf.getCurrentFile();
                 file.setToolTipText(currentFile.getFileName() + "." + currentFile.getFileFormat());
@@ -560,11 +556,14 @@ public final class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePicLabelMouseClicked
 
     private void contactsListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contactsListKeyReleased
-        contactExchange();
+        int key = evt.getKeyCode();
+        if (key == 38 || key == 40) {
+            contactChange();
+        }
     }//GEN-LAST:event_contactsListKeyReleased
 
     private void contactsListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contactsListMouseReleased
-        contactExchange();
+        contactChange();
     }//GEN-LAST:event_contactsListMouseReleased
 
     private void titleChatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleChatMouseClicked
@@ -664,14 +663,18 @@ public final class Chat extends javax.swing.JFrame {
         editProfile.setVisible(true);
     }//GEN-LAST:event_editProfileLabelMouseClicked
 
-    private void contactExchange() {
-        currenContact = getContatos().get(contactsList.getSelectedIndex());
+    private void contactChange() {
+        currenContact = getContacts().get(contactsList.getSelectedIndex());
         if (messageRead) {
             messageThread.stop();
             messageRead = false;
         }
-        messageThread = new Thread(Mensagens);
+        messageThread = new Thread(Messages);
         messageThread.start();
+        if (selectMessage == false) {
+            new Thread(MessagesNotReceived).start();
+            selectMessage = true;
+        }
         clearCurrenteFile();
         componentsToggle(true);
         sendMessageControl();
@@ -696,7 +699,7 @@ public final class Chat extends javax.swing.JFrame {
 
     public void addCaixadeEntrada(String value) {
         caixaDeEntrada.setEditable(true);
-        caixaDeEntrada.setText(caixaDeEntrada.getText() + value + "\n");
+        caixaDeEntrada.setText(caixaDeEntrada.getText() + value);
         caixaDeEntrada.setEditable(false);
     }
 
@@ -706,7 +709,7 @@ public final class Chat extends javax.swing.JFrame {
         caixaDeEntrada.setEditable(false);
     }
 
-    public List<Contact> getContatos() {
+    public List<Contact> getContacts() {
         return contatos;
     }
 
@@ -723,12 +726,11 @@ public final class Chat extends javax.swing.JFrame {
         Thread t = new Thread(sendMessage);
         t.start();
     }
-
     private final Runnable Mensagens = new Runnable() {
         @Override
         public void run() {
-            messageRead = true;
             if (currenContact != null) {
+                messageRead = true;
                 String contactNickName = currenContact.getNickName();
                 String contactName = currenContact.getNome();
                 Server server = new Server();
@@ -749,18 +751,15 @@ public final class Chat extends javax.swing.JFrame {
                 setProfileIcon(contactNickName, profileIconInfo, "Large");
                 communication = server.outPut_inPut(communication);
                 List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
-                String htmlMsg;
-                String msg = "";
+                String htmlMsg = "";
                 HtmlContent html = new HtmlContent();
-                htmlMsg = "<!DOCTYPE html><html><head></head><body>";
                 for (Message m : message) {
                     if (m.getFrom().equals(nickName)) {
-                        msg = html.htmlMsg("#383a59", "left", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + msg;
+                        htmlMsg = html.htmlMsg("#383a59", "left", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                     } else {
-                        msg = html.htmlMsg("#282a36", "right", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + msg;
+                        htmlMsg = html.htmlMsg("#282a36", "right", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                     }
                 }
-                htmlMsg += msg + "</body></html>";
                 setCaixadeEntrada(htmlMsg);
             } else {
                 System.out.print("Mensagem não selecionada");
@@ -768,7 +767,95 @@ public final class Chat extends javax.swing.JFrame {
         }
     };
 
-    public void contatos() {
+    private final Runnable MessagesNotReceived = new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                if (currenContact != null) {
+                    messageRead = true;
+                    String contactNickName = currenContact.getNickName();
+                    String contactName = currenContact.getNome();
+                    Server server = new Server();
+                    Communication communication = new Communication("MESSAGENOTRECEIVED");
+                    communication.setParam("nickName", nickName);
+                    communication.setParam("contactNickName", contactNickName);
+                    setProfileIcon(contactNickName, profilePicLabel);
+                    // Titulo do chat e janela
+                    setTitle("Chat - @" + nickName + " - Contact - @" + currenContact.getNickName());
+                    titleChat.setText(" " + currenContact.getNome());
+                    // Setando informações de usuário
+                    nameInfo.setEditable(true);
+                    nameInfo.setText(contactName);
+                    nameInfo.setEditable(false);
+                    nickNameInfo.setEditable(true);
+                    nickNameInfo.setText("@" + contactNickName);
+                    nickNameInfo.setEditable(false);
+                    setProfileIcon(contactNickName, profileIconInfo, "Large");
+                    communication = server.outPut_inPut(communication);
+                    List<Message> message = (List<Message>) communication.getParam("MESSAGENOTRECEIVEDREPLY");
+                    String htmlMsg = "";
+                    HtmlContent html = new HtmlContent();
+                    int cont = 0;
+                    for (Message m : message) {
+                        if (m.getFrom().equals(nickName)) {
+                            htmlMsg = html.htmlMsg("#383a59", "left", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                        } else {
+                            htmlMsg = html.htmlMsg("#282a36", "right", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                        }
+                        cont++;
+                    }
+                    if (cont != 0) {
+                        setCaixadeEntrada(htmlMsg);
+                    }
+                } else {
+                    System.out.print("Mensagem não selecionada");
+                }
+            }
+        }
+    };
+
+    private final Runnable Messages = new Runnable() {
+        @Override
+        public void run() {
+            if (currenContact != null) {
+                messageRead = true;
+                String contactNickName = currenContact.getNickName();
+                String contactName = currenContact.getNome();
+                Server server = new Server();
+                Communication communication = new Communication("MESSAGE");
+                communication.setParam("nickName", nickName);
+                communication.setParam("contactNickName", contactNickName);
+                setProfileIcon(contactNickName, profilePicLabel);
+                // Titulo do chat e janela
+                setTitle("Chat - @" + nickName + " - Contact - @" + currenContact.getNickName());
+                titleChat.setText(" " + currenContact.getNome());
+                // Setando informações de usuário
+                nameInfo.setEditable(true);
+                nameInfo.setText(contactName);
+                nameInfo.setEditable(false);
+                nickNameInfo.setEditable(true);
+                nickNameInfo.setText("@" + contactNickName);
+                nickNameInfo.setEditable(false);
+                setProfileIcon(contactNickName, profileIconInfo, "Large");
+                communication = server.outPut_inPut(communication);
+                List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
+                String htmlMsg = "";
+                HtmlContent html = new HtmlContent();
+                for (Message m : message) {
+                    if (m.getFrom().equals(nickName)) {
+                        htmlMsg = html.htmlMsg("#383a59", "left", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                    } else {
+                        htmlMsg = html.htmlMsg("#282a36", "right", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                    }
+                }
+                setCaixadeEntrada(htmlMsg);
+            } else {
+                System.out.print("Mensagem não selecionada");
+            }
+        }
+    };
+
+    public void contacts() {
         try {
             Server server = new Server();
             Communication communication = new Communication("READ");
@@ -783,7 +870,7 @@ public final class Chat extends javax.swing.JFrame {
 
     public void readContatosList() throws IOException, ClassNotFoundException {
         contactListDefaultListModel = new DefaultListModel<>();
-        getContatos().forEach((c) -> {
+        getContacts().forEach((c) -> {
             contactListDefaultListModel.addElement(
                     " " + c.getNome());
         });
@@ -816,7 +903,7 @@ public final class Chat extends javax.swing.JFrame {
             InputStream is = new ByteArrayInputStream(imageBytes);
             BufferedImage bi = ImageIO.read(is);
             label.setIcon(new ImageIcon(bi));
-        } catch (IOException ex) {
+        } catch (IOException | NullPointerException ex) {
             System.out.print("Não localizada imagem!");
         }
     }
@@ -878,9 +965,9 @@ public final class Chat extends javax.swing.JFrame {
                     messageThread.stop();
                     messageRead = false;
                 }
-                messageThread = new Thread(Mensagens);
+                messageThread = new Thread(Messages);
                 messageThread.start();
-                contatos();
+                contacts();
                 contactsList.setSelectedIndex(0);
             } else {
                 System.out.print("Já iniciado ou não existente");
@@ -930,7 +1017,7 @@ public final class Chat extends javax.swing.JFrame {
                         messageThread.stop();
                         messageRead = false;
                     }
-                    messageThread = new Thread(Mensagens);
+                    messageThread = new Thread(Messages);
                     messageThread.start();
                 } else if (isAudio(hashName)) {
                     playAudio(tf.getPathName(), tf.getNomeArquivo() + "." + tf.getFileFormat());
@@ -952,18 +1039,20 @@ public final class Chat extends javax.swing.JFrame {
             Server server = new Server();
             Communication communication = new Communication("DELETEMESSAGE");
             communication.setParam("idMessage", idDeleteThread);
+            communication.setParam("msgFrom", nickName);
             communication = server.outPut_inPut(communication);
             System.out.print(communication.getParam("STATUSMESSAGE"));
             if (messageRead) {
                 messageThread.stop();
                 messageRead = false;
             }
-            messageThread = new Thread(Mensagens);
+            messageThread = new Thread(Messages);
             messageThread.start();
-            contatos();
+            contacts();
             clearCurrenteFile();
         }
     };
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addClient;

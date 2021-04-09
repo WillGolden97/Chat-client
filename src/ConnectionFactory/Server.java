@@ -21,12 +21,12 @@ public class Server {
     private Socket socket;
     private ObjectOutputStream outPut;
     private ObjectInputStream input;
-    private static String address;
-    private static int door;
+    private static String host;
+    private static int port;
 
-    public Server(String address, int door) {
-        this.address = address;
-        this.door = door;
+    public Server(String host, int port) {
+        this.host = host;
+        this.port = port;
     }
 
     public Server() {
@@ -34,24 +34,24 @@ public class Server {
     }
 
     public Communication outPut_inPut(Communication m) {
-        Communication messages = null;
+        Communication communication = null;
         try {
-            socket = new Socket(address, door);
+            socket = new Socket(host, port);
             outPut = new ObjectOutputStream(socket.getOutputStream());
             outPut.writeObject(m);
             outPut.flush();
             input = new ObjectInputStream(socket.getInputStream());
-            messages = (Communication) input.readObject();
+            communication = (Communication) input.readObject();
             close();
         } catch (IOException | ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, "Erro de conexão! \n" + ex);
         }
-        return messages;
+        return communication;
     }
 
     public void outPut(Communication m) {
         try {
-            socket = new Socket(address, door);
+            socket = new Socket(host, port);
             outPut = new ObjectOutputStream(socket.getOutputStream());
             outPut.writeObject(m);
             outPut.flush();
@@ -62,15 +62,15 @@ public class Server {
     }
 
     public Communication inPut(Communication m) {
-        Communication messages = null;
+        Communication communication = null;
         try {
             input = new ObjectInputStream(socket.getInputStream());
-            messages = (Communication) input.readObject();
+            communication = (Communication) input.readObject();
             close();
         } catch (IOException | ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, "Erro de conexão! \n" + ex);
         }
-        return messages;
+        return communication;
     }
 
     public void close() throws IOException, ClassNotFoundException {
