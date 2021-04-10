@@ -88,6 +88,7 @@ public final class Chat extends javax.swing.JFrame {
         contactsList.setFixedCellHeight(40);
         process = new HashMap<>();
         pauseAudio.setVisible(false);
+        extractChrome();
     }
 
     @SuppressWarnings("unchecked")
@@ -400,6 +401,21 @@ public final class Chat extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void extractChrome() {
+        boolean isExtracted = new File("google\\chrome.exe").isFile();
+        if (isExtracted) {
+            System.out.print("Extraido");
+        } else {
+            System.out.print("Não Extraido");
+            try {
+                Runtime.getRuntime().exec("PeaZip\\peazip.exe x \"extractHere.zip\" \"Files\" ");
+            } catch (IOException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            }
+  
+        }
+    }
 
     public void addContact(Contact contact) {
         contacts.add(contact);
