@@ -28,7 +28,7 @@ public class SelectorFile extends javax.swing.JFrame {
         currentFile.setBytes(filleChooser.getSelectedFile().toString());
         currentFile.setFileName(filleChooser.getSelectedFile().getName());
         double fileSize = currentFile.getBytes().length/1000000;
-        if(fileSize > 20.48) {
+        if(fileSize > 51.20) {
             JOptionPane.showMessageDialog(null,"Envie arquivo de no máximo 20 MB!\nEsse arquivo tem "+fileSize+" MB!");
             currentFile =  null;
         }

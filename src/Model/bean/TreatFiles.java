@@ -45,8 +45,29 @@ public class TreatFiles extends Arquivos {
     public void setFileName(String fileName) {
         String[] pointArr = fileName.split("[.]");
         String withoutFormat = pointArr[pointArr.length - 1];
+        String format = withoutFormat;
+
         withoutFormat = fileName.replace("." + withoutFormat, "");
+        if (isNotSupportedAudio(format) || isVideo(format)) {
+            withoutFormat = removeAccent(withoutFormat);
+            withoutFormat = withoutFormat.replaceAll("[^A-Za-z0-9_-[.] ]", "");
+        }
         this.fileName = withoutFormat;
+    }
+    private boolean isNotSupportedAudio (String format) {
+        return format.toLowerCase().equals("ogg") || format.toLowerCase().equals("wav");
+    }
+    private boolean isVideo (String format) {
+        return format.toLowerCase().equals("mp4");
+    }    
+    public static String removeAccent(String text) {
+        String withAccent = "ÄÅÁÂÀÃäáâàãÉÊËÈéêëèÍÎÏÌíîïìÖÓÔÒÕöóôòõÜÚÛüúûùÇç";
+        String withoutAccent = "AAAAAAaaaaaEEEEeeeeIIIIiiiiOOOOOoooooUUUuuuuCc";
+
+        for (int i = 0; i < withAccent.length(); i++) {
+            text = text.replaceAll(String.valueOf(withAccent.charAt(i)), String.valueOf(withoutAccent.charAt(i)));
+        }
+        return text;
     }
 
     public String getFileName() {

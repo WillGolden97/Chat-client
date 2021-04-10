@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
@@ -594,15 +595,16 @@ public final class Chat extends javax.swing.JFrame {
                 if (!isFile) {
                     downloadFile(hashName, name);
                 } else {
+                    boolean isNotSupportedAudio = format.toLowerCase().equals("ogg") || format.toLowerCase().equals("wav");
                     if (isAudio(hashName)) {
                         playAudio(pathNameDestination, name);
-                    } else if (isVideo(hashName) && isExtracted) {
+                    } else if (isExtracted && isVideo(hashName) || isExtracted && isNotSupportedAudio) {
                         int x = getLocation().x;
                         int y = getLocation().y;
                         int height = caixaDeEntradaScroll.getHeight();
-                        int width =  caixaDeEntradaScroll.getWidth();
+                        int width = caixaDeEntradaScroll.getWidth();
                         try {
-                            Runtime.getRuntime().exec("google\\chrome.exe --window-position=" + (x+144) + "," + (y+115) + " --window-size="+(width+12)+","+(height+5)+" /incognito --app=\"" + pathNameDestination + "\"");
+                            Runtime.getRuntime().exec("google\\chrome.exe --window-position=" + (x + 144) + "," + (y + 115) + " --window-size=" + (width + 12) + "," + (height + 5) + " /incognito --app=\"" + (pathNameDestination) + "\"");
                         } catch (IOException ex) {
                             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                         }
