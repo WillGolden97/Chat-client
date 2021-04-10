@@ -16,10 +16,12 @@ public class HtmlContent {
     private final String fileIcon;
     private final String audioIcon;
     private final String imageIcon;
+    private final String videoIcon;
 
     public HtmlContent() {
         this.audioIcon = "audioIcon.png";
         this.imageIcon = "imageIcon.png";
+        this.videoIcon = "videoIcon.png";
         this.fileIcon = "filesIcon.png";
     }
 
@@ -49,6 +51,10 @@ public class HtmlContent {
         return format.toLowerCase().equals("ogg") || format.toLowerCase().equals("wav") || format.toLowerCase().equals("mp3");
     }
 
+    private boolean isVideo(String format) {
+        return format.toLowerCase().equals("mp4") || format.toLowerCase().equals("mkv") || format.toLowerCase().equals("avi") || format.toLowerCase().equals("wmv") || format.toLowerCase().equals("flv") || format.toLowerCase().equals("mov");
+    }
+
     private boolean isFile(String name, String format) {
         String fileFormat = format.split("[.]")[1];
         String hash = format.split("[.]")[0];
@@ -59,12 +65,16 @@ public class HtmlContent {
     private String midiaAttachment(String html, String name, String format) {
         String icon = fileIcon;
         String path = new File("Images\\").getAbsoluteFile().toURI().toString();
-        boolean isAudio = format.toLowerCase().equals("ogg") || format.toLowerCase().equals("wav") || format.toLowerCase().equals("mp3");
-        boolean isImage = format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge") || format.toLowerCase().equals("gif");
+        boolean isAudio = isAudio(format);
+        boolean isImage = isImage(format);
+        boolean isVideo = isVideo(format);
+
         if (isAudio) {
             icon = audioIcon;
         } else if (isImage) {
             icon = imageIcon;
+        } else if (isVideo) {
+            icon = videoIcon;
         }
         html = html.replace("#img", "<img src=\"" + path + icon + "\" height=\"16\" />");
         html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0, 20) + "..." : name));
@@ -77,15 +87,14 @@ public class HtmlContent {
         String hash = hashName.split("[.]")[0];
         String format = hashName.split("[.]")[1];
         String name = nomeArquivo + "." + format;
-        html = html.replace("#name", name);
-        html = html.replace("#hashName", hashName);
-
         String filePath = new File("Files\\Received\\" + format + "\\" + hash + "\\").getAbsoluteFile().toURI().toString();
         if (isFile(name, hashName) && isImage(format)) {
-            html = "<div style=\"background-color:rgb(90,90,127);border:1px solid white;\"><center> <img src='" + filePath + "/" + name + "' width=\"260\" /> </center></div>";
+            html = "<div style=\"background-color:rgb(90,90,127);\"><center> <a href=\"file:/#name/#hashName\" ><img src='" + filePath + "/" + name + "' width=\"260\" /></a></center></div>";
         } else {
             html = midiaAttachment(html, name, format);
         }
+        html = html.replaceAll("#name", name);
+        html = html.replaceAll("#hashName", hashName);
         return html;
     }
 

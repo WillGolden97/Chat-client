@@ -66,7 +66,7 @@ public final class Chat extends javax.swing.JFrame {
     // MessagesNotReceived Thread
     private Thread messagesNotReceivedThread;
     // Thread read Messages 
-    private boolean messageRead;
+    private boolean messageRead = false;
     private Thread messageThread;
     // Current contact 
     private Contact currenContact = null;
@@ -134,6 +134,11 @@ public final class Chat extends javax.swing.JFrame {
                 formWindowGainedFocus(evt);
             }
             public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -485,6 +490,12 @@ public final class Chat extends javax.swing.JFrame {
         return format.toLowerCase().equals("mp3");
     }
 
+    private boolean isVideo(String fileName) {
+        String[] spliPoint = fileName.split("[.]");
+        String format = spliPoint[spliPoint.length - 1];
+        return format.toLowerCase().equals("mp4");
+    }
+
     private void campoMensagemKeyReleased(KeyEvent evt) {//GEN-FIRST:event_campoMensagemKeyReleased
         sendMessageControl();
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && campoMensagem.getText().length() > 0) {
@@ -577,13 +588,19 @@ public final class Chat extends javax.swing.JFrame {
                 String name = splitURLName;
                 String[] splitFormat = name.split("[.]");
                 String format = splitFormat[splitFormat.length - 1];
-                String pathNameDestination = new File("Files\\Received\\" + format + "\\" + hash + "\\" + name).toString();
+                String pathNameDestination = new File("Files\\Received\\" + format + "\\" + hash + "\\" + name).getAbsolutePath();
                 boolean isFile = new File(pathNameDestination).isFile();
                 if (!isFile) {
                     downloadFile(hashName, name);
                 } else {
                     if (isAudio(hashName)) {
                         playAudio(pathNameDestination, name);
+                    } else if (isVideo(hashName)) {
+                        try {
+                            Runtime.getRuntime().exec("google\\chrome.exe /incognito --app=\"" + pathNameDestination + "\"");
+                        } catch (IOException ex) {
+                            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } else {
                         try {
                             Runtime.getRuntime().exec("explorer.exe \"" + pathNameDestination + "\"");
@@ -652,6 +669,12 @@ public final class Chat extends javax.swing.JFrame {
         editProfile.setLocation(getLocation());
         editProfile.setVisible(true);
     }//GEN-LAST:event_editProfileLabelMouseClicked
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        Server server = new Server();
+        Communication communication = new Communication("LOGOUT");
+        server.outPut(communication);
+    }//GEN-LAST:event_formWindowClosing
 
     private void contactChange() {
         currenContact = getContacts().get(contactsList.getSelectedIndex());
@@ -799,13 +822,13 @@ public final class Chat extends javax.swing.JFrame {
             communication.setParam("nickName", nickName);
             communication = server.outPut_inPut(communication);
             setContatos((List<Contact>) communication.getParam("READREPLY"));
-            readContatosList();
+            readContactsList();
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void readContatosList() throws IOException, ClassNotFoundException {
+    public void readContactsList() throws IOException, ClassNotFoundException {
         contactListDefaultListModel = new DefaultListModel<>();
         getContacts().forEach((c) -> {
             contactListDefaultListModel.addElement(
@@ -912,6 +935,12 @@ public final class Chat extends javax.swing.JFrame {
             loadingLabel.setToolTipText(loadingLabel.getText().replace(toolTipMgs, ""));
             if (loadingLabel.getToolTipText().equals("")) {
                 loadingLabel.setToolTipText(null);
+                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/succefully.png")));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 loadingLabel.setIcon(null);
             }
         }
@@ -962,6 +991,12 @@ public final class Chat extends javax.swing.JFrame {
                 loadingLabel.setToolTipText(loadingLabel.getToolTipText().replace(download, ""));
                 if (loadingLabel.getToolTipText().equals("")) {
                     loadingLabel.setToolTipText(null);
+                    loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/succefully.png")));
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     loadingLabel.setIcon(null);
                 }
             } catch (IOException ex) {
