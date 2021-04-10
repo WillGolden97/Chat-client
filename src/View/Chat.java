@@ -88,7 +88,6 @@ public final class Chat extends javax.swing.JFrame {
         contactsList.setFixedCellHeight(40);
         process = new HashMap<>();
         pauseAudio.setVisible(false);
-        extractChrome();
     }
 
     @SuppressWarnings("unchecked")
@@ -402,21 +401,6 @@ public final class Chat extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void extractChrome() {
-        boolean isExtracted = new File("google\\chrome.exe").isFile();
-        if (isExtracted) {
-            System.out.print("Extraido");
-        } else {
-            System.out.print("Não Extraido");
-            try {
-                Runtime.getRuntime().exec("PeaZip\\peazip.exe x \"extractHere.zip\" \"Files\" ");
-            } catch (IOException ex) {
-                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-            }
-  
-        }
-    }
-
     public void addContact(Contact contact) {
         contacts.add(contact);
         currenContact = contact;
@@ -606,12 +590,13 @@ public final class Chat extends javax.swing.JFrame {
                 String format = splitFormat[splitFormat.length - 1];
                 String pathNameDestination = new File("Files\\Received\\" + format + "\\" + hash + "\\" + name).getAbsolutePath();
                 boolean isFile = new File(pathNameDestination).isFile();
+                boolean isExtracted = new File("google\\chrome.exe").isFile();
                 if (!isFile) {
                     downloadFile(hashName, name);
                 } else {
                     if (isAudio(hashName)) {
                         playAudio(pathNameDestination, name);
-                    } else if (isVideo(hashName)) {
+                    } else if (isVideo(hashName) && isExtracted) {
                         try {
                             Runtime.getRuntime().exec("google\\chrome.exe /incognito --app=\"" + pathNameDestination + "\"");
                         } catch (IOException ex) {

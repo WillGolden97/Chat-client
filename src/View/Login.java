@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import util.Communication;
@@ -35,6 +36,7 @@ public class Login extends javax.swing.JFrame {
         setIconTop();
         setLocation(500, 250);
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
