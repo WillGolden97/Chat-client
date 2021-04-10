@@ -63,6 +63,8 @@ public final class Chat extends javax.swing.JFrame {
     private Message msg;
     // Delete Message
     private int idDeleteThread;
+    // MessagesNotReceived Thread
+    private Thread messagesNotReceivedThread;
     // Thread read Messages 
     private boolean messageRead;
     private Thread messageThread;
@@ -635,6 +637,9 @@ public final class Chat extends javax.swing.JFrame {
         newContact.setVisible(true);
         newContact.setLocation(getLocation());
         playAudio(currentAudio, "");
+        if (selectMessage) {
+            messagesNotReceivedThread.stop();
+        }
         dispose();
     }//GEN-LAST:event_addClientMouseClicked
 
@@ -657,7 +662,8 @@ public final class Chat extends javax.swing.JFrame {
         messageThread = new Thread(Messages);
         messageThread.start();
         if (selectMessage == false) {
-            new Thread(MessagesNotReceived).start();
+            messagesNotReceivedThread = new Thread(MessagesNotReceived);
+            messagesNotReceivedThread.start();
             selectMessage = true;
         }
         clearCurrenteFile();
