@@ -597,8 +597,12 @@ public final class Chat extends javax.swing.JFrame {
                     if (isAudio(hashName)) {
                         playAudio(pathNameDestination, name);
                     } else if (isVideo(hashName) && isExtracted) {
+                        int x = getLocation().x;
+                        int y = getLocation().y;
+                        int height = caixaDeEntradaScroll.getHeight();
+                        int width =  caixaDeEntradaScroll.getWidth();
                         try {
-                            Runtime.getRuntime().exec("google\\chrome.exe /incognito --app=\"" + pathNameDestination + "\"");
+                            Runtime.getRuntime().exec("google\\chrome.exe --window-position=" + (x+144) + "," + (y+115) + " --window-size="+(width+12)+","+(height+5)+" /incognito --app=\"" + pathNameDestination + "\"");
                         } catch (IOException ex) {
                             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                         }
