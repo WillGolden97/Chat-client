@@ -35,6 +35,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import static javax.swing.event.HyperlinkEvent.EventType.ACTIVATED;
@@ -90,7 +91,13 @@ public final class Chat extends javax.swing.JFrame {
         contactsList.setFixedCellHeight(40);
         process = new HashMap<>();
         pauseAudio.setVisible(false);
-        caixaDeEntradaScroll.getHorizontalScrollBar().setEnabled(false);
+        disableHorizontalScroll(caixaDeEntradaScroll);
+        disableHorizontalScroll(campoMensagemScroll);
+    }
+
+    private void disableHorizontalScroll(JScrollPane scrollPane) {
+        scrollPane.getHorizontalScrollBar().setEnabled(false);
+        scrollPane.getHorizontalScrollBar().setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -803,7 +810,7 @@ public final class Chat extends javax.swing.JFrame {
                         List<Message> message = (List<Message>) communication.getParam("MESSAGENOTRECEIVEDREPLY");
                         HtmlContent html = new HtmlContent();
                         String htmlMsg = "";
-                        caixaDeEntradaScroll.setSize(chatPanel.getWidth(),caixaDeEntradaScroll.getHeight());
+                        caixaDeEntradaScroll.setSize(chatPanel.getWidth(), caixaDeEntradaScroll.getHeight());
                         int margin = (int) ((caixaDeEntradaScroll.getWidth()) - (300 + (caixaDeEntradaScroll.getWidth() * 0.1)));
                         margin = (margin > 300) ? 300 : margin;
                         for (Message m : message) {
@@ -850,7 +857,7 @@ public final class Chat extends javax.swing.JFrame {
                 List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
                 String htmlMsg = "";
                 HtmlContent html = new HtmlContent();
-                caixaDeEntradaScroll.setSize(chatPanel.getWidth(),caixaDeEntradaScroll.getHeight());
+                caixaDeEntradaScroll.setSize(chatPanel.getWidth(), caixaDeEntradaScroll.getHeight());
                 int margin = (int) ((caixaDeEntradaScroll.getWidth()) - (300 + (caixaDeEntradaScroll.getWidth() * 0.1)));
                 margin = (margin > 300) ? 300 : margin;
                 for (Message m : message) {
