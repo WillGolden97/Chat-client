@@ -700,7 +700,7 @@ public final class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        if (!movedMessagesField && selectMessage) {
+        if (!movedMessagesField) {
             new Thread(delayMessageField).start();
             movedMessagesField = true;
         }

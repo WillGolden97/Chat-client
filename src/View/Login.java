@@ -2,15 +2,13 @@ package View;
 
 import ConnectionFactory.Server;
 import Model.bean.Authenticated;
+import Model.bean.Encrypt;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -179,16 +177,6 @@ public class Login extends javax.swing.JFrame {
         setMessageLoginColor(new Color(255, 51, 0));
     }//GEN-LAST:event_logarActionPerformed
 
-    public static String getHashMd5(String value) {
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        BigInteger hash = new BigInteger(1, md.digest(value.getBytes()));
-        return hash.toString(16);
-    }
 
     public void setMessageLogin(String value) {
         messageLogin.setText(value);
@@ -228,7 +216,7 @@ public class Login extends javax.swing.JFrame {
 
         server = new Server(host, port);
         Communication message = new Communication("LOGIN");
-        hashPassword = getHashMd5(nickName.getText() + password.getText());
+        hashPassword = new Encrypt(nickName.getText() + password.getText()).getHashMd5();
         message.setParam("nickName", nickName.getText());
         message.setParam("password", hashPassword);
         replyLogin = (String) server.outPut_inPut(message).getParam("LOGINREPLY");

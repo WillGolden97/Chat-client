@@ -6,12 +6,10 @@
 package Threads;
 
 import ConnectionFactory.Server;
+import Model.bean.Encrypt;
 import View.Login;
 import static java.awt.Color.GREEN;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.Communication;
@@ -38,23 +36,12 @@ public class CreateNewAccount implements Runnable {
         this.password = password;
     }
 
-    public static String getHashMd5(String value) {
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        BigInteger hash = new BigInteger(1, md.digest(value.getBytes()));
-        return hash.toString(16);
-    }
-
     @Override
     public void run() {
         String hashPassword;
         server = new Server();
         Communication message = new Communication("CREATEACCOUNT");
-        hashPassword = getHashMd5(nickName + password);
+        hashPassword = new Encrypt(nickName + password).getHashMd5();
         try {
             message.setParam("picture", picture);
             message.setParam("format", format);

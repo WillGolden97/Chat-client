@@ -6,9 +6,7 @@
 package Threads;
 
 import ConnectionFactory.Server;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import Model.bean.Encrypt;
 import javax.swing.JOptionPane;
 import util.Communication;
 
@@ -34,22 +32,13 @@ public class EditAccount implements Runnable {
         this.password = password;
     }
 
-    public static String getHashMd5(String value) {
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        BigInteger hash = new BigInteger(1, md.digest(value.getBytes()));
-        return hash.toString(16);
-    }
+
 
     @Override
     public void run() {
         String hashPassword;
         server = new Server();
-        hashPassword = getHashMd5(nickName + password);
+        hashPassword = new Encrypt(nickName + password).getHashMd5();
         Communication message = new Communication("EDITACCOUNT");
         try {
             message.setParam("nickName", nickName);
