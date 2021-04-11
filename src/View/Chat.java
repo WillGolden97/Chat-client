@@ -23,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +74,8 @@ public final class Chat extends javax.swing.JFrame {
     private boolean addedContact;
     // Trigger call message   
     private boolean selectMessage = false;
+    // Moved component
+    private boolean movedMessagesField = false;
 
     public Chat() {
         initComponents();
@@ -89,6 +90,7 @@ public final class Chat extends javax.swing.JFrame {
         contactsList.setFixedCellHeight(40);
         process = new HashMap<>();
         pauseAudio.setVisible(false);
+        caixaDeEntradaScroll.getHorizontalScrollBar().setEnabled(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -130,6 +132,11 @@ public final class Chat extends javax.swing.JFrame {
         messageOption.add(deleteItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
@@ -149,6 +156,8 @@ public final class Chat extends javax.swing.JFrame {
         chaTabbedPanel.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
 
         caixaDeEntrada.setContentType("text/html"); // NOI18N
+        caixaDeEntrada.setText("");
+        caixaDeEntrada.setToolTipText("mensagens");
         caixaDeEntrada.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
             public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 caixaDeEntradaHyperlinkUpdate(evt);
@@ -683,6 +692,36 @@ public final class Chat extends javax.swing.JFrame {
         server.outPut(communication);
     }//GEN-LAST:event_formWindowClosing
 
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        if (!movedMessagesField && selectMessage) {
+            new Thread(delayMessageField).start();
+            movedMessagesField = true;
+        }
+    }//GEN-LAST:event_formComponentResized
+
+    private final Runnable delayMessageField = new Runnable() {
+        @Override
+        public void run() {
+            int width1 = (caixaDeEntradaScroll.getWidth());
+            try {
+                Thread.sleep(500);
+
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int width2 = (caixaDeEntradaScroll.getWidth());
+            if (width1 != width2) {
+                if (messageRead) {
+                    messageThread.stop();
+                    messageRead = false;
+                }
+                messageThread = new Thread(Messages);
+                messageThread.start();
+            }
+            movedMessagesField = false;
+        }
+    };
+
     private void contactChange() {
         currenContact = getContacts().get(contactsList.getSelectedIndex());
         if (messageRead) {
@@ -764,11 +803,13 @@ public final class Chat extends javax.swing.JFrame {
                         List<Message> message = (List<Message>) communication.getParam("MESSAGENOTRECEIVEDREPLY");
                         HtmlContent html = new HtmlContent();
                         String htmlMsg = "";
+                        int margin = (int) ((caixaDeEntradaScroll.getWidth()) - (300 + (caixaDeEntradaScroll.getWidth() * 0.1)));
+                        margin = (margin > 300) ? 300 : margin;
                         for (Message m : message) {
                             if (m.getFrom().equals(nickName)) {
-                                htmlMsg = html.htmlMsg("#383a59", "left", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                                htmlMsg = html.htmlMsg("#383a59", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                             } else {
-                                htmlMsg = html.htmlMsg("#282a36", "right", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                                htmlMsg = html.htmlMsg("#282a36", "right", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                             }
                         }
                         setCaixadeEntrada(htmlMsg);
@@ -808,11 +849,13 @@ public final class Chat extends javax.swing.JFrame {
                 List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
                 String htmlMsg = "";
                 HtmlContent html = new HtmlContent();
+                int margin = (int) ((caixaDeEntradaScroll.getWidth()) - (300 + (caixaDeEntradaScroll.getWidth() * 0.1)));
+                margin = (margin > 300) ? 300 : margin;
                 for (Message m : message) {
                     if (m.getFrom().equals(nickName)) {
-                        htmlMsg = html.htmlMsg("#383a59", "left", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                        htmlMsg = html.htmlMsg("#383a59", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                     } else {
-                        htmlMsg = html.htmlMsg("#282a36", "right", m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                        htmlMsg = html.htmlMsg("#282a36", "right", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                     }
                 }
                 setCaixadeEntrada(htmlMsg);

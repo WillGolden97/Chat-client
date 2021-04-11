@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="lib/JLayer1.0.1 2/src"/>
+	<classpathentry kind="src" path="lib/JLayer1.0.1 2/srctest"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="dist/Client.jar"/>
+	<classpathentry kind="lib" path="dist/lib/AbsoluteLayout.jar"/>
+	<classpathentry kind="lib" path="dist/lib/flatlaf-demo-0.36.jar"/>
+	<classpathentry kind="lib" path="dist/lib/jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="dist/lib/mysql-connector-java-5.1.23-bin.jar"/>
+	<classpathentry kind="lib" path="lib/absolutelayout/AbsoluteLayout.jar"/>
+	<classpathentry kind="lib" path="lib/CopyLibs/org-netbeans-modules-java-j2seproject-copylibstask.jar"/>
+	<classpathentry kind="lib" path="lib/flatlaf-demo-0.36.jar"/>
+	<classpathentry kind="lib" path="lib/JLayer1.0.1 2/jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.23-bin.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

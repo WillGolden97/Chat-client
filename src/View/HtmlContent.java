@@ -25,8 +25,8 @@ public class HtmlContent {
         this.fileIcon = "filesIcon.png";
     }
 
-    public String htmlMsg(String color, String floatMsg, int id, String message, String nomeArquivo, String nomeHashArquivo, String date) {
-        String html = "<div style=\"width:100%;color:white;background-color:#color;margin:5px;padding:#topPadding 5px 5px 5px;border:1px solid #48545E;margin-#float:120px;font-size:12px;right:0px;\" > #delete #anexo #message <p style=\"margin-top:-10px;\" align=\"right\"> #date </p> </div> ";
+    public String htmlMsg(String color, String floatMsg, int margin, int id, String message, String nomeArquivo, String nomeHashArquivo, String date) {
+        String html = "<div style=\"width:100%;color:white;background-color:#color;margin:5px;padding:#topPadding 5px 5px 5px;border:1px solid #48545E;margin-#float:"+margin+"px;font-size:12px;right:0px;\" > #delete #anexo #message <p style=\"margin-top:-10px;\" align=\"right\"> #date </p> </div> ";
         String delete = "";
         String topPadding = "5";
         if (floatMsg.equals("left")) {
