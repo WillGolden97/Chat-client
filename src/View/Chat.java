@@ -811,8 +811,13 @@ public final class Chat extends javax.swing.JFrame {
                         HtmlContent html = new HtmlContent();
                         String htmlMsg = "";
                         caixaDeEntradaScroll.setSize(chatPanel.getWidth(), caixaDeEntradaScroll.getHeight());
-                        int margin = (int) ((caixaDeEntradaScroll.getWidth()) - (300 + (caixaDeEntradaScroll.getWidth() * 0.1)));
-                        margin = (margin > 300) ? 300 : margin;
+                        int margin;
+                        if (selectMessage) {
+                            margin = (int) ((caixaDeEntradaScroll.getWidth()) - (300 + (caixaDeEntradaScroll.getWidth() * 0.1)));
+                            margin = (margin > 300) ? 300 : margin;
+                        } else {
+                            margin = 120;
+                        }
                         for (Message m : message) {
                             if (m.getFrom().equals(nickName)) {
                                 htmlMsg = html.htmlMsg("#383a59", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
@@ -858,8 +863,13 @@ public final class Chat extends javax.swing.JFrame {
                 String htmlMsg = "";
                 HtmlContent html = new HtmlContent();
                 caixaDeEntradaScroll.setSize(chatPanel.getWidth(), caixaDeEntradaScroll.getHeight());
-                int margin = (int) ((caixaDeEntradaScroll.getWidth()) - (300 + (caixaDeEntradaScroll.getWidth() * 0.1)));
-                margin = (margin > 300) ? 300 : margin;
+                int margin;
+                if (selectMessage) {
+                    margin = (int) ((caixaDeEntradaScroll.getWidth()) - (300 + (caixaDeEntradaScroll.getWidth() * 0.1)));
+                    margin = (margin > 300) ? 300 : margin;
+                } else {
+                    margin = 120;
+                }
                 for (Message m : message) {
                     if (m.getFrom().equals(nickName)) {
                         htmlMsg = html.htmlMsg("#383a59", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
