@@ -563,7 +563,7 @@ public final class Chat extends javax.swing.JFrame {
             } catch (IOException ex) {
                 System.out.println("Arquivo não selecionado : " + ex);
             } catch (OutOfMemoryError ex) {
-                JOptionPane.showMessageDialog(null, "Envie arquivo de no máximo 20 MB!");
+                JOptionPane.showMessageDialog(null, "Envie arquivo de no máximo 50 MB!");
                 sf.setCurrentFile(null);
             }
         }
