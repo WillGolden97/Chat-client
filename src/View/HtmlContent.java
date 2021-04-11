@@ -26,7 +26,7 @@ public class HtmlContent {
     }
 
     public String htmlMsg(String color, String floatMsg, int margin, int id, String message, String nomeArquivo, String nomeHashArquivo, String date) {
-        String html = "<div style=\"width:100%;color:white;background-color:#color;margin:5px;padding:#topPadding 5px 5px 5px;border:1px solid #48545E;margin-#float:"+margin+"px;font-size:12px;right:0px;\" > #delete #anexo #message <p style=\"margin-top:-10px;\" align=\"right\"> #date </p> </div> ";
+        String html = "<div style=\"width:100%;color:white;background-color:#color;margin:5px;padding:#topPadding 5px 5px 5px;border:1px solid #48545E;margin-#float:#marginpx;font-size:12px;right:0px;\" > #delete #anexo #message <p style=\"margin-top:-10px;\" align=\"right\"> #date </p> </div> ";
         String delete = "";
         String topPadding = "5";
         if (floatMsg.equals("left")) {
@@ -38,6 +38,8 @@ public class HtmlContent {
         html = html.replace("#color", color);
         html = html.replace("#float", floatMsg);
         html = html.replace("#anexo", ((!nomeArquivo.equals("")) ? htmlAnexo(nomeArquivo, nomeHashArquivo) : ""));
+        html = html.replace("#margin",""+margin);
+        html = html.replace("#widthImg",""+((int)(260-(0.05*margin))));
         html = html.replace("#message", message);
         html = html.replace("#date", date);
         return html;
@@ -89,7 +91,7 @@ public class HtmlContent {
         String name = nomeArquivo + "." + format;
         String filePath = new File("Files\\Received\\" + format + "\\" + hash + "\\").getAbsoluteFile().toURI().toString();
         if (isFile(name, hashName) && isImage(format)) {
-            html = "<div style=\"background-color:rgb(90,90,127);\"><center> <a href=\"file:/#name/#hashName\" ><img src='" + filePath + "/" + name + "' width=\"260\" /></a></center></div>";
+            html = "<div style=\"background-color:rgb(90,90,127);\"><center> <a href=\"file:/#name/#hashName\" ><img src='" + filePath + "/" + name + "' width=\"#widthImg\" /></a></center></div>";
         } else {
             html = midiaAttachment(html, name, format);
         }
