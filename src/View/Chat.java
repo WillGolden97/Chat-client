@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
@@ -625,7 +626,13 @@ public final class Chat extends javax.swing.JFrame {
                         int height = caixaDeEntradaScroll.getHeight();
                         int width = caixaDeEntradaScroll.getWidth();
                         try {
-                            Runtime.getRuntime().exec("google\\chrome.exe --window-position=" + (x + 144) + "," + (y + 115) + " --window-size=" + (width + 12) + "," + (height + 5) + " /incognito --app=\"" + (pathNameDestination) + "\"");
+                            String url = URLEncoder.encode(pathNameDestination);
+                            url = url.replaceAll("%5C", "/");
+                            url = url.replaceAll("%2F", "/");
+                            url = url.replaceAll("%3A", ":");
+                            url = url.replaceAll("[+]", "%20");
+                            System.out.println("Endereço : " + url);
+                            Runtime.getRuntime().exec("google\\chrome.exe --window-position=" + (x + 144) + "," + (y + 115) + " --window-size=" + (width + 12) + "," + (height + 5) + " /incognito --app=\"" + (url) + "\"");
                         } catch (IOException ex) {
                             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -738,7 +745,7 @@ public final class Chat extends javax.swing.JFrame {
         try {
             currenContact = getContacts().get(contactsList.getSelectedIndex());
         } catch (NullPointerException ex) {
-        
+
         }
         if (messageRead) {
             messageThread.stop();
