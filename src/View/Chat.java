@@ -159,8 +159,12 @@ public final class Chat extends javax.swing.JFrame {
 
         chatIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         chatIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/chat.png"))); // NOI18N
+        chatIcon.setMinimumSize(null);
 
         chaTabbedPanel.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+
+        caixaDeEntradaScroll.setMinimumSize(null);
+        caixaDeEntradaScroll.setName(""); // NOI18N
 
         caixaDeEntrada.setContentType("text/html"); // NOI18N
         caixaDeEntrada.setText("");
@@ -191,6 +195,7 @@ public final class Chat extends javax.swing.JFrame {
         campoMensagem.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         campoMensagem.setMargin(new java.awt.Insets(0, 0, 0, 0));
         campoMensagem.setMaximumSize(null);
+        campoMensagem.setMinimumSize(null);
         campoMensagem.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 campoMensagemKeyReleased(evt);
@@ -730,7 +735,11 @@ public final class Chat extends javax.swing.JFrame {
     };
 
     private void contactChange() {
-        currenContact = getContacts().get(contactsList.getSelectedIndex());
+        try {
+            currenContact = getContacts().get(contactsList.getSelectedIndex());
+        } catch (NullPointerException ex) {
+        
+        }
         if (messageRead) {
             messageThread.stop();
             messageRead = false;
