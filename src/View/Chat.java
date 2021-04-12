@@ -632,7 +632,7 @@ public final class Chat extends javax.swing.JFrame {
                             url = url.replaceAll("%3A", ":");
                             url = url.replaceAll("[+]", "%20");
                             System.out.println("Endereço : " + url);
-                            Runtime.getRuntime().exec("google\\chrome.exe --window-position=" + (x + 144) + "," + (y + 115) + " --window-size=" + (width + 12) + "," + (height + 5) + " /incognito --app=\"" + (url) + "\"");
+                            Runtime.getRuntime().exec("google\\chrome.exe --window-position=" + (x + 144) + "," + (y + 115) + " --window-size=" + (width + 15) + "," + (height + 5) + " /incognito --app=\"" + (url) + "\"");
                         } catch (IOException ex) {
                             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                         }
