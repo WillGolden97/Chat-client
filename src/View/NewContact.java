@@ -46,7 +46,6 @@ public class NewContact extends javax.swing.JFrame {
 
     private void setLaf() {
         LAF laf = new LAF();
-        laf.setLAF(this);
         if (laf.getTheme().equals("dark")) {
             searchIcon.setIcon(new ImageIcon(getClass().getResource("/Images/search.png")));
         } else {
