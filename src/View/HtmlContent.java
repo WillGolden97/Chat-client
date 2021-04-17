@@ -79,7 +79,7 @@ public class HtmlContent {
             icon = videoIcon;
         }
         html = html.replace("#img", "<img src=\"" + path + icon + "\" height=\"16\" />");
-        html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0, 20) + "..." : name));
+        html = html.replace("#fileName", ((name.length() > 20) ? name.substring(0,19) + "..."+format : name));
         return html;
     }
 
