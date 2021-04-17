@@ -82,7 +82,7 @@ public final class Chat extends javax.swing.JFrame {
     // Set Theme
     private LAF laf;
     // Sucessfull
-    String successfullyIcon = "";
+    private String successfullyIcon = "";
 
     public Chat() {
         initComponents();
@@ -733,13 +733,7 @@ public final class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_formComponentResized
 
     private void formPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_formPropertyChange
-        if (laf.getTheme().equals("dark")) {
-            editProfileLabel.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon.png")));
-            pauseAudio.setIcon(new ImageIcon(getClass().getResource("/Images/audioIcon.png")));
-        } else {
-            editProfileLabel.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon-dark.png")));
-            pauseAudio.setIcon(new ImageIcon(getClass().getResource("/Images/audioIcon-dark.png")));
-        }
+       setLaf();
     }//GEN-LAST:event_formPropertyChange
 
     private final Runnable delayMessageField = new Runnable() {
@@ -1044,7 +1038,7 @@ public final class Chat extends javax.swing.JFrame {
             loadingLabel.setToolTipText(loadingLabel.getText().replace(toolTipMgs, ""));
             if (loadingLabel.getToolTipText().equals("")) {
                 loadingLabel.setToolTipText(null);
-                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/"+successfullyIcon)));
+                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
@@ -1100,7 +1094,7 @@ public final class Chat extends javax.swing.JFrame {
                 loadingLabel.setToolTipText(loadingLabel.getToolTipText().replace(download, ""));
                 if (loadingLabel.getToolTipText().equals("")) {
                     loadingLabel.setToolTipText(null);
-                    loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/"+successfullyIcon)));
+                    loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
