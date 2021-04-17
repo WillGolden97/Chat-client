@@ -80,7 +80,9 @@ public final class Chat extends javax.swing.JFrame {
     // Moved component
     private boolean movedMessagesField = false;
     // Set Theme
-    private LAF laf;   
+    private LAF laf;
+    // Sucessfull
+    String successfullyIcon = "";
 
     public Chat() {
         initComponents();
@@ -423,9 +425,11 @@ public final class Chat extends javax.swing.JFrame {
         if (laf.getTheme().equals("dark")) {
             editProfileLabel.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon.png")));
             pauseAudio.setIcon(new ImageIcon(getClass().getResource("/Images/audioIcon.png")));
+            successfullyIcon = "succefully.png";
         } else {
             editProfileLabel.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon-dark.png")));
             pauseAudio.setIcon(new ImageIcon(getClass().getResource("/Images/audioIcon-dark.png")));
+            successfullyIcon = "succefully-dark.png";
         }
     }
 
@@ -1040,7 +1044,7 @@ public final class Chat extends javax.swing.JFrame {
             loadingLabel.setToolTipText(loadingLabel.getText().replace(toolTipMgs, ""));
             if (loadingLabel.getToolTipText().equals("")) {
                 loadingLabel.setToolTipText(null);
-                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/succefully.png")));
+                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/"+successfullyIcon)));
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
@@ -1096,7 +1100,7 @@ public final class Chat extends javax.swing.JFrame {
                 loadingLabel.setToolTipText(loadingLabel.getToolTipText().replace(download, ""));
                 if (loadingLabel.getToolTipText().equals("")) {
                     loadingLabel.setToolTipText(null);
-                    loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/succefully.png")));
+                    loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/"+successfullyIcon)));
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {

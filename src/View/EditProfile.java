@@ -38,8 +38,6 @@ public class EditProfile extends javax.swing.JFrame {
     private String theme;
     private final Component component;
     private LAF laf;
-    private static JLabel editProfileLabel;
-    private static JLabel pauseAudio;
 
     public EditProfile(String nickName, Component c) {
         initComponents();

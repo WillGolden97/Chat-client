@@ -21,6 +21,9 @@ import util.Communication;
  */
 public class Login extends javax.swing.JFrame {
 
+    private String theme;
+    private LAF laf;
+
     public Login() throws IOException, ClassNotFoundException {
         initComponents();
         setIconTop();
@@ -28,14 +31,26 @@ public class Login extends javax.swing.JFrame {
         setLaf();
     }
 
-    private void setLaf() {
-        LAF laf = new LAF();
+    private void setLaf(String theme) {
+        if (theme.equals("")) {
+            laf = new LAF();
+        } else {
+            laf = new LAF(theme);
+        }
         laf.setLAF(this);
         if (laf.getTheme().equals("dark")) {
             passIcon.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon.png")));
+            themeLabel.setIcon(new ImageIcon(getClass().getResource("/Images/dark.png")));
+            this.theme = "dark";
         } else {
             passIcon.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon-dark.png")));
+            themeLabel.setIcon(new ImageIcon(getClass().getResource("/Images/light.png")));
+            this.theme = "light";
         }
+    }
+
+    private void setLaf() {
+        setLaf("");
     }
 
     /**
@@ -56,6 +71,7 @@ public class Login extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         singUp = new javax.swing.JButton();
         passIcon = new javax.swing.JLabel();
+        themeLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -110,30 +126,47 @@ public class Login extends javax.swing.JFrame {
         passIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/passwordIcon.png"))); // NOI18N
         passIcon.setToolTipText("senha");
 
+        themeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/dark.png"))); // NOI18N
+        themeLabel.setToolTipText("mudar tema");
+        themeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                themeLabelMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(messageLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(70, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(70, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                            .addComponent(passIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(themeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                    .addComponent(passIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(nickName, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(logar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(password, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(singUp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nickName)
+                    .addComponent(logar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(password)
+                    .addComponent(singUp, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
                 .addGap(99, 99, 99))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(themeLabel)))
                 .addGap(5, 5, 5)
                 .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -178,6 +211,16 @@ public class Login extends javax.swing.JFrame {
         login();
         setMessageLoginColor(new Color(255, 51, 0));
     }//GEN-LAST:event_logarActionPerformed
+
+    private void themeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_themeLabelMouseClicked
+        if (theme.equals("dark")) {
+            setLaf("light");
+            laf.setLAF(this);
+        } else {
+            setLaf("dark");
+            laf.setLAF(this);
+        }
+    }//GEN-LAST:event_themeLabelMouseClicked
 
     public void setMessageLogin(String value) {
         messageLogin.setText(value);
@@ -259,5 +302,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel passIcon;
     private javax.swing.JPasswordField password;
     private javax.swing.JButton singUp;
+    private javax.swing.JLabel themeLabel;
     // End of variables declaration//GEN-END:variables
 }
