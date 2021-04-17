@@ -42,10 +42,12 @@ public class Login extends javax.swing.JFrame {
             passIcon.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon.png")));
             themeLabel.setIcon(new ImageIcon(getClass().getResource("/Images/dark.png")));
             this.theme = "dark";
+            themeLabel.setToolTipText("Mudar para tema claro");
         } else {
             passIcon.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon-dark.png")));
             themeLabel.setIcon(new ImageIcon(getClass().getResource("/Images/light.png")));
             this.theme = "light";
+            themeLabel.setToolTipText("Mudar para tema escuro");
         }
     }
 

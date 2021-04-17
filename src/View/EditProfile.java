@@ -270,12 +270,14 @@ public class EditProfile extends javax.swing.JFrame {
             senhaLabel1.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon.png")));
             themeLabel.setIcon(new ImageIcon(getClass().getResource("/Images/dark.png")));
             this.theme = "dark";
+            themeLabel.setToolTipText("Mudar para tema claro");
         } else {
             nameIcon.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon-dark.png")));
             senhaLabel.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon-dark.png")));
             senhaLabel1.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon-dark.png")));
             themeLabel.setIcon(new ImageIcon(getClass().getResource("/Images/light.png")));
             this.theme = "light";
+            themeLabel.setToolTipText("Mudar para tema escuro");
         }
     }
 

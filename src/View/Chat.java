@@ -98,6 +98,7 @@ public final class Chat extends javax.swing.JFrame {
         contactsList.setFixedCellHeight(40);
         process = new HashMap<>();
         pauseAudio.setVisible(false);
+        caixaDeEntrada.setToolTipText(null);
         disableHorizontalScroll(caixaDeEntradaScroll);
         disableHorizontalScroll(campoMensagemScroll);
     }
