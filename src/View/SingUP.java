@@ -39,7 +39,6 @@ public class SingUP extends javax.swing.JFrame {
 
     private void setLaf() {
         LAF laf = new LAF();
-        laf.setLAF(this);
         if (laf.getTheme().equals("dark")) {
             nameIcon.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon.png")));
             passIcon.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon.png")));

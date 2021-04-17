@@ -421,7 +421,6 @@ public final class Chat extends javax.swing.JFrame {
 
     private void setLaf() {
         this.laf = new LAF();
-        laf.setLAF(this);
         if (laf.getTheme().equals("dark")) {
             editProfileLabel.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon.png")));
             pauseAudio.setIcon(new ImageIcon(getClass().getResource("/Images/audioIcon.png")));
