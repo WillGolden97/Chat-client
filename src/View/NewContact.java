@@ -6,6 +6,7 @@
 package View;
 
 import ConnectionFactory.Server;
+import LookAndFeel.LAF;
 import Model.bean.Authenticated;
 import Model.bean.Contact;
 import Model.bean.ProfilePic;
@@ -40,6 +41,17 @@ public class NewContact extends javax.swing.JFrame {
         initComponents();
         setDefaultBorder(searchNickName);
         setIconTop();
+        setLaf();
+    }
+
+    private void setLaf() {
+        LAF laf = new LAF();
+        laf.setLAF(this);
+        if (laf.getTheme().equals("dark")) {
+            searchIcon.setIcon(new ImageIcon(getClass().getResource("/Images/search.png")));
+        } else {
+            searchIcon.setIcon(new ImageIcon(getClass().getResource("/Images/search-dark.png")));
+        }
     }
 
     private void setDefaultBorder(JTextField label) {
@@ -64,7 +76,7 @@ public class NewContact extends javax.swing.JFrame {
         nickNameLabel = new javax.swing.JLabel();
         searchNickName = new javax.swing.JTextField();
         addCotact = new javax.swing.JLabel();
-        search = new javax.swing.JLabel();
+        searchIcon = new javax.swing.JLabel();
 
         setTitle("Adicionar contato");
         setResizable(false);
@@ -87,14 +99,14 @@ public class NewContact extends javax.swing.JFrame {
         jLabel3.setText("Nick Name : ");
 
         nomeLabel.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        nomeLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        nomeLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(127, 127, 127)));
 
         nickNameLabel.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        nickNameLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        nickNameLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(127, 127, 127)));
 
         searchNickName.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         searchNickName.setToolTipText("Pesquise por nick name");
-        searchNickName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        searchNickName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(127, 127, 127)));
         searchNickName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchNickNameKeyReleased(evt);
@@ -108,10 +120,10 @@ public class NewContact extends javax.swing.JFrame {
             }
         });
 
-        search.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/search.png"))); // NOI18N
-        search.addMouseListener(new java.awt.event.MouseAdapter() {
+        searchIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/search.png"))); // NOI18N
+        searchIcon.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                searchMouseClicked(evt);
+                searchIconMouseClicked(evt);
             }
         });
 
@@ -138,7 +150,7 @@ public class NewContact extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(searchNickName))
                 .addGap(10, 10, 10)
-                .addComponent(search, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(searchIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(58, 58, 58))
         );
         layout.setVerticalGroup(
@@ -160,20 +172,20 @@ public class NewContact extends javax.swing.JFrame {
                         .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(searchNickName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(search, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addComponent(searchIcon, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addGap(10, 10, 10))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void searchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMouseClicked
+    private void searchIconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchIconMouseClicked
         if (checkNickName() == 1) {
             searchContact();
         } else {
             JOptionPane.showMessageDialog(null, "Usuário inexistente");
         }
-    }//GEN-LAST:event_searchMouseClicked
+    }//GEN-LAST:event_searchIconMouseClicked
 
     private void addCotactMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addCotactMouseClicked
         if (checkNickName() == 1) {
@@ -297,7 +309,7 @@ public class NewContact extends javax.swing.JFrame {
     private javax.swing.JLabel nickNameLabel;
     private javax.swing.JLabel nomeLabel;
     private javax.swing.JLabel profilePicLabel;
-    private javax.swing.JLabel search;
+    private javax.swing.JLabel searchIcon;
     private javax.swing.JTextField searchNickName;
     // End of variables declaration//GEN-END:variables
 }

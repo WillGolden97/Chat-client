@@ -6,6 +6,7 @@
 package View;
 
 import ConnectionFactory.Server;
+import LookAndFeel.LAF;
 import Model.bean.TreatFiles;
 import Threads.CreateNewAccount;
 import java.awt.Toolkit;
@@ -33,6 +34,21 @@ public class SingUP extends javax.swing.JFrame {
         initComponents();
         setLocation(400, 150);
         setIconTop();
+        setLaf();
+    }
+
+    private void setLaf() {
+        LAF laf = new LAF();
+        laf.setLAF(this);
+        if (laf.getTheme().equals("dark")) {
+            nameIcon.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon.png")));
+            passIcon.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon.png")));
+            passIcon1.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon.png")));
+        } else {
+            nameIcon.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon-dark.png")));
+            passIcon.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon-dark.png")));
+            passIcon1.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon-dark.png")));
+        }
     }
 
     /**
@@ -51,12 +67,12 @@ public class SingUP extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         profilPicLabel = new javax.swing.JLabel();
-        senha = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        passIcon = new javax.swing.JLabel();
+        passIcon1 = new javax.swing.JLabel();
         messageLogin = new javax.swing.JLabel();
         nickName = new javax.swing.JTextField();
         name = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        nameIcon = new javax.swing.JLabel();
 
         setResizable(false);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
@@ -110,7 +126,6 @@ public class SingUP extends javax.swing.JFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("@");
         jLabel1.setToolTipText("nickname do usuário");
@@ -123,15 +138,15 @@ public class SingUP extends javax.swing.JFrame {
         profilPicLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         profilPicLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/profileLarge.png"))); // NOI18N
         profilPicLabel.setAlignmentX(0.5F);
-        profilPicLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+        profilPicLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(127, 127, 127), 2));
 
-        senha.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        senha.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/passwordIcon.png"))); // NOI18N
-        senha.setToolTipText("senha");
+        passIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        passIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/passwordIcon.png"))); // NOI18N
+        passIcon.setToolTipText("senha");
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/passwordIcon.png"))); // NOI18N
-        jLabel3.setToolTipText("repetir senha");
+        passIcon1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        passIcon1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/passwordIcon.png"))); // NOI18N
+        passIcon1.setToolTipText("repetir senha");
 
         messageLogin.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         messageLogin.setForeground(new java.awt.Color(255, 51, 0));
@@ -153,10 +168,10 @@ public class SingUP extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/nameIcon.png"))); // NOI18N
-        jLabel5.setToolTipText("nome do usuário");
+        nameIcon.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        nameIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        nameIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/nameIcon.png"))); // NOI18N
+        nameIcon.setToolTipText("nome do usuário");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -165,10 +180,10 @@ public class SingUP extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(62, 62, 62)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(senha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(passIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(passIcon1, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addComponent(nameIcon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(profilPicLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -193,7 +208,7 @@ public class SingUP extends javax.swing.JFrame {
                 .addComponent(selectPicButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                    .addComponent(nameIcon, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
                     .addComponent(name))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -201,11 +216,11 @@ public class SingUP extends javax.swing.JFrame {
                     .addComponent(nickName, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(senha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(passIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(password, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(passIcon1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(password1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(logar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -216,9 +231,9 @@ public class SingUP extends javax.swing.JFrame {
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, nickName});
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {password, senha});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {passIcon, password});
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel3, password1});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {passIcon1, password1});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -331,17 +346,17 @@ public class SingUP extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JButton logar;
     private javax.swing.JLabel messageLogin;
     private javax.swing.JTextField name;
+    private javax.swing.JLabel nameIcon;
     private javax.swing.JTextField nickName;
+    private javax.swing.JLabel passIcon;
+    private javax.swing.JLabel passIcon1;
     private javax.swing.JPasswordField password;
     private javax.swing.JPasswordField password1;
     private javax.swing.JLabel profilPicLabel;
     private javax.swing.JButton selectPicButton;
-    private javax.swing.JLabel senha;
     // End of variables declaration//GEN-END:variables
 }

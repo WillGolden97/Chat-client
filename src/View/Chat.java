@@ -7,6 +7,7 @@ package View;
 
 import Model.bean.Contact;
 import ConnectionFactory.Server;
+import LookAndFeel.LAF;
 import Model.bean.Arquivos;
 import Model.bean.Authenticated;
 import Model.bean.Message;
@@ -78,9 +79,12 @@ public final class Chat extends javax.swing.JFrame {
     private boolean selectMessage = false;
     // Moved component
     private boolean movedMessagesField = false;
+    // Set Theme
+    private LAF laf;   
 
     public Chat() {
         initComponents();
+        setLaf();
         send.setEnabled(false);
         setDefaultBorder(nameInfo);
         setDefaultBorder(nickNameInfo);
@@ -96,17 +100,10 @@ public final class Chat extends javax.swing.JFrame {
         disableHorizontalScroll(campoMensagemScroll);
     }
 
-    private void disableHorizontalScroll(JScrollPane scrollPane) {
-        scrollPane.getHorizontalScrollBar().setEnabled(false);
-        scrollPane.getHorizontalScrollBar().setVisible(false);
-    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        messageOption = new javax.swing.JPopupMenu();
-        deleteItem = new javax.swing.JMenu();
         chatIcon = new javax.swing.JLabel();
         chaTabbedPanel = new javax.swing.JTabbedPane();
         chatPanel = new javax.swing.JPanel();
@@ -133,12 +130,6 @@ public final class Chat extends javax.swing.JFrame {
         pauseAudio = new javax.swing.JLabel();
         editProfileLabel = new javax.swing.JLabel();
 
-        messageOption.setToolTipText("");
-
-        deleteItem.setText("apagar");
-        deleteItem.setToolTipText("");
-        messageOption.add(deleteItem);
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -150,6 +141,11 @@ public final class Chat extends javax.swing.JFrame {
                 formWindowGainedFocus(evt);
             }
             public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
+        addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                formPropertyChange(evt);
             }
         });
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -169,7 +165,7 @@ public final class Chat extends javax.swing.JFrame {
 
         caixaDeEntrada.setContentType("text/html"); // NOI18N
         caixaDeEntrada.setText("");
-        caixaDeEntrada.setToolTipText("mensagens");
+        caixaDeEntrada.setToolTipText("");
         caixaDeEntrada.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
             public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 caixaDeEntradaHyperlinkUpdate(evt);
@@ -196,7 +192,6 @@ public final class Chat extends javax.swing.JFrame {
         campoMensagem.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         campoMensagem.setMargin(new java.awt.Insets(0, 0, 0, 0));
         campoMensagem.setMaximumSize(null);
-        campoMensagem.setMinimumSize(null);
         campoMensagem.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 campoMensagemKeyReleased(evt);
@@ -275,23 +270,21 @@ public final class Chat extends javax.swing.JFrame {
 
         profileIconInfo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         profileIconInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/profileLarge.png"))); // NOI18N
-        profileIconInfo.setBorder(javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2, new java.awt.Color(255, 255, 255)));
+        profileIconInfo.setBorder(javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2, new java.awt.Color(127, 127, 127)));
 
         nameInfo1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        nameInfo1.setForeground(new java.awt.Color(255, 255, 255));
         nameInfo1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         nameInfo1.setText("Nome :  ");
 
         nickNameInfo2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        nickNameInfo2.setForeground(new java.awt.Color(255, 255, 255));
         nickNameInfo2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         nickNameInfo2.setText("Nick Name :  ");
 
         nameInfo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        nameInfo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        nameInfo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(127, 127, 127)));
 
         nickNameInfo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        nickNameInfo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        nickNameInfo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(127, 127, 127)));
 
         javax.swing.GroupLayout infoPanelLayout = new javax.swing.GroupLayout(infoPanel);
         infoPanel.setLayout(infoPanelLayout);
@@ -423,6 +416,23 @@ public final class Chat extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void setLaf() {
+        this.laf = new LAF();
+        laf.setLAF(this);
+        if (laf.getTheme().equals("dark")) {
+            editProfileLabel.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon.png")));
+            pauseAudio.setIcon(new ImageIcon(getClass().getResource("/Images/audioIcon.png")));
+        } else {
+            editProfileLabel.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon-dark.png")));
+            pauseAudio.setIcon(new ImageIcon(getClass().getResource("/Images/audioIcon-dark.png")));
+        }
+    }
+
+    private void disableHorizontalScroll(JScrollPane scrollPane) {
+        scrollPane.getHorizontalScrollBar().setEnabled(false);
+        scrollPane.getHorizontalScrollBar().setVisible(false);
+    }
 
     public void addContact(Contact contact) {
         contacts.add(contact);
@@ -700,7 +710,7 @@ public final class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_pauseAudioMouseClicked
 
     private void editProfileLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editProfileLabelMouseClicked
-        EditProfile editProfile = new EditProfile(nickName);
+        EditProfile editProfile = new EditProfile(nickName, this);
         editProfile.setLocation(getLocation());
         editProfile.setVisible(true);
     }//GEN-LAST:event_editProfileLabelMouseClicked
@@ -717,6 +727,16 @@ public final class Chat extends javax.swing.JFrame {
             movedMessagesField = true;
         }
     }//GEN-LAST:event_formComponentResized
+
+    private void formPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_formPropertyChange
+        if (laf.getTheme().equals("dark")) {
+            editProfileLabel.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon.png")));
+            pauseAudio.setIcon(new ImageIcon(getClass().getResource("/Images/audioIcon.png")));
+        } else {
+            editProfileLabel.setIcon(new ImageIcon(getClass().getResource("/Images/nameIcon-dark.png")));
+            pauseAudio.setIcon(new ImageIcon(getClass().getResource("/Images/audioIcon-dark.png")));
+        }
+    }//GEN-LAST:event_formPropertyChange
 
     private final Runnable delayMessageField = new Runnable() {
         @Override
@@ -1123,13 +1143,11 @@ public final class Chat extends javax.swing.JFrame {
     private javax.swing.JPanel chatPanel;
     private javax.swing.JList<String> contactsList;
     private javax.swing.JScrollPane contatcsScrollPane;
-    private javax.swing.JMenu deleteItem;
     private javax.swing.JLabel editProfileLabel;
     private javax.swing.JLabel file;
     private javax.swing.JPanel infoPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel loadingLabel;
-    private javax.swing.JPopupMenu messageOption;
     private javax.swing.JTextField nameInfo;
     private javax.swing.JLabel nameInfo1;
     private javax.swing.JTextField nickNameInfo;

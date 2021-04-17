@@ -1,9 +1,9 @@
 package View;
 
 import ConnectionFactory.Server;
+import LookAndFeel.LAF;
 import Model.bean.Authenticated;
 import Model.bean.Encrypt;
-import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.File;
@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.ImageIcon;
 import util.Communication;
 
 /**
@@ -22,18 +21,22 @@ import util.Communication;
  */
 public class Login extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Login
-     *
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
-     */
     public Login() throws IOException, ClassNotFoundException {
         initComponents();
         setIconTop();
         setLocation(500, 250);
+        setLaf();
     }
 
+    private void setLaf() {
+        LAF laf = new LAF();
+        laf.setLAF(this);
+        if (laf.getTheme().equals("dark")) {
+            passIcon.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon.png")));
+        } else {
+            passIcon.setIcon(new ImageIcon(getClass().getResource("/Images/passwordIcon-dark.png")));
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,7 +55,7 @@ public class Login extends javax.swing.JFrame {
         messageLogin = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         singUp = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        passIcon = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -80,7 +83,6 @@ public class Login extends javax.swing.JFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("@");
         jLabel1.setToolTipText("nickname");
@@ -104,9 +106,9 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/passwordIcon.png"))); // NOI18N
-        jLabel3.setToolTipText("senha");
+        passIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        passIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/passwordIcon.png"))); // NOI18N
+        passIcon.setToolTipText("senha");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -118,7 +120,7 @@ public class Login extends javax.swing.JFrame {
                 .addContainerGap(70, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(passIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -133,7 +135,7 @@ public class Login extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nickName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -141,8 +143,8 @@ public class Login extends javax.swing.JFrame {
                 .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(passIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
                 .addComponent(logar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(singUp)
@@ -176,7 +178,6 @@ public class Login extends javax.swing.JFrame {
         login();
         setMessageLoginColor(new Color(255, 51, 0));
     }//GEN-LAST:event_logarActionPerformed
-
 
     public void setMessageLogin(String value) {
         messageLogin.setText(value);
@@ -238,11 +239,6 @@ public class Login extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
-        } catch (UnsupportedLookAndFeelException ex) {
-            System.err.println("Failed to initialize LaF");
-        }
 
         java.awt.EventQueue.invokeLater(() -> {
             try {
@@ -256,11 +252,11 @@ public class Login extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JButton logar;
     private javax.swing.JLabel messageLogin;
     private javax.swing.JTextField nickName;
+    private javax.swing.JLabel passIcon;
     private javax.swing.JPasswordField password;
     private javax.swing.JButton singUp;
     // End of variables declaration//GEN-END:variables

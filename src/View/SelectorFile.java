@@ -10,7 +10,7 @@ public class SelectorFile extends javax.swing.JFrame {
 
     TreatFiles currentFile = new TreatFiles();
 
-    SelectorFile() {
+    public SelectorFile() {
         initComponents();
     }
 
