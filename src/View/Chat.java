@@ -733,7 +733,7 @@ public final class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_formComponentResized
 
     private void formPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_formPropertyChange
-       setLaf();
+        setLaf();
     }//GEN-LAST:event_formPropertyChange
 
     private final Runnable delayMessageField = new Runnable() {
@@ -1111,6 +1111,14 @@ public final class Chat extends javax.swing.JFrame {
     private final Runnable deleteMessage = new Runnable() {
         @Override
         public void run() {
+            // LOADING SET 
+            String toolTipMgsList;
+            toolTipMgsList = (loadingLabel.getToolTipText() == null) ? ("") : (loadingLabel.getToolTipText());
+            String toolTipMgs = "Deletando mensagem ...\n";
+            toolTipMgsList = toolTipMgs + toolTipMgsList;
+            loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
+            loadingLabel.setToolTipText(toolTipMgsList);
+            // LOADING SET 
             Server server = new Server();
             Communication communication = new Communication("DELETEMESSAGE");
             communication.setParam("idMessage", idDeleteThread);
@@ -1125,6 +1133,19 @@ public final class Chat extends javax.swing.JFrame {
             messageThread.start();
             contacts();
             clearCurrenteFile();
+            // LOADING END 
+            loadingLabel.setToolTipText(loadingLabel.getText().replace(toolTipMgs, ""));
+            if (loadingLabel.getToolTipText().equals("")) {
+                loadingLabel.setToolTipText(null);
+                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                loadingLabel.setIcon(null);
+            }
+            // LOADING END 
         }
     };
 
