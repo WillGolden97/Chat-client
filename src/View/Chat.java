@@ -83,6 +83,8 @@ public final class Chat extends javax.swing.JFrame {
     private LAF laf;
     // Sucessfull
     private String successfullyIcon = "";
+    // Messages 
+    private List<Message> currentMessagesList;
 
     public Chat() {
         initComponents();
@@ -420,6 +422,15 @@ public final class Chat extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public List<Message> getCurrentMessagesList() {
+        return currentMessagesList;
+    }
+
+    public void setCurrentMessagesList(List<Message> currentMessagesList) {
+        System.out.println("Inserido");
+        this.currentMessagesList = currentMessagesList;
+    }
+
     private void setLaf() {
         this.laf = new LAF();
         if (laf.getTheme().equals("dark")) {
@@ -752,7 +763,7 @@ public final class Chat extends javax.swing.JFrame {
                     messageThread.stop();
                     messageRead = false;
                 }
-                messageThread = new Thread(Messages);
+                messageThread = new Thread(currentMessages);
                 messageThread.start();
             }
             movedMessagesField = false;
@@ -841,7 +852,7 @@ public final class Chat extends javax.swing.JFrame {
                     communication.setParam("contactNickName", contactNickName);
                     communication = server.outPut_inPut(communication);
                     try {
-                        List<Message> message = (List<Message>) communication.getParam("MESSAGENOTRECEIVEDREPLY");
+                        List<Message> messagesNotReceived = (List<Message>) communication.getParam("MESSAGENOTRECEIVEDREPLY");
                         HtmlContent html = new HtmlContent();
                         String htmlMsg = "";
                         caixaDeEntradaScroll.setSize(chatPanel.getWidth(), caixaDeEntradaScroll.getHeight());
@@ -852,7 +863,7 @@ public final class Chat extends javax.swing.JFrame {
                         } else {
                             margin = 120;
                         }
-                        for (Message m : message) {
+                        for (Message m : messagesNotReceived) {
                             if (m.getFrom().equals(nickName)) {
                                 htmlMsg = html.htmlMsg("#383a59", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                             } else {
@@ -860,6 +871,7 @@ public final class Chat extends javax.swing.JFrame {
                             }
                         }
                         setCaixadeEntrada(htmlMsg);
+                        setCurrentMessagesList(messagesNotReceived);
                     } catch (NullPointerException ex) {
                     }
                 } else {
@@ -869,11 +881,48 @@ public final class Chat extends javax.swing.JFrame {
         }
     };
 
+    private final Runnable currentMessages = new Runnable() {
+        @Override
+        public void run() {
+            if (currenContact != null) {
+                messageRead = true;
+                String htmlMsg = "";
+                HtmlContent html = new HtmlContent();
+                caixaDeEntradaScroll.setSize(chatPanel.getWidth(), caixaDeEntradaScroll.getHeight());
+                int margin;
+                if (selectMessage) {
+                    margin = (int) ((caixaDeEntradaScroll.getWidth()) - (300 + (caixaDeEntradaScroll.getWidth() * 0.1)));
+                    margin = (margin > 300) ? 300 : margin;
+                } else {
+                    margin = 120;
+                }
+                for (Message m : getCurrentMessagesList()) {
+                    if (m.getFrom().equals(nickName)) {
+                        htmlMsg = html.htmlMsg("#383a59", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                    } else {
+                        htmlMsg = html.htmlMsg("#282a36", "right", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                    }
+                }
+                setCaixadeEntrada(htmlMsg);
+            } else {
+                System.out.print("Mensagem não selecionada");
+            }
+        }
+    };
+
     private final Runnable Messages = new Runnable() {
         @Override
         public void run() {
             if (currenContact != null) {
                 messageRead = true;
+                // LOADING SET 
+                String toolTipMgsList;
+                toolTipMgsList = (loadingLabel.getToolTipText() == null) ? ("") : (loadingLabel.getToolTipText());
+                String toolTipMgs = "Deletando mensagem ...\n";
+                toolTipMgsList = toolTipMgs + toolTipMgsList;
+                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
+                loadingLabel.setToolTipText(toolTipMgsList);
+                // LOADING SET 
                 String contactNickName = currenContact.getNickName();
                 String contactName = currenContact.getNome();
                 Server server = new Server();
@@ -893,7 +942,7 @@ public final class Chat extends javax.swing.JFrame {
                 nickNameInfo.setEditable(false);
                 setProfileIcon(contactNickName, profileIconInfo, "Large");
                 communication = server.outPut_inPut(communication);
-                List<Message> message = (List<Message>) communication.getParam("MESSAGEREPLY");
+                setCurrentMessagesList((List<Message>) communication.getParam("MESSAGEREPLY"));
                 String htmlMsg = "";
                 HtmlContent html = new HtmlContent();
                 caixaDeEntradaScroll.setSize(chatPanel.getWidth(), caixaDeEntradaScroll.getHeight());
@@ -904,7 +953,7 @@ public final class Chat extends javax.swing.JFrame {
                 } else {
                     margin = 120;
                 }
-                for (Message m : message) {
+                for (Message m : getCurrentMessagesList()) {
                     if (m.getFrom().equals(nickName)) {
                         htmlMsg = html.htmlMsg("#383a59", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                     } else {
@@ -912,6 +961,19 @@ public final class Chat extends javax.swing.JFrame {
                     }
                 }
                 setCaixadeEntrada(htmlMsg);
+                // LOADING END 
+                loadingLabel.setToolTipText(loadingLabel.getText().replace(toolTipMgs, ""));
+                if (loadingLabel.getToolTipText().equals("")) {
+                    loadingLabel.setToolTipText(null);
+                    loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    loadingLabel.setIcon(null);
+                }
+                // LOADING END 
             } else {
                 System.out.print("Mensagem não selecionada");
             }
