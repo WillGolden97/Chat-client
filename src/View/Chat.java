@@ -42,12 +42,15 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import static javax.swing.event.HyperlinkEvent.EventType.ACTIVATED;
 import util.Communication;
+import java.awt.*;
+import java.awt.TrayIcon.MessageType;
+import java.awt.event.ActionListener;
 
 /**
  *
  * @author William
  */
-public final class Chat extends javax.swing.JFrame {
+public final class Chat extends javax.swing.JFrame implements ActionListener {
 
     private final Authenticated auth = new Authenticated();
     private List<Contact> contacts;
@@ -85,6 +88,12 @@ public final class Chat extends javax.swing.JFrame {
     private String successfullyIcon = "";
     // Messages 
     private List<Message> currentMessagesList;
+    // Notificações
+    private final String fileMessage = new File("src\\Images\\chat.png").getAbsolutePath();
+    //If the icon is a file
+    private final Image image = Toolkit.getDefaultToolkit().createImage(fileMessage);
+    TrayIcon notifications = new TrayIcon(image, "Chat");
+    private final SystemTray tinyChat = SystemTray.getSystemTray();
 
     public Chat() {
         initComponents();
@@ -103,6 +112,9 @@ public final class Chat extends javax.swing.JFrame {
         caixaDeEntrada.setToolTipText(null);
         disableHorizontalScroll(caixaDeEntradaScroll);
         disableHorizontalScroll(campoMensagemScroll);
+        notifications.addActionListener(this);
+        startDisplayTray();
+        new Thread(MessagesNotReceivedAllContacts).start();
     }
 
     @SuppressWarnings("unchecked")
@@ -421,6 +433,33 @@ public final class Chat extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    public void startDisplayTray() {
+        //Let the system resize the image if needed
+        notifications.setImageAutoSize(true);
+        //Set tooltip text for the tray icon
+        notifications.setToolTip("Chat");
+        notifications.setActionCommand("show");
+        try {
+            tinyChat.add(notifications);
+        } catch (AWTException | IllegalArgumentException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void setDisplayTray(String title, String message) {
+        notifications.displayMessage(title, message, MessageType.NONE);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if ("show".equals(e.getActionCommand())) {
+            System.out.println(isFocused());
+            System.out.print("show");
+            setState(Frame.NORMAL);
+        }
+    }
 
     public List<Message> getCurrentMessagesList() {
         return currentMessagesList;
@@ -842,7 +881,7 @@ public final class Chat extends javax.swing.JFrame {
         @Override
         public void run() {
             while (true) {
-                if (currenContact != null) {
+                if (currenContact != null && isFocused()) {
                     messageRead = true;
                     String contactNickName = currenContact.getNickName();
                     Server server = new Server();
@@ -874,7 +913,53 @@ public final class Chat extends javax.swing.JFrame {
                     } catch (NullPointerException ex) {
                     }
                 } else {
-                    System.out.print("Mensagem não selecionada");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+    };
+
+    private final Runnable MessagesNotReceivedAllContacts = new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                if (!isFocused()) {
+                    Server server = new Server();
+                    Communication communication = new Communication("MESSAGENOTRECEIVEDALLCONTACTS");
+                    communication.setParam("nickName", nickName);
+                    communication = server.outPut_inPut(communication);
+                    try {
+                        List<Message> messages = (List<Message>) communication.getParam("MESSAGENOTRECEIVEDALLCONTACTSREPLY");
+                        Message message = null;
+                        int count = 0;
+                        for (Message m : messages) {
+                            setDisplayTray("From : @" + m.getFrom() + ", To : @" + m.getTo(), m.getMessage());
+                            message = m;
+                            count++;
+                        }
+                        if (count != 0) {
+                            contacts();
+                        }
+                        if (message.getFrom().equals(currenContact.getNickName())) {
+                            if (messageRead) {
+                                messageThread.stop();
+                                messageRead = false;
+                            }
+                            messageThread = new Thread(Messages);
+                            messageThread.start();
+                        }
+                    } catch (NullPointerException ex) {
+                    }
+                } else {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -973,8 +1058,6 @@ public final class Chat extends javax.swing.JFrame {
                     loadingLabel.setIcon(null);
                 }
                 // LOADING END 
-            } else {
-                System.out.print("Mensagem não selecionada");
             }
         }
     };
@@ -1183,6 +1266,7 @@ public final class Chat extends javax.swing.JFrame {
             Server server = new Server();
             Communication communication = new Communication("DELETEMESSAGE");
             communication.setParam("idMessage", idDeleteThread);
+            communication.setParam("msgTo", currenContact.getNickName());
             communication.setParam("msgFrom", nickName);
             communication = server.outPut_inPut(communication);
             System.out.print(communication.getParam("STATUSMESSAGE"));
@@ -1238,4 +1322,5 @@ public final class Chat extends javax.swing.JFrame {
     private javax.swing.JButton send;
     private javax.swing.JLabel titleChat;
     // End of variables declaration//GEN-END:variables
+
 }
