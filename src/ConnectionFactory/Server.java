@@ -44,9 +44,8 @@ public class Server {
             communication = (Communication) input.readObject();
             close();
         } catch (IOException | ClassNotFoundException ex) {
-            if (JOptionPane.showConfirmDialog(null, "Erro de conexão! \n" + ex + "\nDeseja finalizar o sistema?") == 0) {
-                System.exit(0);
-            }
+            JOptionPane.showMessageDialog(null, "Erro de conexão! \n");
+            System.exit(0);
         }
         return communication;
     }
@@ -58,9 +57,8 @@ public class Server {
             outPut.writeObject(m);
             outPut.flush();
         } catch (IOException ex) {
-            if (JOptionPane.showConfirmDialog(null, "Erro de conexão! \n" + ex + "\nDeseja finalizar o sistema?") == 0) {
-                System.exit(0);
-            }
+            JOptionPane.showMessageDialog(null, "Erro de conexão! \n");
+            System.exit(0);
         }
     }
 
@@ -71,9 +69,8 @@ public class Server {
             communication = (Communication) input.readObject();
             close();
         } catch (IOException | ClassNotFoundException ex) {
-            if (JOptionPane.showConfirmDialog(null, "Erro de conexão! \n" + ex + "\nDeseja finalizar o sistema?") == 0) {
-                System.exit(0);
-            }
+            JOptionPane.showMessageDialog(null, "Erro de conexão! \n");
+            System.exit(0);
         }
         return communication;
     }
@@ -84,9 +81,8 @@ public class Server {
             input.close();
             socket.close();
         } catch (IOException ex) {
-            if (JOptionPane.showConfirmDialog(null, "Erro de conexão! \n" + ex + "\nDeseja finalizar o sistema?") == 0) {
-                System.exit(0);
-            }
+            JOptionPane.showMessageDialog(null, "Erro de conexão! \n");
+            System.exit(0);
         }
     }
 }
