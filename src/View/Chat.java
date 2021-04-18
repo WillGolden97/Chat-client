@@ -427,7 +427,6 @@ public final class Chat extends javax.swing.JFrame {
     }
 
     public void setCurrentMessagesList(List<Message> currentMessagesList) {
-        System.out.println("Inserido");
         this.currentMessagesList = currentMessagesList;
     }
 
