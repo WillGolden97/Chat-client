@@ -1132,13 +1132,9 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             characters.setText("000/500");
             campoMensagem.setText("");
             send.setEnabled(false);
-            String toolTipMgsList;
-            toolTipMgsList = (loadingLabel.getToolTipText() == null) ? ("") : (loadingLabel.getToolTipText());
-            String toolTipMgs = "Enviando mensagem ...\n";
-            toolTipMgsList = toolTipMgs + toolTipMgsList;
+            // SEND MESSAGE 
             loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
-            loadingLabel.setToolTipText(toolTipMgsList);
-
+            // SEND MESSAGE 
             try {
                 message.setNomeArquivo(file.getFileName());
                 hashName = file.getHashedNameFile() + "." + file.getFileFormat();
@@ -1179,17 +1175,15 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             } else {
                 System.out.print("Já iniciado ou não existente");
             }
-            loadingLabel.setToolTipText(loadingLabel.getText().replace(toolTipMgs, ""));
-            if (loadingLabel.getToolTipText().equals("")) {
-                loadingLabel.setToolTipText(null);
-                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                loadingLabel.setIcon(null);
+            // SEND MESSAGE END
+            loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
             }
+            loadingLabel.setIcon(null);
+            // SEND MESSAGE END
         }
     };
 
@@ -1198,11 +1192,9 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         public void run() {
             //Instanciando objeto que manipula arquivos
             TreatFiles tf = new TreatFiles();
+            // DOWNLOAD 
             loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
-            String download = "Baixando : " + nameDownloadFileThread + "\n";
-            String downloadList;
-            downloadList = (loadingLabel.getToolTipText() == null) ? ("") : (loadingLabel.getToolTipText());
-            loadingLabel.setToolTipText(download + downloadList);
+            // DOWNLOAD 
             try {
                 // Abrir conexão socket
                 Server server = new Server();
@@ -1235,17 +1227,15 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                 } else if (isAudio(hashName)) {
                     playAudio(tf.getPathName(), tf.getNomeArquivo() + "." + tf.getFileFormat());
                 }
-                loadingLabel.setToolTipText(loadingLabel.getToolTipText().replace(download, ""));
-                if (loadingLabel.getToolTipText().equals("")) {
-                    loadingLabel.setToolTipText(null);
-                    loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    loadingLabel.setIcon(null);
+                // DOWNLOAD END
+                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                loadingLabel.setIcon(null);
+                // DONWLOAD END
             } catch (IOException ex) {
                 Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1255,14 +1245,9 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
     private final Runnable deleteMessage = new Runnable() {
         @Override
         public void run() {
-            // LOADING SET 
-            String toolTipMgsList;
-            toolTipMgsList = (loadingLabel.getToolTipText() == null) ? ("") : (loadingLabel.getToolTipText());
-            String toolTipMgs = "Deletando mensagem ...\n";
-            toolTipMgsList = toolTipMgs + toolTipMgsList;
+            // DELETE
             loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
-            loadingLabel.setToolTipText(toolTipMgsList);
-            // LOADING SET 
+            // DELETE 
             Server server = new Server();
             Communication communication = new Communication("DELETEMESSAGE");
             communication.setParam("idMessage", idDeleteThread);
@@ -1278,19 +1263,15 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             messageThread.start();
             contacts();
             clearCurrenteFile();
-            // LOADING END 
-            loadingLabel.setToolTipText(loadingLabel.getText().replace(toolTipMgs, ""));
-            if (loadingLabel.getToolTipText().equals("")) {
-                loadingLabel.setToolTipText(null);
-                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                loadingLabel.setIcon(null);
+            // DELETE END 
+            loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
             }
-            // LOADING END 
+            loadingLabel.setIcon(null);
+            // DELETE END 
         }
     };
 
