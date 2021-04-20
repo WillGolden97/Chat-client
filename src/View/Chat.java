@@ -70,6 +70,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
     private int idDeleteThread;
     // MessagesNotReceived Thread
     private Thread messagesNotReceivedThread;
+    private Thread messagesNotReceivedAllContactsThread;
     // Thread read Messages 
     private boolean messageRead = false;
     private Thread messageThread;
@@ -113,7 +114,6 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         disableHorizontalScroll(campoMensagemScroll);
         notifications.addActionListener(this);
         startDisplayTray();
-        new Thread(MessagesNotReceivedAllContacts).start();
     }
 
     @SuppressWarnings("unchecked")
@@ -146,7 +146,6 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         pauseAudio = new javax.swing.JLabel();
         editProfileLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
@@ -454,9 +453,16 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("show".equals(e.getActionCommand())) {
-            System.out.println(isFocused());
-            System.out.println("show");
             setState(Frame.NORMAL);
+            setVisible(true);
+            try {
+                messagesNotReceivedAllContactsThread.stop();
+            } catch (NullPointerException ex) {
+            }
+            messageThread = new Thread(Messages);
+            messageThread.start();
+            messagesNotReceivedThread = new Thread(MessagesNotReceived);
+            messagesNotReceivedThread.start();
         }
     }
 
@@ -767,9 +773,20 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
     }//GEN-LAST:event_editProfileLabelMouseClicked
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        Server server = new Server();
-        Communication communication = new Communication("LOGOUT");
-        server.outPut(communication);
+        String[] options = {"Minimizar", "Encerrar"};
+        if (JOptionPane.showOptionDialog(null, "Deseja apenas minimizar ou encerrar?", "Encerrar ou Minimizar?", WIDTH, HEIGHT, null, options, nickName) == 0) {
+            messagesNotReceivedAllContactsThread = new Thread(MessagesNotReceivedAllContacts);
+            messagesNotReceivedAllContactsThread.start();
+            try {
+                messagesNotReceivedThread.stop();
+            } catch (NullPointerException ex) {
+            }
+        } else {
+            Server server = new Server();
+            Communication communication = new Communication("LOGOUT");
+            server.outPut(communication);
+            System.exit(0);
+        }
     }//GEN-LAST:event_formWindowClosing
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
@@ -923,36 +940,28 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         @Override
         public void run() {
             while (true) {
-                if (!isFocused()) {
-                    Server server = new Server();
-                    Communication communication = new Communication("MESSAGENOTRECEIVEDALLCONTACTS");
-                    communication.setParam("nickName", nickName);
-                    communication = server.outPut_inPut(communication);
-                    try {
-                        List<Message> messages = (List<Message>) communication.getParam("MESSAGENOTRECEIVEDALLCONTACTSREPLY");
-                        Message message = null;
-                        int count = 0;
-                        for (Message m : messages) {
-                            setDisplayTray("From : @" + m.getFrom() + ", To : @" + m.getTo(), m.getMessage());
-                            message = m;
-                            count++;
-                        }
-                        if (count != 0) {
-                            int index = 0;
-                            if (!contactsList.isSelectionEmpty()) {
-                                index = contactsList.getSelectedIndex();
-                            }
-                            contacts();
-                            contactsList.setSelectedIndex(index);
-                        }
-                    } catch (NullPointerException ex) {
+                Server server = new Server();
+                Communication communication = new Communication("MESSAGENOTRECEIVEDALLCONTACTS");
+                communication.setParam("nickName", nickName);
+                communication = server.outPut_inPut(communication);
+                try {
+                    List<Message> messages = (List<Message>) communication.getParam("MESSAGENOTRECEIVEDALLCONTACTSREPLY");
+                    Message message = null;
+                    int count = 0;
+                    for (Message m : messages) {
+                        setDisplayTray("From : @" + m.getFrom() + ", To : @" + m.getTo(), m.getMessage());
+                        message = m;
+                        count++;
                     }
-                } else {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                    if (count != 0) {
+                        int index = 0;
+                        if (!contactsList.isSelectionEmpty()) {
+                            index = contactsList.getSelectedIndex();
+                        }
+                        contacts();
+                        contactsList.setSelectedIndex(index);
                     }
+                } catch (NullPointerException ex) {
                 }
             }
         }
