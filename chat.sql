@@ -21,6 +21,10 @@ SELECT Messages.Idmessage, "" as messages ,Messages.MsgFrom,"",Messages.Date as 
 UNION
 SELECT Messages.Idmessage, Messages.Messages, Messages.MsgFrom,Messages.MsgTo, Messages.Date as dataOrd, DATE_FORMAT(messages.date, '%H:%i') as HourMsg, "" AS NomeArquivo, "" AS hashArquivo From messages WHERE messages.MsgFrom = contactNickName AND Messages.MsgTo = nickName AND messages.Messages != "" OR messages.MsgFrom = nickName AND Messages.MsgTo = contactNickName AND messages.Messages != "" ORDER BY dataOrd DESC LIMIT 0,15$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `contNotReceived`(IN `contactNickName` VARCHAR(20))
+    NO SQL
+SELECT COUNT(Idmessage) AS contMSg FROM messages WHERE Messages.MsgFrom = contactNickName AND received = 0 OR Messages.MsgFrom = contactNickName AND received = 2$$
+
 DELIMITER ;
 
 CREATE TABLE `anexo` (

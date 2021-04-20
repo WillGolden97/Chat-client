@@ -64,7 +64,6 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
     private Thread threadAudio = null;
     // DownloadFile 
     private String hashDownloadFileThread;
-    private String nameDownloadFileThread;
     // Send message
     private Message msg;
     // Delete Message
@@ -456,7 +455,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if ("show".equals(e.getActionCommand())) {
             System.out.println(isFocused());
-            System.out.print("show");
+            System.out.println("show");
             setState(Frame.NORMAL);
         }
     }
@@ -547,7 +546,6 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
 
     private void downloadFile(String hash, String name) {
         this.hashDownloadFileThread = hash;
-        this.nameDownloadFileThread = name;
         Thread t;
         if (((Thread) getProcess(hash)) != null) {
             t = (Thread) getProcess(hash);
@@ -811,12 +809,10 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
     private void contactChange() {
         try {
             currenContact = getContacts().get(contactsList.getSelectedIndex());
-        } catch (NullPointerException ex) {
-
-        }
-        if (messageRead) {
             messageThread.stop();
             messageRead = false;
+        } catch (NullPointerException ex) {
+
         }
         messageThread = new Thread(Messages);
         messageThread.start();
@@ -863,7 +859,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         return contacts;
     }
 
-    public void setContatos(List<Contact> contatos) {
+    public void setContacts(List<Contact> contatos) {
         this.contacts = contatos;
     }
 
@@ -881,7 +877,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         @Override
         public void run() {
             while (true) {
-                if (currenContact != null && isFocused()) {
+                if (currenContact != null) {
                     messageRead = true;
                     String contactNickName = currenContact.getNickName();
                     Server server = new Server();
@@ -942,15 +938,12 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                             count++;
                         }
                         if (count != 0) {
-                            contacts();
-                        }
-                        if (message.getFrom().equals(currenContact.getNickName())) {
-                            if (messageRead) {
-                                messageThread.stop();
-                                messageRead = false;
+                            int index = 0;
+                            if (!contactsList.isSelectionEmpty()) {
+                                index = contactsList.getSelectedIndex();
                             }
-                            messageThread = new Thread(Messages);
-                            messageThread.start();
+                            contacts();
+                            contactsList.setSelectedIndex(index);
                         }
                     } catch (NullPointerException ex) {
                     }
@@ -1000,12 +993,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             if (currenContact != null) {
                 messageRead = true;
                 // LOADING SET 
-                String toolTipMgsList;
-                toolTipMgsList = (loadingLabel.getToolTipText() == null) ? ("") : (loadingLabel.getToolTipText());
-                String toolTipMgs = "Deletando mensagem ...\n";
-                toolTipMgsList = toolTipMgs + toolTipMgsList;
                 loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
-                loadingLabel.setToolTipText(toolTipMgsList);
                 // LOADING SET 
                 String contactNickName = currenContact.getNickName();
                 String contactName = currenContact.getNome();
@@ -1046,17 +1034,13 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                 }
                 setCaixadeEntrada(htmlMsg);
                 // LOADING END 
-                loadingLabel.setToolTipText(loadingLabel.getText().replace(toolTipMgs, ""));
-                if (loadingLabel.getToolTipText().equals("")) {
-                    loadingLabel.setToolTipText(null);
-                    loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    loadingLabel.setIcon(null);
+                loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/" + successfullyIcon)));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                loadingLabel.setIcon(null);
                 // LOADING END 
             }
         }
@@ -1068,7 +1052,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             Communication communication = new Communication("READ");
             communication.setParam("nickName", nickName);
             communication = server.outPut_inPut(communication);
-            setContatos((List<Contact>) communication.getParam("READREPLY"));
+            setContacts((List<Contact>) communication.getParam("READREPLY"));
             readContactsList();
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
@@ -1254,13 +1238,22 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             communication.setParam("msgTo", currenContact.getNickName());
             communication.setParam("msgFrom", nickName);
             communication = server.outPut_inPut(communication);
-            System.out.print(communication.getParam("STATUSMESSAGE"));
-            if (messageRead) {
-                messageThread.stop();
-                messageRead = false;
+            if (communication.getParam("STATUSMESSAGE").equals("SUCCESSFULL")) {
+                List<Message> messageList = currentMessagesList;
+                for (int i = 0; i < messageList.size(); i++) {
+                    if (messageList.get(i).getIdMessage() == idDeleteThread) {
+                        messageList.remove(i);
+                        break;
+                    }
+                }
+                setCurrentMessagesList(messageList);
+                if (messageRead) {
+                    messageThread.stop();
+                    messageRead = false;
+                }
+                messageThread = new Thread(currentMessages);
+                messageThread.start();
             }
-            messageThread = new Thread(Messages);
-            messageThread.start();
             contacts();
             clearCurrenteFile();
             // DELETE END 
