@@ -84,14 +84,14 @@ public class HtmlContent {
     }
 
     public String htmlAnexo(String nomeArquivo, String nomeHashArquivo) {
-        String html = "<div style=\"background-color:rgb(90,90,127);padding:10px 5px 10px 7px;border:1px solid white;\"> #img <a href=\"file:/#name/#hashName\" style=\"color:white;font-size:12px;text-decoration:none;\" > #fileName </a> </div>";
+        String html = "<div style=\"background-color:#458f57;padding:10px 5px 10px 7px;border:1px solid white;\"> #img <a href=\"file:/#name/#hashName\" style=\"color:white;font-size:12px;text-decoration:none;\" > #fileName </a> </div>";
         String hashName = nomeHashArquivo;
         String hash = hashName.split("[.]")[0];
         String format = hashName.split("[.]")[1];
         String name = nomeArquivo + "." + format;
         String filePath = new File("Files\\Received\\" + format + "\\" + hash + "\\").getAbsoluteFile().toURI().toString();
         if (isFile(name, hashName) && isImage(format)) {
-            html = "<div style=\"background-color:rgb(90,90,127);\"><center> <a href=\"file:/#name/#hashName\" ><img src='" + filePath + "/" + name + "' width=\"#widthImg\" /></a></center></div>";
+            html = "<div style=\"background-color:#458f57;\"><center> <a href=\"file:/#name/#hashName\" ><img src='" + filePath + "/" + name + "' width=\"#widthImg\" /></a></center></div>";
         } else {
             html = midiaAttachment(html, name, format);
         }

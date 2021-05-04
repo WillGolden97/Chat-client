@@ -29,6 +29,7 @@ public class Login extends javax.swing.JFrame {
         setIconTop();
         setLocation(500, 250);
         setLaf();
+        setTitle("TwoLeaf");
     }
 
     private void setLaf(String theme) {

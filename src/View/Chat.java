@@ -92,7 +92,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
     private final String fileMessage = new File("src\\Images\\chat.png").getAbsolutePath();
     //If the icon is a file
     private final Image image = Toolkit.getDefaultToolkit().createImage(fileMessage);
-    TrayIcon notifications = new TrayIcon(image, "Chat");
+    private final TrayIcon notifications = new TrayIcon(image, "Chat");
     private final SystemTray tinyChat = SystemTray.getSystemTray();
 
     public Chat() {
@@ -346,6 +346,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         });
         contactsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         contactsList.setToolTipText("Contatos");
+        contactsList.setSelectionBackground(new java.awt.Color(29, 134, 52));
         contactsList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 contactsListMouseReleased(evt);
@@ -361,7 +362,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("  Contatos");
-        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(74, 136, 199)));
+        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(69, 143, 87)));
 
         addClient.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/AddCLient.png"))); // NOI18N
         addClient.setToolTipText("adicione novo contato");
@@ -916,9 +917,9 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                         }
                         for (Message m : messagesNotReceived) {
                             if (m.getFrom().equals(nickName)) {
-                                htmlMsg = html.htmlMsg("#383a59", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                                htmlMsg = html.htmlMsg("#1d8634", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                             } else {
-                                htmlMsg = html.htmlMsg("#282a36", "right", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                                htmlMsg = html.htmlMsg("#285d33", "right", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                             }
                         }
                         setCaixadeEntrada(htmlMsg);
@@ -982,12 +983,16 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                 } else {
                     margin = 120;
                 }
-                for (Message m : getCurrentMessagesList()) {
-                    if (m.getFrom().equals(nickName)) {
-                        htmlMsg = html.htmlMsg("#383a59", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
-                    } else {
-                        htmlMsg = html.htmlMsg("#282a36", "right", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                try {
+                    for (Message m : getCurrentMessagesList()) {
+                        if (m.getFrom().equals(nickName)) {
+                            htmlMsg = html.htmlMsg("#1d8634", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                        } else {
+                            htmlMsg = html.htmlMsg("#285d33", "right", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                        }
                     }
+                } catch (NullPointerException ex) {
+                    System.out.print("Mensagem não selecionada");
                 }
                 setCaixadeEntrada(htmlMsg);
             } else {
@@ -1036,9 +1041,9 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                 }
                 for (Message m : getCurrentMessagesList()) {
                     if (m.getFrom().equals(nickName)) {
-                        htmlMsg = html.htmlMsg("#383a59", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                        htmlMsg = html.htmlMsg("#1d8634", "left", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                     } else {
-                        htmlMsg = html.htmlMsg("#282a36", "right", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
+                        htmlMsg = html.htmlMsg("#285d33", "right", margin, m.getIdMessage(), m.getMessage(), m.getNomeArquivo(), m.getHashArquivo(), m.getDate()) + htmlMsg;
                     }
                 }
                 setCaixadeEntrada(htmlMsg);
