@@ -12,8 +12,11 @@ import Threads.CreateNewAccount;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -325,9 +328,32 @@ public class SingUP extends javax.swing.JFrame {
     }
 
     private int checkNickName() {
-        int i;
         Server server;
-        server = new Server("192.168.56.1", 2134);
+
+        File myObj = new File("server.ini");
+        Scanner myReader;
+        String host = "";
+        int port = 0;
+        try {
+            myReader = new Scanner(myObj);
+            int cont = 0;
+            while (myReader.hasNextLine()) {
+
+                String data = myReader.nextLine();
+                if (cont == 0) {
+                    data = data.replaceAll(" ", "").split(":")[1];
+                    host = data;
+                } else if (cont == 1) {
+                    data = data.replaceAll(" ", "").split(":")[1];
+                    port = Integer.parseInt(data);
+                }
+                cont++;
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        int i;
+        server = new Server(host, port);
         Communication message = new Communication("CHECKCLIENT");
         message.setParam("nickName", nickName.getText());
         try {
