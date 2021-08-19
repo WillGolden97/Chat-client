@@ -355,9 +355,8 @@ public class EditProfile extends javax.swing.JFrame {
             setSize(getWidth(), 484);
         } else {
             togglePasswordFields(!passwordFieldsEnable);
-            setSize(getWidth(), 574);
+            setSize(getWidth(), 594);
         }
-
     }//GEN-LAST:event_changePasswordActionPerformed
 
     private void nameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nameMouseClicked
